@@ -197,12 +197,9 @@ El conjunto `paneles-sin-matricula` no contiene la entidad Matrícula ni sus DTO
 
 | Archivo | SHA-256 |
 |---|---|
-| `diagrama-qa-genericos (1).puml` (canónico con Matrícula) | `D97A835D3DC62BA408063C5DBF578F72B0DF8000058BC5A55AE0EDD1C023D96A` |
+| `diagrama-qa-genericos (1).puml` (canónico original) | `D97A835D3DC62BA408063C5DBF578F72B0DF8000058BC5A55AE0EDD1C023D96A` |
 | `diagrama-qa-genericos (1).svg` (SVG canónico) | `136213F426BDFF4A8BE90E3A8119E96A6888C716594D9C32AEBBCAC837B65DBA` |
 | `proyecto.json` (posiciones/rutas manuales) | `BBA61AC9FBF2764913D274A7A4D6AA57D3174C0218FB70DED0C9144736445A73` |
-| `flujos/matricula-clases.puml` (diagrama enfocado) | `EE46F95418F48EE1C62D731F0C1F14793BD8CA7D5D56DA696CAD673A348383E6` |
-| `flujos/matricula-clases.svg` (diagrama enfocado) | `5A03E5EF5E70B6B12714C8FAA91E1AA44CAC3C6B8E397DA222EC2639212CB18F` |
-| `flujos/matricula-clases.png` (diagrama enfocado) | `0758096A73FE5A8CE8D310134036447CA30720CF2A1A0D85167CBEE125BE7632` |
 
 Las fechas de modificación de esos archivos son anteriores al cierre de esta entrega (7/11/2026), lo que confirma que no fueron tocados durante la generación de los paneles.
 
