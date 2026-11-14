@@ -13,6 +13,7 @@ public class CursoPeriodoControlador {
 
     private final CursoPeriodoServicio servicio;
     private final CursoProfesorServicio validacion;
+    
 
     public CursoPeriodoControlador(CursoPeriodoServicio servicio,CursoProfesorServicio validacion) {
         if (servicio == null) {

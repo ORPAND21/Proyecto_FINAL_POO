@@ -40,6 +40,9 @@ public class CursoEstudiante {
 
     // Métodos de comportamiento
     public void admitir() {
+        if(!estaPendiente()){
+            throw new IllegalArgumentException("Invalido | Solo se pueden admitir estudiantes en estado pendiente");
+        }
         estado = estado.cambiarEstadoA(EstadoInscripcion.ADMITIDO);
     }
 
