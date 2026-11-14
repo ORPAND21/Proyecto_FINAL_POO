@@ -6,8 +6,9 @@ import com.cleandev.tpa.api.converter.CodedEnum;
 
 public enum EstadoMonitoria implements CodedEnum {
     
-    ACTIVO(1, "Vigente"),
-    INACTIVO(2,"Retirado");
+    PENDIENTE(1, "Pendiente"),
+    APROBADO(2,"Aprobado"),
+    REPROBADO(3,"Reprobado");
     
     private final int code;
     private final String description;
@@ -25,6 +26,9 @@ public enum EstadoMonitoria implements CodedEnum {
     @Override
     public String getDescription() {
         return description;
+    }
+    public EstadoMonitoria desdeCalificacion (EstadoMonitoria calificacion){
+        
     }
     
     
