@@ -172,7 +172,7 @@ public class CursoEstudianteServicio {
 
         return hidratarYmapearUnico(actualizado, estudiante, cursoPeriodo);
     }
-
+    
     //2. Listar cursos por estudiante
     public List<CursoEstudianteDto> listarPorEstudiante(UUID idEstudiante) {
         Estudiante estudiante = estudianteRepositorio.buscarPorId(idEstudiante).

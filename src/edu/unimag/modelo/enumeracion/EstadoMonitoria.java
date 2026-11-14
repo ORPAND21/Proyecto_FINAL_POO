@@ -1,6 +1,7 @@
 package edu.unimag.modelo.enumeracion;
 
 import com.cleandev.tpa.api.converter.CodedEnum;
+import edu.unimag.modelo.constante.PoliticasAcademicas;
 
 public enum EstadoMonitoria implements CodedEnum {
 
@@ -30,7 +31,7 @@ public enum EstadoMonitoria implements CodedEnum {
         if (calificacion == null) {
             return EstadoMonitoria.PENDIENTE;
         }
-        if (calificacion >= 3.0) {
+        if (calificacion >= PoliticasAcademicas.NOTA_MINIMA) {
             return EstadoMonitoria.APROBADO;
         }
             return EstadoMonitoria.REPROBADO;

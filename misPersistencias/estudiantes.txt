@@ -1,3 +1,4 @@
 805bc544-58a0-4f5e-9500-87ac0f5977f2¦2026114006¦Diego¦calle 3¦unimag@unimag.edu.co¦12345678¦2~
 45eae386-de46-455b-aa17-0ebaca07bf7e¦2025114006¦si¦calle 2¦si@gmail¦3456971234¦1~
 44ce78ee-355c-4aae-8ec4-ba2ec9d3a22c¦20240¦orly¦6546#C¦orlando@gmail.com¦35025057¦1~
+4c52e51b-c57b-4e4f-bbd5-4bba43d5e046¦2027114006¦guerrero¦calle 3¦unimag@edu¦1234567678¦1~
