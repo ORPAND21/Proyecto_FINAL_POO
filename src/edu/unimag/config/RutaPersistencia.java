@@ -13,7 +13,10 @@ public enum RutaPersistencia {
     CURSOS_PERIODOS("cursos_periodos.txt"),
     CURSOS_PROFESORES("cursos_profesores.txt"),
     PROGRAMAS("programas.txt"),
-    PLANES_ESTUDIO("planes_estudio.txt");
+    PLANES_ESTUDIO("planes_estudio.txt"),
+    CURSOS_ESTUDIANTES("cursos_estudiantes.txt"),
+    PLANES_ESTUDIO_MATERIAS("planes_estudio_materias.txt"),
+    MONITORIAS("monitorias.txt");
 
     private final Path ruta;
 

@@ -89,6 +89,10 @@ public class ConfiguracionModuloCursoProfesor implements ModuloConfigurable {
                 cursoProfesorMapeador);
     }
 
+    public CursoProfesorRepositorio getCursoProfesorRepositorio() {
+        return cursoProfesorRepositorio;
+    }
+
     public CursoProfesorServicio getCursoProfesorServicio() {
         return cursoProfesorServicio;
     }

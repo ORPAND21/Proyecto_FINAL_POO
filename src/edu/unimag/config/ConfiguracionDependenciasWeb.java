@@ -1,7 +1,10 @@
 package edu.unimag.config;
 
+import edu.unimag.config.modulos.ConfiguracionModuloCursoEstudiante;
 import edu.unimag.config.modulos.ConfiguracionModuloCursoPeriodo;
 import edu.unimag.config.modulos.ConfiguracionModuloCursoProfesor;
+import edu.unimag.config.modulos.ConfiguracionModuloMonitoria;
+import edu.unimag.config.modulos.ConfiguracionModuloPlanEstudioMateria;
 import edu.unimag.config.modulos.ConfiguracionModuloEstudiante;
 import edu.unimag.config.modulos.ConfiguracionModuloFacultad;
 import edu.unimag.config.modulos.ConfiguracionModuloFormacionProfesor;
@@ -11,8 +14,11 @@ import edu.unimag.config.modulos.ConfiguracionModuloPlanEstudio;
 import edu.unimag.config.modulos.ConfiguracionModuloPrograma;
 import edu.unimag.config.modulos.ConfiguracionModuloProfesor;
 import edu.unimag.config.modulos.api.ModuloConfigurable;
+import edu.unimag.controlador.CursoEstudianteControlador;
 import edu.unimag.controlador.CursoPeriodoControlador;
 import edu.unimag.controlador.CursoProfesorControlador;
+import edu.unimag.controlador.MonitoriaControlador;
+import edu.unimag.controlador.PlanEstudioMateriaControlador;
 import edu.unimag.controlador.EstudianteControlador;
 import edu.unimag.controlador.FacultadControlador;
 import edu.unimag.controlador.FormacionProfesorControlador;
@@ -45,6 +51,9 @@ public class ConfiguracionDependenciasWeb implements AutoCloseable {
     private final CursoPeriodoControlador cursoPeriodoControlador;
     private final PlanEstudioControlador planEstudioControlador;
     private final CursoProfesorControlador cursoProfesorControlador;
+    private final CursoEstudianteControlador cursoEstudianteControlador;
+    private final PlanEstudioMateriaControlador planEstudioMateriaControlador;
+    private final MonitoriaControlador monitoriaControlador;
 
     public ConfiguracionDependenciasWeb() {
         try {
@@ -96,6 +105,41 @@ public class ConfiguracionDependenciasWeb implements AutoCloseable {
                     configPeriodo.getPeriodoAcademicoRepositorio());
             modulosConfigurados.add(configCursoProfesor);
 
+            // NIVEL 6: CursoEstudiante (PK compuesta) tiene Estudiante y CursoPeriodo
+            ConfiguracionModuloCursoEstudiante configCursoEstudiante = new ConfiguracionModuloCursoEstudiante(
+                    configEstudiante.getEstudianteRepositorio(),
+                    configEstudiante.getEstudianteServicio(),
+                    configCursoPeriodo.getCursoPeriodoRepositorio(),
+                    configCursoPeriodo.getCursoPeriodoServicio(),
+                    configMateria.getMateriaRepositorio(),
+                    configPeriodo.getPeriodoAcademicoRepositorio());
+            modulosConfigurados.add(configCursoEstudiante);
+
+            // NIVEL 6: PlanEstudioMateria (PK compuesta) tiene PlanEstudio y Materia
+            ConfiguracionModuloPlanEstudioMateria configPlanEstudioMateria = new ConfiguracionModuloPlanEstudioMateria(
+                    configPlanEstudio.getPlanEstudioRepositorio(),
+                    configPlanEstudio.getPlanEstudioServicio(),
+                    configMateria.getMateriaRepositorio(),
+                    configMateria.getMateriaServicio(),
+                    configPrograma.getProgramaRepositorio(),
+                    configFacultad.getFacultadRepositorio());
+            modulosConfigurados.add(configPlanEstudioMateria);
+
+            // NIVEL 7: Monitoria (PK compuesta) tiene CursoPeriodo, Estudiante y Profesor
+            // y valida contra CursoEstudiante y CursoProfesor
+            ConfiguracionModuloMonitoria configMonitoria = new ConfiguracionModuloMonitoria(
+                    configEstudiante.getEstudianteRepositorio(),
+                    configEstudiante.getEstudianteServicio(),
+                    configProfesor.getProfesorRepositorio(),
+                    configProfesor.getProfesorServicio(),
+                    configCursoPeriodo.getCursoPeriodoRepositorio(),
+                    configCursoPeriodo.getCursoPeriodoServicio(),
+                    configMateria.getMateriaRepositorio(),
+                    configPeriodo.getPeriodoAcademicoRepositorio(),
+                    configCursoEstudiante.getCursoEstudianteRepositorio(),
+                    configCursoProfesor.getCursoProfesorRepositorio());
+            modulosConfigurados.add(configMonitoria);
+
             // Controladores que usara la web
             // (los modulos que exponen su servicio se envuelven aqui; los que no, usan construirControlador())
             this.profesorControlador = new ProfesorControlador(configProfesor.getProfesorServicio());
@@ -112,6 +156,9 @@ public class ConfiguracionDependenciasWeb implements AutoCloseable {
                     configPlanEstudio.getPlanEstudioServicio(),
                     configPrograma.getProgramaServicio());
             this.cursoProfesorControlador = configCursoProfesor.construirControlador();
+            this.cursoEstudianteControlador = configCursoEstudiante.construirControlador();
+            this.planEstudioMateriaControlador = configPlanEstudioMateria.construirControlador();
+            this.monitoriaControlador = configMonitoria.construirControlador();
         } catch (RuntimeException e) {
             close(); // si algo falla a medias, liberar lo ya abierto
             throw e;
@@ -156,6 +203,18 @@ public class ConfiguracionDependenciasWeb implements AutoCloseable {
 
     public CursoProfesorControlador getCursoProfesorControlador() {
         return cursoProfesorControlador;
+    }
+
+    public CursoEstudianteControlador getCursoEstudianteControlador() {
+        return cursoEstudianteControlador;
+    }
+
+    public PlanEstudioMateriaControlador getPlanEstudioMateriaControlador() {
+        return planEstudioMateriaControlador;
+    }
+
+    public MonitoriaControlador getMonitoriaControlador() {
+        return monitoriaControlador;
     }
 
     @Override
