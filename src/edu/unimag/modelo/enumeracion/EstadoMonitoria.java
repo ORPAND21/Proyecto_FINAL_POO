@@ -31,7 +31,7 @@ public enum EstadoMonitoria implements CodedEnum {
         if (calificacion == null) {
             return EstadoMonitoria.PENDIENTE;
         }
-        if (calificacion >= PoliticasAcademicas.NOTA_MINIMA) {
+        if (calificacion >= PoliticasAcademicas.NOTA_APROBACION) {
             return EstadoMonitoria.APROBADO;
         }
             return EstadoMonitoria.REPROBADO;
