@@ -26,7 +26,7 @@ public enum EstadoMonitoria implements CodedEnum {
         return description;
     }
 
-    public EstadoMonitoria desdeCalificacion(Integer calificacion) {
+    public static EstadoMonitoria desdeCalificacion(Integer calificacion) {
         if (calificacion == null) {
             return EstadoMonitoria.PENDIENTE;
         }
@@ -36,15 +36,15 @@ public enum EstadoMonitoria implements CodedEnum {
             return EstadoMonitoria.REPROBADO;
         
     }
-    public EstadoMonitoria cambiarEstado(EstadoMonitoria nuevo){
-        if(this == PENDIENTE && nuevo == REPROBADO){
-            return nuevo;
+    public EstadoMonitoria cambiarEstadoA(EstadoMonitoria nuevoEstado){
+        if(this == PENDIENTE && nuevoEstado == REPROBADO){
+            return nuevoEstado;
         }
-        if(this==PENDIENTE && nuevo == APROBADO){
-            return nuevo;
+        if(this==PENDIENTE && nuevoEstado == APROBADO){
+            return nuevoEstado;
         }
-       if(this==APROBADO && nuevo==REPROBADO){
-           return nuevo;
+       if(this==APROBADO && nuevoEstado==REPROBADO){
+           return nuevoEstado;
        }
        throw new IllegalArgumentException("Incorrecto el estado");
         

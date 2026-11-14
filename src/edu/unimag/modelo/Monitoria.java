@@ -62,7 +62,6 @@ public class Monitoria {
     public void evaluar(Integer calificacion, String comentario) {
         EstadoMonitoria nuevoEstado = EstadoMonitoria.desdeCalificacion(calificacion);
         this.estadoMonitoria = this.estadoMonitoria.cambiarEstadoA(nuevoEstado);
-
         if (this.calificacionMonitoria != null) {
             String fechaFormateada = OffsetDateTime.now().format(PoliticasAcademicas.FORMATO_AUDITORIA);
             String trazaAuditoria = String.format(" | REEVALUACIÓN [%s]: %s (Nota anterior: %d)",
