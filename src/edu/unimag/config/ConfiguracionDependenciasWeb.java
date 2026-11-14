@@ -6,7 +6,6 @@ import edu.unimag.config.modulos.ConfiguracionModuloEstudiante;
 import edu.unimag.config.modulos.ConfiguracionModuloFacultad;
 import edu.unimag.config.modulos.ConfiguracionModuloFormacionProfesor;
 import edu.unimag.config.modulos.ConfiguracionModuloMateria;
-import edu.unimag.config.modulos.ConfiguracionModuloMatricula;
 import edu.unimag.config.modulos.ConfiguracionModuloPeriodoAcademico;
 import edu.unimag.config.modulos.ConfiguracionModuloPlanEstudio;
 import edu.unimag.config.modulos.ConfiguracionModuloPrograma;
@@ -18,7 +17,6 @@ import edu.unimag.controlador.EstudianteControlador;
 import edu.unimag.controlador.FacultadControlador;
 import edu.unimag.controlador.FormacionProfesorControlador;
 import edu.unimag.controlador.MateriaControlador;
-import edu.unimag.controlador.MatriculaControlador;
 import edu.unimag.controlador.PeriodoAcademicoControlador;
 import edu.unimag.controlador.PlanEstudioControlador;
 import edu.unimag.controlador.ProfesorControlador;
@@ -47,7 +45,6 @@ public class ConfiguracionDependenciasWeb implements AutoCloseable {
     private final CursoPeriodoControlador cursoPeriodoControlador;
     private final PlanEstudioControlador planEstudioControlador;
     private final CursoProfesorControlador cursoProfesorControlador;
-    private final MatriculaControlador matriculaControlador;
 
     public ConfiguracionDependenciasWeb() {
         try {
@@ -99,19 +96,6 @@ public class ConfiguracionDependenciasWeb implements AutoCloseable {
                     configPeriodo.getPeriodoAcademicoRepositorio());
             modulosConfigurados.add(configCursoProfesor);
 
-            // NIVEL 6: Matricula (PK compuesta de 5 modelos)
-            ConfiguracionModuloMatricula configMatricula = new ConfiguracionModuloMatricula(
-                    configEstudiante.getEstudianteRepositorio(),
-                    configEstudiante.getEstudianteServicio(),
-                    configCursoPeriodo.getCursoPeriodoRepositorio(),
-                    configCursoPeriodo.getCursoPeriodoServicio(),
-                    configMateria.getMateriaRepositorio(),
-                    configMateria.getMateriaServicio(),
-                    configPeriodo.getPeriodoAcademicoRepositorio(),
-                    configProfesor.getProfesorRepositorio(),
-                    configProfesor.getProfesorServicio());
-            modulosConfigurados.add(configMatricula);
-
             // Controladores que usara la web
             // (los modulos que exponen su servicio se envuelven aqui; los que no, usan construirControlador())
             this.profesorControlador = new ProfesorControlador(configProfesor.getProfesorServicio());
@@ -128,7 +112,6 @@ public class ConfiguracionDependenciasWeb implements AutoCloseable {
                     configPlanEstudio.getPlanEstudioServicio(),
                     configPrograma.getProgramaServicio());
             this.cursoProfesorControlador = configCursoProfesor.construirControlador();
-            this.matriculaControlador = configMatricula.construirControlador();
         } catch (RuntimeException e) {
             close(); // si algo falla a medias, liberar lo ya abierto
             throw e;
@@ -173,10 +156,6 @@ public class ConfiguracionDependenciasWeb implements AutoCloseable {
 
     public CursoProfesorControlador getCursoProfesorControlador() {
         return cursoProfesorControlador;
-    }
-
-    public MatriculaControlador getMatriculaControlador() {
-        return matriculaControlador;
     }
 
     @Override

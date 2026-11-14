@@ -12,7 +12,6 @@ public enum RutaPersistencia {
     PERIODOS_ACADEMICOS("periodos.txt"),
     CURSOS_PERIODOS("cursos_periodos.txt"),
     CURSOS_PROFESORES("cursos_profesores.txt"),
-    MATRICULAS("matriculas.txt"),
     PROGRAMAS("programas.txt"),
     PLANES_ESTUDIO("planes_estudio.txt");
 

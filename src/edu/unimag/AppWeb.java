@@ -7,7 +7,6 @@ import edu.unimag.vista.web.EstudianteWeb;
 import edu.unimag.vista.web.FacultadWeb;
 import edu.unimag.vista.web.FormacionProfesorWeb;
 import edu.unimag.vista.web.MateriaWeb;
-import edu.unimag.vista.web.MatriculaWeb;
 import edu.unimag.vista.web.PeriodoAcademicoWeb;
 import edu.unimag.vista.web.PlanEstudioWeb;
 import edu.unimag.vista.web.ProfesorWeb;
@@ -57,8 +56,7 @@ public class AppWeb {
                             new ProgramaWeb(config.getProgramaControlador()),
                             new CursoPeriodoWeb(config.getCursoPeriodoControlador()),
                             new PlanEstudioWeb(config.getPlanEstudioControlador()),
-                            new CursoProfesorWeb(config.getCursoProfesorControlador()),
-                            new MatriculaWeb(config.getMatriculaControlador())));
+                            new CursoProfesorWeb(config.getCursoProfesorControlador())));
             servidor.iniciar();
 
             // 3. El servidor NO bloquea, por eso los recursos se liberan con un
