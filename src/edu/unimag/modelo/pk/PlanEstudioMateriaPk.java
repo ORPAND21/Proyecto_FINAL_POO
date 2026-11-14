@@ -66,10 +66,10 @@ public class PlanEstudioMateriaPk {
             return false;
         }
         final PlanEstudioMateriaPk other = (PlanEstudioMateriaPk) obj;
-        if (!Objects.equals(this.getIdPlanEstudio(), other.getIdPlanEstudio())) {
+        if (!Objects.equals(this.planEstudio, other.planEstudio)) {
             return false;
         }
-        return Objects.equals(this.getIdMateria(), other.getIdMateria());
+        return Objects.equals(this.materia, other.materia);
     }
 
     @Override

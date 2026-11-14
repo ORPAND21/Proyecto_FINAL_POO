@@ -82,11 +82,14 @@ public class MonitoriaPk {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final CursoEstudiantePk other = (CursoEstudiantePk) obj;
-        if (!Objects.equals(this.getIdCursoPeriodo(), other.getIdCursoPeriodo())) {
+        final MonitoriaPk other = (MonitoriaPk) obj;
+        if (!Objects.equals(this.cursoPeriodo, other.cursoPeriodo)) {
             return false;
         }
-        return Objects.equals(this.getIdEstudiante(), other.getIdEstudiante());
+        if (!Objects.equals(this.estudiante, other.estudiante)) {
+            return false;
+        }
+        return Objects.equals(this.profesor, other.profesor);
     }
 
     @Override

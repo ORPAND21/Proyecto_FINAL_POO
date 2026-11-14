@@ -4,6 +4,7 @@ import com.cleandev.tpa.api.annotations.TpaConvert;
 import com.cleandev.tpa.api.annotations.TpaId;
 import edu.unimag.modelo.convertidor.EstadoEntidadConverter;
 import edu.unimag.modelo.enumeracion.EstadoEntidad;
+import java.util.Objects;
 
 public class Materia {
 
@@ -99,5 +100,28 @@ public class Materia {
 
     public EstadoEntidad getEstadoMateria() {
         return estadoMateria;
+    }
+
+    // Identidad
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 31 * hash + Objects.hashCode(idMateria);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Materia other = (Materia) obj;
+        return Objects.equals(this.idMateria, other.idMateria);
     }
 }

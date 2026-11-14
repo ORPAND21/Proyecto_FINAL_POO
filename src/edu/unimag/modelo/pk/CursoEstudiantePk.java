@@ -67,10 +67,10 @@ public class CursoEstudiantePk {
             return false;
         }
         final CursoEstudiantePk other = (CursoEstudiantePk) obj;
-        if (!Objects.equals(this.getIdCursoPeriodo(), other.getIdCursoPeriodo())) {
+        if (!Objects.equals(this.cursoPeriodo, other.cursoPeriodo)) {
             return false;
         }
-        return Objects.equals(this.getIdEstudiante(), other.getIdEstudiante());
+        return Objects.equals(this.estudiante, other.estudiante);
     }
 
     @Override

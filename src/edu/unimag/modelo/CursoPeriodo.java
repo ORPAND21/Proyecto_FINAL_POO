@@ -2,6 +2,7 @@ package edu.unimag.modelo;
 
 import com.cleandev.tpa.api.annotations.TpaId;
 import java.time.OffsetDateTime;
+import java.util.Objects;
 import java.util.UUID;
 
 public class CursoPeriodo {
@@ -104,5 +105,28 @@ public class CursoPeriodo {
 
     public Integer getIdPeriodoAcademico() {
         return this.periodoAcademico.getIdPeriodoAcademico();
+    }
+
+    // Identidad
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 31 * hash + Objects.hashCode(idCursoPeriodo);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final CursoPeriodo other = (CursoPeriodo) obj;
+        return Objects.equals(this.idCursoPeriodo, other.idCursoPeriodo);
     }
 }
