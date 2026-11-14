@@ -15,6 +15,11 @@ public class MonitoriaRepositorioImpl
     }
 
     @Override
+    protected boolean permiteBorradoFisico() {
+        return true;
+    }
+
+    @Override
     public boolean insertarSiNoExiste(Monitoria monitoria) {
         if (monitoria == null) {
             throw new IllegalArgumentException("La monitoria no puede ser nula");

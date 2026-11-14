@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Materias de planes de estudio</title>
+    <link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+    <main class="ancho">
+        <nav>
+            <a href="index.html">← Menú principal</a>
+        </nav>
+
+        <h1>Materias de planes de estudio</h1>
+
+        <section>
+            <h2>Asignar materia a plan</h2>
+            <form id="formAsignar">
+                <label>Plan de estudio
+                    <select id="selPlan" required></select>
+                </label>
+                <label>Materia
+                    <select id="selMateria" required></select>
+                </label>
+                <label>Semestre
+                    <input id="semestre" type="number" min="1" required>
+                </label>
+                <label>Orden
+                    <input id="orden" type="number" min="1" required>
+                </label>
+                <button type="submit">Asignar</button>
+            </form>
+            <p id="msgAsignar" role="status"></p>
+        </section>
+
+        <section>
+            <h2>Consultar asignaciones</h2>
+            <form id="formFiltro">
+                <label>Consultar por
+                    <select id="filtroTipo">
+                        <option value="plan">Materias de un plan</option>
+                        <option value="materia">Planes que incluyen una materia</option>
+                    </select>
+                </label>
+                <label id="grupoPlan">Plan de estudio
+                    <select id="filtroPlan"></select>
+                </label>
+                <label id="grupoMateria" hidden>Materia
+                    <select id="filtroMateria"></select>
+                </label>
+                <button type="submit">Consultar</button>
+            </form>
+            <p id="msgLista" role="status"></p>
+
+            <div class="tabla-scroll">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Plan</th>
+                            <th>Programa</th>
+                            <th>Materia</th>
+                            <th>Créditos</th>
+                            <th>Semestre</th>
+                            <th>Orden</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabla"></tbody>
+                </table>
+            </div>
+            <p id="vacio" hidden>No hay asignaciones para esa consulta.</p>
+        </section>
+    </main>
+
+    <script src="api.js"></script>
+    <script src="planes-materias.js"></script>
+</body>
+</html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Inscripciones de estudiantes</title>
+    <link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+    <main class="ancho">
+        <nav>
+            <a href="index.html">← Menú principal</a>
+        </nav>
+
+        <h1>Inscripciones de estudiantes</h1>
+
+        <section>
+            <h2>Inscribir estudiante a curso</h2>
+            <form id="formAsignar">
+                <label>Estudiante
+                    <select id="selEstudiante" required></select>
+                </label>
+                <label>Curso del periodo
+                    <select id="selCurso" required></select>
+                </label>
+                <button type="submit">Inscribir</button>
+            </form>
+            <p id="msgAsignar" role="status"></p>
+        </section>
+
+        <section>
+            <h2>Consultar inscripciones</h2>
+            <form id="formFiltro">
+                <label>Consultar por
+                    <select id="filtroTipo">
+                        <option value="estudiante">Estudiante</option>
+                        <option value="curso">Curso del periodo</option>
+                        <option value="materia">Materia</option>
+                        <option value="periodo">Periodo</option>
+                        <option value="materiaPeriodo">Materia y periodo</option>
+                    </select>
+                </label>
+                <label id="grupoEstudiante">Estudiante
+                    <select id="filtroEstudiante"></select>
+                </label>
+                <label id="grupoCurso" hidden>Curso del periodo
+                    <select id="filtroCurso"></select>
+                </label>
+                <label id="grupoMateria" hidden>Materia
+                    <select id="filtroMateria"></select>
+                </label>
+                <label id="grupoPeriodo" hidden>Periodo
+                    <select id="filtroPeriodo"></select>
+                </label>
+                <button type="submit">Consultar</button>
+            </form>
+            <p id="msgLista" role="status"></p>
+
+            <div class="tabla-scroll">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Estudiante</th>
+                            <th>Curso</th>
+                            <th>Materia</th>
+                            <th>Periodo</th>
+                            <th>Estado</th>
+                            <th>Fecha</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabla"></tbody>
+                </table>
+            </div>
+            <p id="vacio" hidden>No hay inscripciones para esa consulta.</p>
+        </section>
+    </main>
+
+    <script src="api.js"></script>
+    <script src="cursos-estudiantes.js"></script>
+</body>
+</html>

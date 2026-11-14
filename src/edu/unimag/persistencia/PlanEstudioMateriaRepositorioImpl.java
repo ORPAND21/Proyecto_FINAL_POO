@@ -15,6 +15,11 @@ public class PlanEstudioMateriaRepositorioImpl
     }
 
     @Override
+    protected boolean permiteBorradoFisico() {
+        return true;
+    }
+
+    @Override
     public boolean insertarSiNoExiste(PlanEstudioMateria planEstudioMateria) {
         if (planEstudioMateria == null) {
             throw new IllegalArgumentException("La relacion plan-materia no puede ser nula");
