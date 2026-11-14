@@ -1,0 +1,18 @@
+﻿panel,contenido,clases,relaciones,asociacion,realizacion,composicion,agregacion,overlap,perp,cross,total,svg,png
+01-modelo,Modelo,20,18,18,0,0,0,0,0,0,0,5618x1569,5617x1568
+02-dto,DTO,31,7,7,0,0,0,0,0,0,0,2789x1071,2788x1070
+03-repositorio-persistencia,Repositorio + persistencia,31,27,8,19,0,0,0,0,0,0,3103x1781,3102x1780
+04-mapeador-realizaciones,Mapeador (realizaciones),8,5,0,5,0,0,0,0,0,0,2889x571,2888x570
+05-mapeador-asociaciones,Mapeador (asociaciones),11,7,7,0,0,0,0,0,0,0,3293x625,3292x624
+06-servicio-controlador,Servicio + controlador,20,13,13,0,0,0,0,0,0,0,2983x2390,2982x2389
+07-vista-config,Vista + configuracion,28,11,0,10,0,1,0,0,0,0,4395x2305,4394x2304
+08-composicion-transversal,Composicion transversal,35,24,0,0,24,0,0,0,0,0,3140x3654,3139x3653
+09-agregacion-transversal,Agregacion transversal,16,8,0,0,0,8,0,0,0,0,1752x2601,1751x2600
+10-asociaciones-dto-modelo,Asociaciones DTO -> modelo,16,14,14,0,0,0,0,0,0,0,859x1526,858x1525
+11-asociaciones-servicio-mapeador,Asociaciones servicio -> mapeador,20,10,10,0,0,0,0,0,0,0,3402x2354,3401x2353
+12-asociaciones-vista-repositorio,Asociaciones configuracion de modulo -> repositorio,11,10,10,0,0,0,0,0,0,0,4613x421,4612x420
+13-asociaciones-config-servicio-controlador,Asociaciones configuracion -> servicio/controlador,9,6,6,0,0,0,0,0,0,0,3140x1310,3139x1309
+14-asociaciones-vista-web-controlador,Asociaciones vista web -> controlador,20,10,10,0,0,0,0,0,0,0,1659x1975,1658x1974
+15-asociaciones-servicio-repositorio-simple,Asociaciones servicio -> repositorio (simples),10,5,5,0,0,0,0,0,0,0,1364x1051,1363x1050
+16-asociaciones-servicio-repositorio-curso-profesor-plan,Asociaciones servicio -> repositorio (CursoProfesor/PlanEstudio),10,8,8,0,0,0,0,0,0,0,2660x705,2659x704
+17-asociaciones-servicio-repositorio-periodo-formacion-programa,Asociaciones servicio -> repositorio (CursoPeriodo/FormacionProfesor/Programa),10,7,7,0,0,0,0,0,0,0,2135x725,2134x724

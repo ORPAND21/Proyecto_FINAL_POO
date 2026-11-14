@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Gestión de Programas académicos</title>
+    <link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+    <main class="ancho">
+        <nav>
+            <a href="index.html">← Menú principal</a>
+        </nav>
+
+        <h1>Gestión de Programas académicos</h1>
+
+        <section>
+            <h2 id="tituloForm">Registrar programa</h2>
+            <form id="formulario">
+                <label>Nombre
+                    <input id="nombre" type="text" required>
+                </label>
+                <label>Nivel
+                    <select id="nivel" required></select>
+                </label>
+                <label>Facultad
+                    <select id="facultad" required></select>
+                </label>
+                <button id="btnGuardar" type="submit">Guardar</button>
+                <button id="btnCancelar" type="button" class="secundario" hidden>Cancelar</button>
+            </form>
+            <p id="mensaje" role="status"></p>
+        </section>
+
+        <section>
+            <h2>Programas registrados</h2>
+            <form class="filtro" onsubmit="return false">
+                <label>Filtrar por facultad
+                    <select id="filtro"></select>
+                </label>
+            </form>
+            <div class="tabla-scroll">
+                <table>
+                    <thead>
+                        <tr><th>Nombre</th><th>Nivel</th><th>Facultad</th><th>Estado</th><th>Acciones</th></tr>
+                    </thead>
+                    <tbody id="tabla"></tbody>
+                </table>
+            </div>
+            <p id="vacio" hidden>No hay programas para mostrar.</p>
+        </section>
+    </main>
+
+    <script src="api.js"></script>
+    <script src="programas.js"></script>
+</body>
+</html>

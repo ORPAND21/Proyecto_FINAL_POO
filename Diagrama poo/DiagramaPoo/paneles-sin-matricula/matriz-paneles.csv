@@ -1,0 +1,8 @@
+﻿origen\destino,modelo,dto,repo_pers,mapeador,servicio_controlador,vista_config,total
+modelo,0,0,0,0,0,0,0
+dto,14,0,0,0,0,0,14
+repo_pers,8,0,0,0,0,0,8
+mapeador,0,0,0,0,0,0,0
+servicio_controlador,0,0,20,10,0,0,30
+vista_config,0,0,20,0,30,0,50
+total,22,0,40,10,30,0,102

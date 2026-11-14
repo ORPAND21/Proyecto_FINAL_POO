@@ -1,0 +1,35 @@
+/* Estilos EXTRA de esta pagina. Se carga despues de estilos.css y reutiliza sus colores. */
+
+[hidden] { display: none !important; }
+
+main.ancho { max-width: 1100px; }
+
+nav { display: flex; gap: 18px; margin-bottom: 8px; }
+nav a { color: var(--acento); text-decoration: none; }
+nav a[aria-current="page"] { font-weight: 600; text-decoration: underline; }
+
+select {
+    padding: 8px 10px;
+    border: 1px solid var(--borde);
+    border-radius: 6px;
+    background: var(--fondo);
+    color: var(--texto);
+    font: inherit;
+}
+
+.tabla-scroll { overflow-x: auto; }
+td.acciones { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+
+button.secundario {
+    background: transparent;
+    color: var(--acento);
+    border: 1px solid var(--acento);
+    padding: 6px 12px;
+}
+button.peligro {
+    background: var(--error);
+    padding: 6px 12px;
+}
+#msgAsignar, #msgLista { min-height: 1.4em; margin: 12px 0 0; }
+#msgAsignar.error, #msgLista.error { color: var(--error); }
+#msgAsignar.ok, #msgLista.ok { color: var(--ok); }

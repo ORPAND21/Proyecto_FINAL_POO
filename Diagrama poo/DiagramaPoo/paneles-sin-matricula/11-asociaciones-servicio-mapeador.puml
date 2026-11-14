@@ -1,0 +1,290 @@
+@startuml
+' Panel 11 - Asociaciones servicio -> mapeador. Config: left to right, ortho, nodesep 8, ranksep 80.
+' --- Sin iconos de PlantUML: el tipo lo indican las palabras clave ---
+hide circle
+skinparam classAttributeIconSize 0
+set separator none
+' Compartimentos vacios suprimidos (UML 2.5.1 permite no mostrarlos)
+hide empty members
+' Clases externas de Java: no se analizan por dentro (compartimentos ocultos, no vacios)
+hide <<JDK-External>> members
+' --- Tipografia y lineas ---
+skinparam defaultFontName SansSerif
+skinparam defaultFontSize 12
+left to right direction
+skinparam linetype ortho
+skinparam nodesep 8
+skinparam ranksep 80
+skinparam shadowing false
+skinparam roundCorner 0
+skinparam backgroundColor white
+skinparam ArrowColor #34495E
+skinparam ArrowFontColor #34495E
+skinparam ArrowFontSize 11
+skinparam ArrowThickness 1.1
+' --- Clases: encabezado con banda gris, nombre en negrita ---
+skinparam classBorderColor #2C3E50
+skinparam classBorderThickness 1
+skinparam classBackgroundColor #FFFFFF
+skinparam classHeaderBackgroundColor #F4F6F7
+skinparam classFontStyle bold
+skinparam classFontSize 13
+skinparam classAttributeFontSize 12
+skinparam stereotypeFontSize 10
+skinparam stereotypeFontColor #566573
+' --- Paquetes (carpeta, como en UML) ---
+skinparam packageStyle folder
+skinparam packageBorderColor #85929E
+skinparam packageBackgroundColor #FBFCFC
+skinparam packageFontColor #2C3E50
+skinparam packageFontStyle bold
+' --- Paleta pastel por tipo de clasificador ---
+skinparam class<<interface>>BackgroundColor #E8F8F0
+skinparam class<<interface>>HeaderBackgroundColor #D5F5E3
+skinparam interfaceBackgroundColor #E8F8F0
+skinparam interfaceHeaderBackgroundColor #D5F5E3
+skinparam class<<enumeration>>BackgroundColor #FEF9E7
+skinparam class<<enumeration>>HeaderBackgroundColor #FCF3CF
+skinparam class<<annotation>>BackgroundColor #F5EEF8
+skinparam class<<annotation>>HeaderBackgroundColor #EBDEF0
+skinparam class<<record>>BackgroundColor #EBF5FB
+skinparam class<<record>>HeaderBackgroundColor #D6EAF8
+skinparam class<<JDK-External>>BackgroundColor #F2F3F4
+skinparam class<<JDK-External>>BorderColor #AAB7B8
+skinparam interface<<JDK-External>>BackgroundColor #F2F3F4
+skinparam interface<<JDK-External>>BorderColor #AAB7B8
+
+' --- Definicion de Clasificadores (Agrupados por Paquete) ---
+skinparam groupInheritance 2
+
+' --- Paquetes ordenados por capa ---
+package edu.unimag {
+    class "CursoPeriodoMapeador" as edu.unimag.mapeador.CursoPeriodoMapeador {
+    -  materiaMapeador : MateriaMapeador {readOnly}
+    -  periodoAcademicoMapeador : PeriodoAcademicoMapeador {readOnly}
+    --
+    +  <<create>> CursoPeriodoMapeador(materiaMapeador : MateriaMapeador, periodoAcademicoMapeador : PeriodoAcademicoMapeador)
+    +  toDtoList(entities : CursoPeriodo [*] {ordered, nonunique}, materiaCargador : MateriaCargador, periodoCargador : PeriodoAcademicoCargador) : CursoPeriodoDto [*] {ordered, nonunique}
+    +  toDto(entity : CursoPeriodo, materiaCargador : MateriaCargador, periodoCargador : PeriodoAcademicoCargador) : CursoPeriodoDto
+    -  validarIntegridad(entity : CursoPeriodo, materiaCargador : MateriaCargador, periodoCargador : PeriodoAcademicoCargador) : boolean
+    -  transformarADto(entity : CursoPeriodo, materiaCargador : MateriaCargador, periodoCargador : PeriodoAcademicoCargador) : CursoPeriodoDto
+    }
+    class "CursoProfesorMapeador" as edu.unimag.mapeador.CursoProfesorMapeador {
+    -  profesorMapeador : ProfesorMapeador {readOnly}
+    -  cursoPeriodoMapeador : CursoPeriodoMapeador {readOnly}
+    --
+    +  <<create>> CursoProfesorMapeador(profesorMapeador : ProfesorMapeador, cursoPeriodoMapeador : CursoPeriodoMapeador)
+    +  toDtoList(entidades : CursoProfesor [*] {ordered, nonunique}, profesorCargador : ProfesorCargador, cursoPeriodoCargador : CursoPeriodoCargador, materiaCargador : MateriaCargador, periodoCargador : PeriodoAcademicoCargador) : CursoProfesorDto [*] {ordered, nonunique}
+    -  validarIntegridad(miEntidad : CursoProfesor, profesorCargador : ProfesorCargador, cursoPeriodoCargador : CursoPeriodoCargador, materiaCargador : MateriaCargador, periodoCargador : PeriodoAcademicoCargador) : boolean
+    -  transformarDto(miEntidad : CursoProfesor, profesorCargador : ProfesorCargador, cursoPeriodoCargador : CursoPeriodoCargador, materiaCargador : MateriaCargador, periodoCargador : PeriodoAcademicoCargador) : CursoProfesorDto
+    +  toDto(entidad : CursoProfesor, profesorCargador : ProfesorCargador, cursoPeriodoCargador : CursoPeriodoCargador, materiaCargador : MateriaCargador, periodoCargador : PeriodoAcademicoCargador) : CursoProfesorDto
+    }
+    class "EstudianteMapeador" as edu.unimag.mapeador.EstudianteMapeador {
+    +  toDto(entidad : Estudiante) : EstudianteDto
+    +  toDtoList(entidades : Estudiante [*] {ordered, nonunique}) : EstudianteDto [*] {ordered, nonunique}
+    }
+    class "FacultadMapeador" as edu.unimag.mapeador.FacultadMapeador {
+    +  <<create>> FacultadMapeador()
+    +  toDto(entidad : Facultad) : FacultadDto
+    +  toDtoList(entidades : Facultad [*] {ordered, nonunique}) : FacultadDto [*] {ordered, nonunique}
+    }
+    class "FormacionProfesorMapeador" as edu.unimag.mapeador.FormacionProfesorMapeador {
+    -  profesorMapeador : ProfesorMapeador {readOnly}
+    --
+    +  <<create>> FormacionProfesorMapeador(profesorMapeador : ProfesorMapeador)
+    +  toDto(entity : FormacionProfesor, profesorCargador : ProfesorCargador) : FormacionProfesorDto
+    +  toDtoList(entidades : FormacionProfesor [*] {ordered, nonunique}, profesorCargador : ProfesorCargador) : FormacionProfesorDto [*] {ordered, nonunique}
+    }
+    class "MateriaMapeador" as edu.unimag.mapeador.MateriaMapeador {
+    +  <<create>> MateriaMapeador()
+    +  toDto(entidad : Materia) : MateriaDto
+    +  toDtoList(entidades : Materia [*] {ordered, nonunique}) : MateriaDto [*] {ordered, nonunique}
+    }
+    class "PeriodoAcademicoMapeador" as edu.unimag.mapeador.PeriodoAcademicoMapeador {
+    +  <<create>> PeriodoAcademicoMapeador()
+    +  toDto(entidad : PeriodoAcademico) : PeriodoAcademicoDto
+    +  toDtoList(entidades : PeriodoAcademico [*] {ordered, nonunique}) : PeriodoAcademicoDto [*] {ordered, nonunique}
+    }
+    class "PlanEstudioMapeador" as edu.unimag.mapeador.PlanEstudioMapeador {
+    -  programaMapeador : ProgramaMapeador {readOnly}
+    --
+    +  <<create>> PlanEstudioMapeador(programaMapeador : ProgramaMapeador)
+    +  toDtoList(entidades : PlanEstudio [*] {ordered, nonunique}, programaCargador : ProgramaCargador, facultadCargador : FacultadCargador) : PlanEstudioDto [*] {ordered, nonunique}
+    +  toDto(entity : PlanEstudio, programaCargador : ProgramaCargador, facultadCargador : FacultadCargador) : PlanEstudioDto
+    -  validarIntegridad(entity : PlanEstudio, programaCargador : ProgramaCargador, facultadCargador : FacultadCargador) : boolean
+    -  transformarADto(entity : PlanEstudio, programaCargador : ProgramaCargador, facultadCargador : FacultadCargador) : PlanEstudioDto
+    }
+    class "ProfesorMapeador" as edu.unimag.mapeador.ProfesorMapeador {
+    +  <<create>> ProfesorMapeador()
+    +  toDto(entidad : Profesor) : ProfesorDto
+    +  toDtoList(entidades : Profesor [*] {ordered, nonunique}) : ProfesorDto [*] {ordered, nonunique}
+    }
+    class "ProgramaMapeador" as edu.unimag.mapeador.ProgramaMapeador {
+    -  facultadMapeador : FacultadMapeador {readOnly}
+    --
+    +  <<create>> ProgramaMapeador(facultadMapeador : FacultadMapeador)
+    +  toDtoList(entidades : Programa [*] {ordered, nonunique}, facultadCargador : FacultadCargador) : ProgramaDto [*] {ordered, nonunique}
+    +  toDto(entity : Programa, facultadCargador : FacultadCargador) : ProgramaDto
+    -  validarIntegridad(entity : Programa, facultadCargador : FacultadCargador) : boolean
+    -  transformarADto(entity : Programa, facultadCargador : FacultadCargador) : ProgramaDto
+    }
+    class "CursoPeriodoServicio" as edu.unimag.servicio.CursoPeriodoServicio {
+    -  cursoPeriodoRepositorio : CursoPeriodoRepositorio {readOnly}
+    -  materiaRepositorio : MateriaRepositorio {readOnly}
+    -  periodoAcademicoRepositorio : PeriodoAcademicoRepositorio {readOnly}
+    -  mapeador : CursoPeriodoMapeador {readOnly}
+    --
+    +  <<create>> CursoPeriodoServicio(cursoPeriodoRepositorio : CursoPeriodoRepositorio, materiaRepositorio : MateriaRepositorio, periodoAcademicoRepositorio : PeriodoAcademicoRepositorio, mapeador : CursoPeriodoMapeador)
+    +  registrar(dto : CursoPeriodoCrearDto) : CursoPeriodoDto
+    +  listarTodos() : CursoPeriodoDto [*] {ordered, nonunique}
+    +  actualizar(dto : CursoPeriodoActualizarDto) : CursoPeriodoDto
+    +  eliminar(id : UUID) : boolean
+    -  hidratarYMapearUnico(cursoPeriodo : CursoPeriodo) : CursoPeriodoDto
+    +  buscarPorId(id : UUID) : CursoPeriodoDto
+    }
+    class "CursoProfesorServicio" as edu.unimag.servicio.CursoProfesorServicio {
+    -  cursoProfesorRepositorio : CursoProfesorRepositorio {readOnly}
+    -  profesorRepositorio : ProfesorRepositorio {readOnly}
+    -  cursoPeriodoRepositorio : CursoPeriodoRepositorio {readOnly}
+    -  materiaRepositorio : MateriaRepositorio {readOnly}
+    -  periodoAcademicoRepositorio : PeriodoAcademicoRepositorio {readOnly}
+    -  mapeador : CursoProfesorMapeador {readOnly}
+    --
+    +  <<create>> CursoProfesorServicio(cursoProfesorRepositorio : CursoProfesorRepositorio, profesorRepositorio : ProfesorRepositorio, cursoPeriodoRepositorio : CursoPeriodoRepositorio, materiaRepositorio : MateriaRepositorio, periodoAcademicoRepositorio : PeriodoAcademicoRepositorio, mapeador : CursoProfesorMapeador)
+    +  asignar(dto : CursoProfesorCrearDto) : CursoProfesorDto
+    +  cambiarTipoAsignacion(dto : CursoProfesorActualizarDto) : CursoProfesorDto
+    +  retirar(idCursoPeriodo : UUID, idProfesor : Long) : CursoProfesorDto
+    +  reActivar(idCursoPeriodo : UUID, idProfesor : Long) : CursoProfesorDto
+    +  listarPorProfesor(idProfesor : Long) : CursoProfesorDto [*] {ordered, nonunique}
+    +  listarPorMateria(idMateria : Integer) : CursoProfesorDto [*] {ordered, nonunique}
+    +  listarPorPeriodo(idPeriodo : Integer) : CursoProfesorDto [*] {ordered, nonunique}
+    +  listarPorMateriaYPorPeriodo(idMateria : Integer, idPeriodo : Integer) : CursoProfesorDto [*] {ordered, nonunique}
+    -  hidratarYmapearListaGenerico(asignaciones : CursoProfesor [*] {ordered, nonunique}, materiaCargadorInicial : MateriaCargador, periodoCargadorInicial : PeriodoAcademicoCargador) : CursoProfesorDto [*] {ordered, nonunique}
+    -  hidratarYmapearListaConMateria(asignaciones : CursoProfesor [*] {ordered, nonunique}, materia : Materia) : CursoProfesorDto [*] {ordered, nonunique}
+    -  hidratarYmapearListaConPeriodo(asignaciones : CursoProfesor [*] {ordered, nonunique}, periodo : PeriodoAcademico) : CursoProfesorDto [*] {ordered, nonunique}
+    -  hidratarYmapearListaConMateriaYperiodo(asignaciones : CursoProfesor [*] {ordered, nonunique}, periodo : PeriodoAcademico, materia : Materia) : CursoProfesorDto [*] {ordered, nonunique}
+    -  hidratarYmapearUnico(asignacion : CursoProfesor, profesor : Profesor, cursoPeriodo : CursoPeriodo) : CursoProfesorDto
+    -  hidratarYmapearLista(asignaciones : CursoProfesor [*] {ordered, nonunique}, profesor : Profesor) : CursoProfesorDto [*] {ordered, nonunique}
+    }
+    class "EstudianteServicio" as edu.unimag.servicio.EstudianteServicio {
+    -  repositorio : EstudianteRepositorio {readOnly}
+    -  mapper : EstudianteMapeador {readOnly}
+    --
+    +  <<create>> EstudianteServicio(repositorio : EstudianteRepositorio, mapper : EstudianteMapeador)
+    +  registrarNuevoEstudiante(dto : EstudianteCrearDto) : EstudianteDto
+    +  actualizarDatos(dto : EstudianteActualizarDto) : EstudianteDto
+    +  activar(id : UUID) : EstudianteDto
+    +  inactivar(id : UUID) : EstudianteDto
+    +  buscarPorId(id : UUID) : EstudianteDto
+    +  listarTodos() : EstudianteDto [*] {ordered, nonunique}
+    +  listarActivos() : EstudianteDto [*] {ordered, nonunique}
+    +  listarInactivos() : EstudianteDto [*] {ordered, nonunique}
+    +  estaActivo(id : UUID) : boolean
+    +  contarEstudiantes() : int
+    }
+    class "FacultadServicio" as edu.unimag.servicio.FacultadServicio {
+    -  repositorio : FacultadRepositorio {readOnly}
+    -  mapper : FacultadMapeador {readOnly}
+    --
+    +  <<create>> FacultadServicio(repositorio : FacultadRepositorio, mapper : FacultadMapeador)
+    +  registrarFacultad(dto : FacultadCrearDto) : FacultadDto
+    +  listarTodas() : FacultadDto [*] {ordered, nonunique}
+    +  actualizar(dto : FacultadActualizarDto) : FacultadDto
+    +  suspender(id : Long) : FacultadDto
+    +  reactivar(id : Long) : FacultadDto
+    }
+    class "FormacionProfesorServicio" as edu.unimag.servicio.FormacionProfesorServicio {
+    -  formacionRepositorio : FormacionProfesorRepositorio {readOnly}
+    -  profesorRepositorio : ProfesorRepositorio {readOnly}
+    -  mapeador : FormacionProfesorMapeador {readOnly}
+    --
+    +  <<create>> FormacionProfesorServicio(formacionRepositorio : FormacionProfesorRepositorio, profesorRepositorio : ProfesorRepositorio, mapeador : FormacionProfesorMapeador)
+    +  registrarFormacion(dto : FormacionProfesorCrearDto) : FormacionProfesorDto
+    +  listarFormaciones() : FormacionProfesorDto [*] {ordered, nonunique}
+    +  actualizarFormacion(dto : FormacionProfesorActualizarDto) : FormacionProfesorDto
+    +  eliminarFormacion(id : Long) : boolean
+    +  listarFormacionesPorProfesor(idProfesor : Long) : FormacionProfesorDto [*] {ordered, nonunique}
+    -  hidratarYMapearUnico(formacion : FormacionProfesor) : FormacionProfesorDto
+    }
+    class "MateriaServicio" as edu.unimag.servicio.MateriaServicio {
+    -  repositorio : MateriaRepositorio {readOnly}
+    -  mapper : MateriaMapeador {readOnly}
+    --
+    +  <<create>> MateriaServicio(repositorio : MateriaRepositorio, mapper : MateriaMapeador)
+    +  registrarMateria(dto : MateriaCrearDto) : MateriaDto
+    +  listarTodas() : MateriaDto [*] {ordered, nonunique}
+    +  actualizar(dto : MateriaActualizarDto) : MateriaDto
+    +  suspender(id : Integer) : MateriaDto
+    +  reactivar(id : Integer) : MateriaDto
+    +  buscarPorId(id : Integer) : MateriaDto
+    }
+    class "PeriodoAcademicoServicio" as edu.unimag.servicio.PeriodoAcademicoServicio {
+    -  repositorio : PeriodoAcademicoRepositorio {readOnly}
+    -  mapper : PeriodoAcademicoMapeador {readOnly}
+    --
+    +  <<create>> PeriodoAcademicoServicio(repositorio : PeriodoAcademicoRepositorio, mapper : PeriodoAcademicoMapeador)
+    +  registrar(dto : PeriodoAcademicoCrearDto) : PeriodoAcademicoDto
+    +  listarTodos() : PeriodoAcademicoDto [*] {ordered, nonunique}
+    +  actualizar(dto : PeriodoAcademicoActualizarDto) : PeriodoAcademicoDto
+    +  suspender(id : Integer) : PeriodoAcademicoDto
+    +  reactivar(id : Integer) : PeriodoAcademicoDto
+    }
+    class "PlanEstudioServicio" as edu.unimag.servicio.PlanEstudioServicio {
+    -  planEstudioRepositorio : PlanEstudioRepositorio {readOnly}
+    -  programaRepositorio : ProgramaRepositorio {readOnly}
+    -  facultadRepositorio : FacultadRepositorio {readOnly}
+    -  mapeador : PlanEstudioMapeador {readOnly}
+    --
+    +  <<create>> PlanEstudioServicio(planEstudioRepositorio : PlanEstudioRepositorio, programaRepositorio : ProgramaRepositorio, facultadRepositorio : FacultadRepositorio, mapeador : PlanEstudioMapeador)
+    +  registrar(dto : PlanEstudioCrearDto) : PlanEstudioDto
+    +  actualizar(dto : PlanEstudioActualizarDto) : PlanEstudioDto
+    +  activar(idPlanEstudio : Long) : PlanEstudioDto
+    +  inactivar(idPlanEstudio : Long) : PlanEstudioDto
+    +  listarTodos() : PlanEstudioDto [*] {ordered, nonunique}
+    +  buscarPorId(idPlanEstudio : Long) : PlanEstudioDto
+    +  listarPorPrograma(idPrograma : UUID) : PlanEstudioDto [*] {ordered, nonunique}
+    -  hidratarYMapearUnico(plan : PlanEstudio) : PlanEstudioDto
+    -  hidratarYMapearUnico(plan : PlanEstudio, programa : Programa) : PlanEstudioDto
+    -  hidratarYMapearUnico(plan : PlanEstudio, programa : Programa, facultad : Facultad) : PlanEstudioDto
+    }
+    class "ProfesorServicio" as edu.unimag.servicio.ProfesorServicio {
+    -  repositorio : ProfesorRepositorio {readOnly}
+    -  mapper : ProfesorMapeador {readOnly}
+    --
+    +  <<create>> ProfesorServicio(repositorio : ProfesorRepositorio, mapper : ProfesorMapeador)
+    +  registrarProfesor(dto : ProfesorCrearDto) : ProfesorDto
+    +  actualizar(dto : ProfesorActualizarDto) : ProfesorDto
+    +  buscarPorId(id : Long) : ProfesorDto
+    +  listarTodos() : ProfesorDto [*] {ordered, nonunique}
+    +  listarActivos() : ProfesorDto [*] {ordered, nonunique}
+    +  listarInactivos() : ProfesorDto [*] {ordered, nonunique}
+    +  estaActivo(id : Long) : boolean
+    +  contarProfesores() : int
+    }
+    class "ProgramaServicio" as edu.unimag.servicio.ProgramaServicio {
+    -  programaRepositorio : ProgramaRepositorio {readOnly}
+    -  facultadRepositorio : FacultadRepositorio {readOnly}
+    -  mapeador : ProgramaMapeador {readOnly}
+    --
+    +  <<create>> ProgramaServicio(programaRepositorio : ProgramaRepositorio, facultadRepositorio : FacultadRepositorio, mapeador : ProgramaMapeador)
+    +  registrar(dto : ProgramaCrearDto) : ProgramaDto
+    +  actualizar(dto : ProgramaActualizarDto) : ProgramaDto
+    +  suspender(idPrograma : UUID) : ProgramaDto
+    +  reactivar(idPrograma : UUID) : ProgramaDto
+    +  listarTodos() : ProgramaDto [*] {ordered, nonunique}
+    +  buscarPorId(idPrograma : UUID) : ProgramaDto
+    +  listarPorFacultad(idFacultad : Long) : ProgramaDto [*] {ordered, nonunique}
+    -  hidratarYMapearUnico(programa : Programa) : ProgramaDto
+    -  hidratarYMapearUnico(programa : Programa, facultad : Facultad) : ProgramaDto
+    }
+edu.unimag.servicio.CursoProfesorServicio --> "mapeador\n1" edu.unimag.mapeador.CursoProfesorMapeador
+edu.unimag.servicio.CursoPeriodoServicio --> "mapeador\n1" edu.unimag.mapeador.CursoPeriodoMapeador
+edu.unimag.servicio.EstudianteServicio --> "mapper\n1" edu.unimag.mapeador.EstudianteMapeador
+edu.unimag.servicio.FacultadServicio --> "mapper\n1" edu.unimag.mapeador.FacultadMapeador
+edu.unimag.servicio.FormacionProfesorServicio --> "mapeador\n1" edu.unimag.mapeador.FormacionProfesorMapeador
+edu.unimag.servicio.MateriaServicio --> "mapper\n1" edu.unimag.mapeador.MateriaMapeador
+edu.unimag.servicio.PeriodoAcademicoServicio --> "mapper\n1" edu.unimag.mapeador.PeriodoAcademicoMapeador
+edu.unimag.servicio.PlanEstudioServicio --> "mapeador\n1" edu.unimag.mapeador.PlanEstudioMapeador
+edu.unimag.servicio.ProfesorServicio --> "mapper\n1" edu.unimag.mapeador.ProfesorMapeador
+edu.unimag.servicio.ProgramaServicio --> "mapeador\n1" edu.unimag.mapeador.ProgramaMapeador
+@enduml

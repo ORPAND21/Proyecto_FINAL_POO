@@ -1,0 +1,201 @@
+@startuml
+' Panel 13 - Asociaciones configuracion -> servicio/controlador. Config: left to right, ortho, nodesep 8, ranksep 80.
+' --- Sin iconos de PlantUML: el tipo lo indican las palabras clave ---
+hide circle
+skinparam classAttributeIconSize 0
+set separator none
+' Compartimentos vacios suprimidos (UML 2.5.1 permite no mostrarlos)
+hide empty members
+' Clases externas de Java: no se analizan por dentro (compartimentos ocultos, no vacios)
+hide <<JDK-External>> members
+' --- Tipografia y lineas ---
+skinparam defaultFontName SansSerif
+skinparam defaultFontSize 12
+left to right direction
+skinparam linetype ortho
+skinparam nodesep 8
+skinparam ranksep 80
+skinparam shadowing false
+skinparam roundCorner 0
+skinparam backgroundColor white
+skinparam ArrowColor #34495E
+skinparam ArrowFontColor #34495E
+skinparam ArrowFontSize 11
+skinparam ArrowThickness 1.1
+' --- Clases: encabezado con banda gris, nombre en negrita ---
+skinparam classBorderColor #2C3E50
+skinparam classBorderThickness 1
+skinparam classBackgroundColor #FFFFFF
+skinparam classHeaderBackgroundColor #F4F6F7
+skinparam classFontStyle bold
+skinparam classFontSize 13
+skinparam classAttributeFontSize 12
+skinparam stereotypeFontSize 10
+skinparam stereotypeFontColor #566573
+' --- Paquetes (carpeta, como en UML) ---
+skinparam packageStyle folder
+skinparam packageBorderColor #85929E
+skinparam packageBackgroundColor #FBFCFC
+skinparam packageFontColor #2C3E50
+skinparam packageFontStyle bold
+' --- Paleta pastel por tipo de clasificador ---
+skinparam class<<interface>>BackgroundColor #E8F8F0
+skinparam class<<interface>>HeaderBackgroundColor #D5F5E3
+skinparam interfaceBackgroundColor #E8F8F0
+skinparam interfaceHeaderBackgroundColor #D5F5E3
+skinparam class<<enumeration>>BackgroundColor #FEF9E7
+skinparam class<<enumeration>>HeaderBackgroundColor #FCF3CF
+skinparam class<<annotation>>BackgroundColor #F5EEF8
+skinparam class<<annotation>>HeaderBackgroundColor #EBDEF0
+skinparam class<<record>>BackgroundColor #EBF5FB
+skinparam class<<record>>HeaderBackgroundColor #D6EAF8
+skinparam class<<JDK-External>>BackgroundColor #F2F3F4
+skinparam class<<JDK-External>>BorderColor #AAB7B8
+skinparam interface<<JDK-External>>BackgroundColor #F2F3F4
+skinparam interface<<JDK-External>>BorderColor #AAB7B8
+
+' --- Definicion de Clasificadores (Agrupados por Paquete) ---
+skinparam groupInheritance 2
+
+' --- Paquetes ordenados por capa ---
+package edu.unimag {
+    class "ConfiguracionDependenciasWeb" as edu.unimag.config.ConfiguracionDependenciasWeb {
+    -  {field} modulosConfigurados : ModuloConfigurable [*] = new ArrayList<>() {readOnly, ordered, nonunique}
+    -  profesorControlador : ProfesorControlador {readOnly}
+    -  estudianteControlador : EstudianteControlador {readOnly}
+    -  facultadControlador : FacultadControlador {readOnly}
+    -  materiaControlador : MateriaControlador {readOnly}
+    -  periodoAcademicoControlador : PeriodoAcademicoControlador {readOnly}
+    -  formacionProfesorControlador : FormacionProfesorControlador {readOnly}
+    -  programaControlador : ProgramaControlador {readOnly}
+    -  cursoPeriodoControlador : CursoPeriodoControlador {readOnly}
+    -  planEstudioControlador : PlanEstudioControlador {readOnly}
+    -  cursoProfesorControlador : CursoProfesorControlador {readOnly}
+    --
+    +  <<create>> ConfiguracionDependenciasWeb()
+    +  getProfesorControlador() : ProfesorControlador
+    +  getEstudianteControlador() : EstudianteControlador
+    +  getFacultadControlador() : FacultadControlador
+    +  getMateriaControlador() : MateriaControlador
+    +  getPeriodoAcademicoControlador() : PeriodoAcademicoControlador
+    +  getFormacionProfesorControlador() : FormacionProfesorControlador
+    +  getProgramaControlador() : ProgramaControlador
+    +  getCursoPeriodoControlador() : CursoPeriodoControlador
+    +  getPlanEstudioControlador() : PlanEstudioControlador
+    +  getCursoProfesorControlador() : CursoProfesorControlador
+    +  close() : void
+    }
+    class "ConfiguracionModuloCursoProfesor" as edu.unimag.config.modulos.ConfiguracionModuloCursoProfesor {
+    -  cursoProfesorRepositorio : CursoProfesorRepositorio {readOnly}
+    -  profesorRepositorio : ProfesorRepositorio {readOnly}
+    -  profesorServicio : ProfesorServicio {readOnly}
+    -  cursoPeriodoRepositorio : CursoPeriodoRepositorio {readOnly}
+    -  cursoPeriodoServicio : CursoPeriodoServicio {readOnly}
+    -  materiaRepositorio : MateriaRepositorio {readOnly}
+    -  periodoAcademicoRepositorio : PeriodoAcademicoRepositorio {readOnly}
+    --
+    +  <<create>> ConfiguracionModuloCursoProfesor(profesorRepositorio : ProfesorRepositorio, profesorServicio : ProfesorServicio, cursoPeriodoRepositorio : CursoPeriodoRepositorio, cursoPeriodoServicio : CursoPeriodoServicio, materiaRepositorio : MateriaRepositorio, periodoAcademicoRepositorio : PeriodoAcademicoRepositorio)
+    +  construirControlador() : CursoProfesorControlador
+    +  cerrarRecursos() : void
+    }
+    class "ConfiguracionModuloPlanEstudio" as edu.unimag.config.modulos.ConfiguracionModuloPlanEstudio {
+    -  planEstudioRepositorio : PlanEstudioRepositorio {readOnly}
+    -  programaRepositorio : ProgramaRepositorio {readOnly}
+    -  programaServicio : ProgramaServicio {readOnly}
+    -  facultadRepositorio : FacultadRepositorio {readOnly}
+    -  planEstudioServicio : PlanEstudioServicio {readOnly}
+    --
+    +  <<create>> ConfiguracionModuloPlanEstudio(programaRepositorio : ProgramaRepositorio, programaServicio : ProgramaServicio, facultadRepositorio : FacultadRepositorio)
+    +  getPlanEstudioRepositorio() : PlanEstudioRepositorio
+    +  getPlanEstudioServicio() : PlanEstudioServicio
+    +  construirControlador() : PlanEstudioControlador
+    +  cerrarRecursos() : void
+    }
+    class "CursoProfesorControlador" as edu.unimag.controlador.CursoProfesorControlador {
+    -  cursoProfesorServicio : CursoProfesorServicio {readOnly}
+    -  profesorServicio : ProfesorServicio {readOnly}
+    -  cursoPeriodoServicio : CursoPeriodoServicio {readOnly}
+    --
+    +  <<create>> CursoProfesorControlador(cursoProfesorServicio : CursoProfesorServicio, profesorServicio : ProfesorServicio, cursoPeriodoServicio : CursoPeriodoServicio)
+    +  asignar(dto : CursoProfesorCrearDto) : CursoProfesorDto
+    +  cambiarTipoAsignacion(dto : CursoProfesorActualizarDto) : CursoProfesorDto
+    +  retirar(idCursoPeriodo : UUID, idProfesor : Long) : CursoProfesorDto
+    +  reactivar(idCursoPeriodo : UUID, idProfesor : Long) : CursoProfesorDto
+    +  listarPorProfesor(idProfesor : Long) : CursoProfesorDto [*] {ordered, nonunique}
+    +  listarPorMateria(idMateria : Integer) : CursoProfesorDto [*] {ordered, nonunique}
+    +  listarPorMateriaPeriodo(idMateria : Integer, idPeriodo : Integer) : CursoProfesorDto [*] {ordered, nonunique}
+    +  listarPorPeriodo(idPeriodo : Integer) : CursoProfesorDto [*] {ordered, nonunique}
+    +  buscarProfesor(idProfesor : Long) : ProfesorDto
+    +  buscarPorCursoPeriodo(idCursoPeriodo : UUID) : CursoPeriodoDto
+    }
+    class "FacultadControlador" as edu.unimag.controlador.FacultadControlador {
+    -  servicio : FacultadServicio {readOnly}
+    --
+    +  <<create>> FacultadControlador(servicio : FacultadServicio)
+    +  registrar(request : FacultadCrearDto) : FacultadDto
+    +  listarTodas() : FacultadDto [*] {ordered, nonunique}
+    +  actualizar(request : FacultadActualizarDto) : FacultadDto
+    +  suspender(id : Long) : FacultadDto
+    +  reactivar(id : Long) : FacultadDto
+    }
+    class "FormacionProfesorControlador" as edu.unimag.controlador.FormacionProfesorControlador {
+    -  servicio : FormacionProfesorServicio {readOnly}
+    --
+    +  <<create>> FormacionProfesorControlador(servicio : FormacionProfesorServicio)
+    +  registrar(request : FormacionProfesorCrearDto) : FormacionProfesorDto
+    +  listarTodos() : FormacionProfesorDto [*] {ordered, nonunique}
+    +  actualizar(request : FormacionProfesorActualizarDto) : FormacionProfesorDto
+    +  eliminar(id : Long) : boolean
+    +  listarPorProfesor(idProfesor : Long) : FormacionProfesorDto [*] {ordered, nonunique}
+    }
+    class "CursoPeriodoServicio" as edu.unimag.servicio.CursoPeriodoServicio {
+    -  cursoPeriodoRepositorio : CursoPeriodoRepositorio {readOnly}
+    -  materiaRepositorio : MateriaRepositorio {readOnly}
+    -  periodoAcademicoRepositorio : PeriodoAcademicoRepositorio {readOnly}
+    -  mapeador : CursoPeriodoMapeador {readOnly}
+    --
+    +  <<create>> CursoPeriodoServicio(cursoPeriodoRepositorio : CursoPeriodoRepositorio, materiaRepositorio : MateriaRepositorio, periodoAcademicoRepositorio : PeriodoAcademicoRepositorio, mapeador : CursoPeriodoMapeador)
+    +  registrar(dto : CursoPeriodoCrearDto) : CursoPeriodoDto
+    +  listarTodos() : CursoPeriodoDto [*] {ordered, nonunique}
+    +  actualizar(dto : CursoPeriodoActualizarDto) : CursoPeriodoDto
+    +  eliminar(id : UUID) : boolean
+    -  hidratarYMapearUnico(cursoPeriodo : CursoPeriodo) : CursoPeriodoDto
+    +  buscarPorId(id : UUID) : CursoPeriodoDto
+    }
+    class "ProfesorServicio" as edu.unimag.servicio.ProfesorServicio {
+    -  repositorio : ProfesorRepositorio {readOnly}
+    -  mapper : ProfesorMapeador {readOnly}
+    --
+    +  <<create>> ProfesorServicio(repositorio : ProfesorRepositorio, mapper : ProfesorMapeador)
+    +  registrarProfesor(dto : ProfesorCrearDto) : ProfesorDto
+    +  actualizar(dto : ProfesorActualizarDto) : ProfesorDto
+    +  buscarPorId(id : Long) : ProfesorDto
+    +  listarTodos() : ProfesorDto [*] {ordered, nonunique}
+    +  listarActivos() : ProfesorDto [*] {ordered, nonunique}
+    +  listarInactivos() : ProfesorDto [*] {ordered, nonunique}
+    +  estaActivo(id : Long) : boolean
+    +  contarProfesores() : int
+    }
+    class "ProgramaServicio" as edu.unimag.servicio.ProgramaServicio {
+    -  programaRepositorio : ProgramaRepositorio {readOnly}
+    -  facultadRepositorio : FacultadRepositorio {readOnly}
+    -  mapeador : ProgramaMapeador {readOnly}
+    --
+    +  <<create>> ProgramaServicio(programaRepositorio : ProgramaRepositorio, facultadRepositorio : FacultadRepositorio, mapeador : ProgramaMapeador)
+    +  registrar(dto : ProgramaCrearDto) : ProgramaDto
+    +  actualizar(dto : ProgramaActualizarDto) : ProgramaDto
+    +  suspender(idPrograma : UUID) : ProgramaDto
+    +  reactivar(idPrograma : UUID) : ProgramaDto
+    +  listarTodos() : ProgramaDto [*] {ordered, nonunique}
+    +  buscarPorId(idPrograma : UUID) : ProgramaDto
+    +  listarPorFacultad(idFacultad : Long) : ProgramaDto [*] {ordered, nonunique}
+    -  hidratarYMapearUnico(programa : Programa) : ProgramaDto
+    -  hidratarYMapearUnico(programa : Programa, facultad : Facultad) : ProgramaDto
+    }
+edu.unimag.config.ConfiguracionDependenciasWeb --> "cursoProfesorControlador\n1" edu.unimag.controlador.CursoProfesorControlador
+edu.unimag.config.ConfiguracionDependenciasWeb --> "facultadControlador\n1" edu.unimag.controlador.FacultadControlador
+edu.unimag.config.ConfiguracionDependenciasWeb --> "formacionProfesorControlador\n1" edu.unimag.controlador.FormacionProfesorControlador
+edu.unimag.config.modulos.ConfiguracionModuloCursoProfesor --> "cursoPeriodoServicio\n1" edu.unimag.servicio.CursoPeriodoServicio
+edu.unimag.config.modulos.ConfiguracionModuloCursoProfesor --> "profesorServicio\n1" edu.unimag.servicio.ProfesorServicio
+edu.unimag.config.modulos.ConfiguracionModuloPlanEstudio --> "programaServicio\n1" edu.unimag.servicio.ProgramaServicio
+@enduml

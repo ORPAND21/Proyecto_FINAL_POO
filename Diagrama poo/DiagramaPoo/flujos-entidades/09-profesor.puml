@@ -1,0 +1,310 @@
+@startuml
+' ============================================================
+' Flujo de Profesor
+' 19 clases, 18 relaciones estructurales dibujadas
+' 10 dependencias de metodo conservadas comentadas al final
+' Recorte del UML completo sin Matricula: mismas clases, miembros y
+' relaciones del flujo. Las dependencias <<use>> no se dibujan para
+' evitar cruces; se conservan comentadas al final, como en el
+' diagrama depurado sin Matricula.
+' Direccion: top to bottom, enrutado ortogonal.
+' Nota: las relaciones ConfiguracionModuloX --> colaborador se escriben
+' como colaborador <-- ConfiguracionModuloX (misma relacion y mismo
+' sentido dibujado) para ordenar la capa de configuracion y reducir cruces.
+' ============================================================
+hide circle
+hide empty members
+skinparam defaultFontName Helvetica
+skinparam defaultFontSize 10
+skinparam classFontSize 11
+skinparam classAttributeFontSize 9
+skinparam classAttributeIconSize 0
+skinparam classRoundCorner 0
+skinparam shadowing false
+skinparam monochrome false
+skinparam classBorderColor black
+skinparam backgroundColor white
+skinparam classBackgroundColor white
+' --- Paleta de colores pastel para Java 17 ---
+skinparam interfaceBackgroundColor #D5F5E3
+skinparam interface<<Interface>>BackgroundColor #D5F5E3
+skinparam class<<Interface>>BackgroundColor #D5F5E3
+skinparam abstractBackgroundColor #FFE5CC
+skinparam class<<Abstract>>BackgroundColor #FFE5CC
+skinparam class<<Record>>BackgroundColor #D0E1FD
+' --- Paquetes ---
+skinparam packageStyle folder
+skinparam packageBorderColor #85929E
+skinparam packageBackgroundColor #FBFCFC
+skinparam packageFontColor #2C3E50
+skinparam packageFontStyle bold
+' --- Flechas y separacion ---
+skinparam ArrowColor #34495E
+skinparam ArrowFontColor #34495E
+skinparam ArrowFontSize 8
+skinparam ArrowThickness 0.9
+skinparam nodesep 22
+skinparam ranksep 75
+top to bottom direction
+skinparam linetype ortho
+title Flujo de Profesor
+
+package edu.unimag.vista.web {
+    class ProfesorWeb {
+    -  {readOnly} controlador : ProfesorControlador
+    +  ProfesorWeb(controlador : ProfesorControlador) : void <<Create>>
+    #  atender(ex : HttpExchange, metodo : String, segmentos : List<String>) : void
+}
+    abstract class ManejadorWeb <<Abstract>> {
+    -  {static, readOnly} ORIGENES_PERMITIDOS : Set<String> = Set.of("http://127.0.0.1:5500", "http://localhost:5500")
+    -  {readOnly} rutaBase : String
+    #  ManejadorWeb(rutaBase : String) : void <<Create>>
+    +  getRutaBase() : String
+    #  {abstract} atender(ex : HttpExchange, metodo : String, segmentos : List<String>) : void
+    +  {final} handle(ex : HttpExchange) : void
+    #  responderJson(ex : HttpExchange, codigo : int, cuerpo : Object) : void
+    #  error(mensaje : String) : String
+    #  metodoNoPermitido(ex : HttpExchange, permitidos : String) : void
+    #  exigirMetodo(ex : HttpExchange, metodo : String, esperado : String) : boolean
+    #  noEncontrado(ex : HttpExchange) : void
+    #  leerCuerpo(ex : HttpExchange) : Map<String, String>
+    #  leerConsulta(ex : HttpExchange) : Map<String, String>
+    #  {static} aLong(valor : String, campo : String) : Long
+    #  {static} aInteger(valor : String, campo : String) : Integer
+    #  {static} aUuid(valor : String, campo : String) : UUID
+    #  {static} textoOpcional(campos : Map<String, String>, clave : String) : String
+    #  {static} integerOpcional(campos : Map<String, String>, clave : String) : Integer
+    #  {static} longOpcional(campos : Map<String, String>, clave : String) : Long
+    #  {static} enumDesdeCodigo(tipo : Class<E>, valor : String, campo : String) : E
+    #  {static} enumOpcional(tipo : Class<E>, campos : Map<String, String>, clave : String) : E
+    #  {static} aFecha(valor : String, campo : String) : OffsetDateTime
+    #  {static} fechaOpcional(campos : Map<String, String>, clave : String) : OffsetDateTime
+    -  {static} requerido(valor : String, campo : String) : String
+    -  aplicarCors(ex : HttpExchange) : void
+    -  segmentosDeRuta(ex : HttpExchange) : List<String>
+}
+}
+
+package edu.unimag.controlador {
+    class ProfesorControlador {
+    -  {readOnly} servicio : ProfesorServicio
+    +  ProfesorControlador(servicio : ProfesorServicio) : void <<Create>>
+    +  registrar(request : ProfesorCrearDto) : ProfesorDto
+    +  actualizar(request : ProfesorActualizarDto) : ProfesorDto
+    +  validarCelular(celular : String) : boolean
+    +  validarNombre(nombre : String) : boolean
+    +  buscarPorId(id : Long) : ProfesorDto
+    +  listarTodos() : List<ProfesorDto>
+    +  listarActivos() : List<ProfesorDto>
+    +  listarInactivos() : List<ProfesorDto>
+    +  contarProfesores() : int
+}
+}
+
+package edu.unimag.servicio {
+    class ProfesorServicio {
+    -  {readOnly} repositorio : ProfesorRepositorio
+    -  {readOnly} mapper : ProfesorMapeador
+    +  ProfesorServicio(repositorio : ProfesorRepositorio, mapper : ProfesorMapeador) : void <<Create>>
+    +  registrarProfesor(dto : ProfesorCrearDto) : ProfesorDto
+    +  actualizar(dto : ProfesorActualizarDto) : ProfesorDto
+    +  buscarPorId(id : Long) : ProfesorDto
+    +  listarTodos() : List<ProfesorDto>
+    +  listarActivos() : List<ProfesorDto>
+    +  listarInactivos() : List<ProfesorDto>
+    +  estaActivo(id : Long) : boolean
+    +  contarProfesores() : int
+}
+}
+
+package edu.unimag.mapeador {
+    class ProfesorMapeador {
+    +  ProfesorMapeador() : void <<Create>>
+    +  toDto(entidad : Profesor) : ProfesorDto
+    +  toDtoList(entidades : List<Profesor>) : List<ProfesorDto>
+}
+}
+
+package edu.unimag.mapeador.api {
+    interface Mapeador<E, R> <<Interface>> {
+    +  {abstract} toDto(entidad : E) : R
+    +  {abstract} toDtoList(entidades : List<E>) : List<R>
+}
+}
+
+package edu.unimag.repositorio.cargador {
+    class ProfesorCargador {
+    -  {readOnly} repositorio : ProfesorRepositorio
+    -  {readOnly} cache : Map<Long, Profesor>
+    +  ProfesorCargador(repositorio : ProfesorRepositorio) : void <<Create>>
+    +  cargarTodos() : void
+    +  cargarPorIds(ids : List<Long>) : void
+    +  registrarEnCache(entidad : Profesor) : void
+    +  obtener(id : Long) : Optional<Profesor>
+    +  existe(id : Long) : boolean
+}
+}
+
+package edu.unimag.repositorio {
+    interface ProfesorRepositorio <<Interface>> {
+}
+}
+
+package edu.unimag.repositorio.api {
+    interface CargadorDatos<T, ID> <<Interface>> {
+    +  {abstract} cargarTodos() : void
+    +  {abstract} cargarPorIds(ids : List<ID>) : void
+    +  {abstract} registrarEnCache(entidad : T) : void
+    +  {abstract} obtener(id : ID) : Optional<T>
+    +  {abstract} existe(id : ID) : boolean
+}
+    interface RepositorioBase<T, ID> <<Interface>> {
+    +  {abstract} guardar(entidad : T) : T
+    +  {abstract} actualizar(entidad : T) : T
+    +  {abstract} buscarPorId(id : ID) : Optional<T>
+    +  {abstract} eliminar(id : ID) : boolean
+    +  {abstract} listarTodos() : List<T>
+    +  {abstract} contar() : long
+    +  {abstract} cerrar() : void
+}
+}
+
+package edu.unimag.persistencia {
+    class ProfesorRepositorioImpl {
+    +  ProfesorRepositorioImpl(tpaRepository : TpaRepository<Profesor, Long>) : void <<Create>>
+}
+}
+
+package edu.unimag.persistencia.abstracta {
+    abstract class RepositorioBaseAbstracto<T, ID> <<Abstract>> {
+    #  {readOnly} tpaRepository : TpaRepository<T, ID>
+    +  RepositorioBaseAbstracto(tpaRepository : TpaRepository<T, ID>) : void <<Create>>
+    +  guardar(entidad : T) : T
+    +  actualizar(entidad : T) : T
+    +  buscarPorId(id : ID) : Optional<T>
+    +  listarTodos() : List<T>
+    +  contar() : long
+    +  {final} eliminar(id : ID) : boolean
+    +  cerrar() : void
+    #  permiteBorradoFisico() : boolean
+}
+}
+
+package edu.unimag.dto.profesor {
+    class ProfesorCrearDto <<Record>> {
+    +  {readOnly} nombre : String
+    +  {readOnly} celular : String
+}
+    class ProfesorActualizarDto <<Record>> {
+    +  {readOnly} id : Long
+    +  {readOnly} nuevoNombre : String
+    +  {readOnly} nuevoCelular : String
+    +  {readOnly} nuevoEstado : Integer
+    +  obtenerEstadoComoEnum() : EstadoEntidad
+}
+    class ProfesorDto <<Record>> {
+    +  {readOnly} id : Long
+    +  {readOnly} nombre : String
+    +  {readOnly} celular : String
+    +  {readOnly} estado : EstadoEntidad
+    +  {readOnly} activo : Boolean
+}
+}
+
+package edu.unimag.modelo {
+    class Profesor {
+    -  idProfesor : Long
+    -  nombreProfesor : String
+    -  celularProfesor : String
+    -  estadoProfesor : EstadoEntidad
+    #  Profesor() : void <<Create>>
+    +  Profesor(nombreProfesor : String, celularProfesor : String) : void <<Create>>
+    +  Profesor(idProfesor : Long, nombreProfesor : String, celularProfesor : String, estadoProfesor : EstadoEntidad) : void <<Create>>
+    +  actualizarNombre(nuevoNombre : String) : void
+    +  actualizarCelular(nuevoCelular : String) : void
+    +  cambiarEstado(nuevoEstado : EstadoEntidad) : void
+    +  estaActivo() : boolean
+    +  getIdProfesor() : Long
+    +  getNombreProfesor() : String
+    +  getCelularProfesor() : String
+    +  getEstadoProfesor() : EstadoEntidad
+}
+}
+
+package edu.unimag.modelo.enumeracion {
+    enum EstadoEntidad {
+    +  {static, readOnly} ACTIVO : EstadoEntidad
+    +  {static, readOnly} INACTIVO : EstadoEntidad
+    -  {readOnly} code : int
+    -  {readOnly} description : String
+    ~  EstadoEntidad(code : int, description : String) : void <<Create>>
+    +  getCode() : int
+    +  getDescription() : String
+    +  cambiarEstadoA(nuevoEstado : EstadoEntidad) : EstadoEntidad
+}
+}
+
+package edu.unimag.config.modulos {
+    class ConfiguracionModuloProfesor {
+    -  {readOnly} profesorRepositorio : ProfesorRepositorio
+    -  {readOnly} profesorServicio : ProfesorServicio
+    +  ConfiguracionModuloProfesor() : void <<Create>>
+    +  getProfesorRepositorio() : ProfesorRepositorio
+    +  getProfesorServicio() : ProfesorServicio
+    +  construirControlador() : ProfesorControlador
+    +  cerrarRecursos() : void
+}
+}
+
+package edu.unimag.config.modulos.api {
+    interface ModuloConfigurable <<Interface>> {
+    +  {abstract} cerrarRecursos() : void
+}
+}
+
+' --- Orden de capas (oculto) ---
+edu.unimag.vista.web.ProfesorWeb -[hidden]-> edu.unimag.controlador.ProfesorControlador
+edu.unimag.controlador.ProfesorControlador -[hidden]-> edu.unimag.servicio.ProfesorServicio
+edu.unimag.servicio.ProfesorServicio -[hidden]-> edu.unimag.mapeador.ProfesorMapeador
+edu.unimag.servicio.ProfesorServicio -[hidden]-> edu.unimag.repositorio.ProfesorRepositorio
+edu.unimag.mapeador.ProfesorMapeador -[hidden]-> edu.unimag.repositorio.cargador.ProfesorCargador
+edu.unimag.mapeador.ProfesorMapeador -[hidden]-> edu.unimag.modelo.Profesor
+edu.unimag.repositorio.ProfesorRepositorio -[hidden]-> edu.unimag.persistencia.ProfesorRepositorioImpl
+edu.unimag.repositorio.ProfesorRepositorio -[hidden]-> edu.unimag.modelo.Profesor
+edu.unimag.persistencia.ProfesorRepositorioImpl -[hidden]-> edu.unimag.modelo.Profesor
+edu.unimag.mapeador.ProfesorMapeador -[hidden]-> edu.unimag.config.modulos.ConfiguracionModuloProfesor
+edu.unimag.config.modulos.ConfiguracionModuloProfesor -[hidden]-> edu.unimag.repositorio.ProfesorRepositorio
+
+' --- Grafo de relaciones estructurales ---
+edu.unimag.vista.web.ManejadorWeb <|-- edu.unimag.vista.web.ProfesorWeb
+edu.unimag.mapeador.api.Mapeador <|.. edu.unimag.mapeador.ProfesorMapeador
+edu.unimag.repositorio.ProfesorRepositorio <|.. edu.unimag.persistencia.ProfesorRepositorioImpl
+edu.unimag.repositorio.api.CargadorDatos <|.. edu.unimag.repositorio.cargador.ProfesorCargador
+edu.unimag.repositorio.api.RepositorioBase <|-- edu.unimag.repositorio.ProfesorRepositorio
+edu.unimag.repositorio.api.RepositorioBase <|.. edu.unimag.persistencia.abstracta.RepositorioBaseAbstracto
+edu.unimag.persistencia.abstracta.RepositorioBaseAbstracto <|-- edu.unimag.persistencia.ProfesorRepositorioImpl
+edu.unimag.config.modulos.api.ModuloConfigurable <|.. edu.unimag.config.modulos.ConfiguracionModuloProfesor
+edu.unimag.vista.web.ProfesorWeb "1" --> "1" edu.unimag.controlador.ProfesorControlador
+edu.unimag.controlador.ProfesorControlador "1" --> "1" edu.unimag.servicio.ProfesorServicio
+edu.unimag.servicio.ProfesorServicio "1" --> "1" edu.unimag.mapeador.ProfesorMapeador
+edu.unimag.servicio.ProfesorServicio "1" --> "1" edu.unimag.repositorio.ProfesorRepositorio
+edu.unimag.repositorio.cargador.ProfesorCargador "1" --> "1" edu.unimag.repositorio.ProfesorRepositorio
+edu.unimag.repositorio.cargador.ProfesorCargador "1" o-- "*" edu.unimag.modelo.Profesor
+edu.unimag.dto.profesor.ProfesorDto "1" --> "1" edu.unimag.modelo.enumeracion.EstadoEntidad
+edu.unimag.modelo.Profesor "1" --> "1" edu.unimag.modelo.enumeracion.EstadoEntidad
+edu.unimag.config.modulos.ConfiguracionModuloProfesor "1" *-- "1" edu.unimag.servicio.ProfesorServicio
+edu.unimag.config.modulos.ConfiguracionModuloProfesor "1" *-- "1" edu.unimag.repositorio.ProfesorRepositorio
+
+' --- Dependencias de metodo (conservadas como en el UML completo) ---
+' edu.unimag.controlador.ProfesorControlador ..> edu.unimag.dto.profesor.ProfesorActualizarDto : <<use>>
+' edu.unimag.controlador.ProfesorControlador ..> edu.unimag.dto.profesor.ProfesorCrearDto : <<use>>
+' edu.unimag.controlador.ProfesorControlador ..> edu.unimag.dto.profesor.ProfesorDto : <<use>>
+' edu.unimag.servicio.ProfesorServicio ..> edu.unimag.dto.profesor.ProfesorActualizarDto : <<use>>
+' edu.unimag.servicio.ProfesorServicio ..> edu.unimag.dto.profesor.ProfesorCrearDto : <<use>>
+' edu.unimag.servicio.ProfesorServicio ..> edu.unimag.dto.profesor.ProfesorDto : <<use>>
+' edu.unimag.mapeador.ProfesorMapeador ..> edu.unimag.dto.profesor.ProfesorDto : <<use>>
+' edu.unimag.mapeador.ProfesorMapeador ..> edu.unimag.modelo.Profesor : <<use>>
+' edu.unimag.dto.profesor.ProfesorActualizarDto ..> edu.unimag.modelo.enumeracion.EstadoEntidad : <<use>>
+' edu.unimag.config.modulos.ConfiguracionModuloProfesor ..> edu.unimag.controlador.ProfesorControlador : <<use>>
+
+@enduml

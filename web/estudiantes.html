@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Gestión de Estudiantes</title>
+    <link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+    <main class="ancho">
+        <nav>
+            <a href="index.html">← Menú principal</a>
+        </nav>
+
+        <h1>Gestión de Estudiantes</h1>
+
+        <section>
+            <h2 id="tituloForm">Registrar estudiante</h2>
+            <form id="formulario">
+                <label>Código
+                    <input id="codigo" type="text" required>
+                </label>
+                <label>Nombre
+                    <input id="nombre" type="text" required>
+                </label>
+                <label>Correo
+                    <input id="correo" type="email" required>
+                </label>
+                <label>Celular
+                    <input id="celular" type="tel" required>
+                </label>
+                <label>Dirección
+                    <input id="direccion" type="text" required>
+                </label>
+                <button id="btnGuardar" type="submit">Guardar</button>
+                <button id="btnCancelar" type="button" class="secundario" hidden>Cancelar</button>
+            </form>
+            <p id="mensaje" role="status"></p>
+        </section>
+
+        <section>
+            <h2>Estudiantes registrados</h2>
+            <form class="filtro" onsubmit="return false">
+                <label>Mostrar
+                    <select id="filtro"><option value="todos">Todos</option><option value="activos">Activos</option><option value="inactivos">Inactivos</option></select>
+                </label>
+            </form>
+            <div class="tabla-scroll">
+                <table>
+                    <thead>
+                        <tr><th>Código</th><th>Nombre</th><th>Correo</th><th>Celular</th><th>Dirección</th><th>Estado</th><th>Acciones</th></tr>
+                    </thead>
+                    <tbody id="tabla"></tbody>
+                </table>
+            </div>
+            <p id="vacio" hidden>No hay estudiantes para mostrar.</p>
+        </section>
+    </main>
+
+    <script src="api.js"></script>
+    <script src="estudiantes.js"></script>
+</body>
+</html>

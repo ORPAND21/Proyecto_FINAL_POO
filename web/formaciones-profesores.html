@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Formaciones de profesores</title>
+    <link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+    <main class="ancho">
+        <nav>
+            <a href="index.html">← Menú principal</a>
+        </nav>
+
+        <h1>Formaciones de profesores</h1>
+
+        <section>
+            <h2 id="tituloForm">Registrar formación</h2>
+            <form id="formulario">
+                <label>Profesor
+                    <select id="profesor" required></select>
+                </label>
+                <label>Título
+                    <input id="titulo" type="text" required>
+                </label>
+                <label>Fecha de obtención
+                    <input id="fecha" type="date" required>
+                </label>
+                <button id="btnGuardar" type="submit">Guardar</button>
+                <button id="btnCancelar" type="button" class="secundario" hidden>Cancelar</button>
+            </form>
+            <p id="mensaje" role="status"></p>
+        </section>
+
+        <section>
+            <h2>Formaciones registradas</h2>
+            <form class="filtro" onsubmit="return false">
+                <label>Filtrar por profesor
+                    <select id="filtro"></select>
+                </label>
+            </form>
+            <div class="tabla-scroll">
+                <table>
+                    <thead>
+                        <tr><th>ID</th><th>Profesor</th><th>Título</th><th>Fecha</th><th>Acciones</th></tr>
+                    </thead>
+                    <tbody id="tabla"></tbody>
+                </table>
+            </div>
+            <p id="vacio" hidden>No hay formaciones para mostrar.</p>
+        </section>
+    </main>
+
+    <script src="api.js"></script>
+    <script src="formaciones-profesores.js"></script>
+</body>
+</html>

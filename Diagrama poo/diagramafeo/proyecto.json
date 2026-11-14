@@ -1,0 +1,634 @@
+{
+ "version": 1,
+ "name": "diagramafeo",
+ "modified": "2026-11-08T21:41:29.383Z",
+ "puml": "diagrama-qa-genericos (1).puml",
+ "positions": {
+  "edu.unimag.AppWeb": {
+   "x": 30,
+   "y": 58
+  },
+  "edu.unimag.config.ConfiguracionDependenciasWeb": {
+   "x": 458,
+   "y": 58
+  },
+  "edu.unimag.config.RutaPersistencia": {
+   "x": 1054,
+   "y": 58
+  },
+  "edu.unimag.vista.web.CursoProfesorWeb": {
+   "x": 6056,
+   "y": 5285
+  },
+  "edu.unimag.vista.web.CursoPeriodoWeb": {
+   "x": 5490,
+   "y": 5285
+  },
+  "edu.unimag.vista.web.EstudianteWeb": {
+   "x": 6701,
+   "y": 5285
+  },
+  "edu.unimag.vista.web.FacultadWeb": {
+   "x": 5262,
+   "y": 5562
+  },
+  "edu.unimag.vista.web.FormacionProfesorWeb": {
+   "x": 5862,
+   "y": 5562
+  },
+  "edu.unimag.vista.web.ManejadorWeb": {
+   "x": 5603,
+   "y": 4752
+  },
+  "edu.unimag.vista.web.MatriculaWeb": {
+   "x": 5262,
+   "y": 5759
+  },
+  "edu.unimag.vista.web.MateriaWeb": {
+   "x": 6428,
+   "y": 5562
+  },
+  "edu.unimag.vista.web.ServidorWeb": {
+   "x": 6258,
+   "y": 4752
+  },
+  "edu.unimag.vista.web.PeriodoAcademicoWeb": {
+   "x": 5899,
+   "y": 5759
+  },
+  "edu.unimag.vista.web.PlanEstudioWeb": {
+   "x": 6499,
+   "y": 5759
+  },
+  "edu.unimag.vista.web.ProfesorWeb": {
+   "x": 5262,
+   "y": 5988
+  },
+  "edu.unimag.vista.web.ProgramaWeb": {
+   "x": 5828,
+   "y": 5988
+  },
+  "edu.unimag.vista.web.Json": {
+   "x": 5262,
+   "y": 4752
+  },
+  "edu.unimag.vista.web.Json.Lector": {
+   "x": 5262,
+   "y": 5285
+  },
+  "edu.unimag.controlador.CursoProfesorControlador": {
+   "x": 4681,
+   "y": 58
+  },
+  "edu.unimag.controlador.CursoPeriodoControlador": {
+   "x": 4261,
+   "y": 58
+  },
+  "edu.unimag.controlador.EstudianteControlador": {
+   "x": 5606,
+   "y": 58
+  },
+  "edu.unimag.controlador.FacultadControlador": {
+   "x": 5994,
+   "y": 58
+  },
+  "edu.unimag.controlador.FormacionProfesorControlador": {
+   "x": 4261,
+   "y": 415
+  },
+  "edu.unimag.controlador.MateriaControlador": {
+   "x": 4774,
+   "y": 415
+  },
+  "edu.unimag.controlador.PeriodoAcademicoControlador": {
+   "x": 4261,
+   "y": 772
+  },
+  "edu.unimag.controlador.PlanEstudioControlador": {
+   "x": 4737,
+   "y": 772
+  },
+  "edu.unimag.controlador.ProfesorControlador": {
+   "x": 5338,
+   "y": 772
+  },
+  "edu.unimag.controlador.ProgramaControlador": {
+   "x": 5704,
+   "y": 772
+  },
+  "edu.unimag.controlador.MatriculaControlador": {
+   "x": 5132,
+   "y": 415
+  },
+  "edu.unimag.config.modulos.ConfiguracionModuloCursoProfesor": {
+   "x": 1482,
+   "y": 303
+  },
+  "edu.unimag.config.modulos.ConfiguracionModuloCursoPeriodo": {
+   "x": 1482,
+   "y": 58
+  },
+  "edu.unimag.config.modulos.ConfiguracionModuloEstudiante": {
+   "x": 3267,
+   "y": 303
+  },
+  "edu.unimag.config.modulos.ConfiguracionModuloFacultad": {
+   "x": 1482,
+   "y": 580
+  },
+  "edu.unimag.config.modulos.ConfiguracionModuloFormacionProfesor": {
+   "x": 1822,
+   "y": 580
+  },
+  "edu.unimag.config.modulos.ConfiguracionModuloMateria": {
+   "x": 2411,
+   "y": 580
+  },
+  "edu.unimag.config.modulos.ConfiguracionModuloPeriodoAcademico": {
+   "x": 1482,
+   "y": 1134
+  },
+  "edu.unimag.config.modulos.ConfiguracionModuloPlanEstudio": {
+   "x": 1935,
+   "y": 1134
+  },
+  "edu.unimag.config.modulos.ConfiguracionModuloProfesor": {
+   "x": 2893,
+   "y": 1134
+  },
+  "edu.unimag.config.modulos.ConfiguracionModuloPrograma": {
+   "x": 3236,
+   "y": 1134
+  },
+  "edu.unimag.config.modulos.ConfiguracionModuloMatricula": {
+   "x": 1618,
+   "y": 799
+  },
+  "edu.unimag.config.modulos.api.ModuloConfigurable": {
+   "x": 3973,
+   "y": 58
+  },
+  "edu.unimag.servicio.CursoProfesorServicio": {
+   "x": 3394,
+   "y": 4752
+  },
+  "edu.unimag.servicio.CursoPeriodoServicio": {
+   "x": 2141,
+   "y": 4752
+  },
+  "edu.unimag.servicio.EstudianteServicio": {
+   "x": 2141,
+   "y": 5205
+  },
+  "edu.unimag.servicio.FacultadServicio": {
+   "x": 2709,
+   "y": 5205
+  },
+  "edu.unimag.servicio.FormacionProfesorServicio": {
+   "x": 3244,
+   "y": 5205
+  },
+  "edu.unimag.servicio.MateriaServicio": {
+   "x": 4241,
+   "y": 5205
+  },
+  "edu.unimag.servicio.PeriodoAcademicoServicio": {
+   "x": 4105,
+   "y": 5530
+  },
+  "edu.unimag.servicio.PlanEstudioServicio": {
+   "x": 2141,
+   "y": 5967
+  },
+  "edu.unimag.servicio.ProfesorServicio": {
+   "x": 3268,
+   "y": 5967
+  },
+  "edu.unimag.servicio.ProgramaServicio": {
+   "x": 3803,
+   "y": 5967
+  },
+  "edu.unimag.servicio.MatriculaServicio": {
+   "x": 2141,
+   "y": 5530
+  },
+  "edu.unimag.mapeador.CursoProfesorMapeador": {
+   "x": 1729,
+   "y": 2085
+  },
+  "edu.unimag.mapeador.CursoPeriodoMapeador": {
+   "x": 1729,
+   "y": 1856
+  },
+  "edu.unimag.mapeador.EstudianteMapeador": {
+   "x": 3259,
+   "y": 2085
+  },
+  "edu.unimag.mapeador.FacultadMapeador": {
+   "x": 1729,
+   "y": 2314
+  },
+  "edu.unimag.mapeador.FormacionProfesorMapeador": {
+   "x": 2293,
+   "y": 2314
+  },
+  "edu.unimag.mapeador.MateriaMapeador": {
+   "x": 3172,
+   "y": 2314
+  },
+  "edu.unimag.mapeador.PeriodoAcademicoMapeador": {
+   "x": 1729,
+   "y": 2772
+  },
+  "edu.unimag.mapeador.PlanEstudioMapeador": {
+   "x": 2404,
+   "y": 2772
+  },
+  "edu.unimag.mapeador.ProfesorMapeador": {
+   "x": 3420,
+   "y": 2772
+  },
+  "edu.unimag.mapeador.ProgramaMapeador": {
+   "x": 1729,
+   "y": 2985
+  },
+  "edu.unimag.mapeador.MatriculaMapeador": {
+   "x": 1729,
+   "y": 2495
+  },
+  "edu.unimag.mapeador.api.Mapeador": {
+   "x": 4085,
+   "y": 1856
+  },
+  "edu.unimag.dto.cursoProfesor.CursoProfesorDto": {
+   "x": 624,
+   "y": 1509
+  },
+  "edu.unimag.dto.cursoProfesor.CursoProfesorCrearDto": {
+   "x": 327,
+   "y": 1509
+  },
+  "edu.unimag.dto.cursoProfesor.CursoProfesorActualizarDto": {
+   "x": 30,
+   "y": 1509
+  },
+  "edu.unimag.dto.cursoperiodo.CursoPeriodoDto": {
+   "x": 6995,
+   "y": 58
+  },
+  "edu.unimag.dto.cursoperiodo.CursoPeriodoCrearDto": {
+   "x": 6711,
+   "y": 58
+  },
+  "edu.unimag.dto.cursoperiodo.CursoPeriodoActualizarDto": {
+   "x": 6467,
+   "y": 58
+  },
+  "edu.unimag.dto.estudiante.EstudianteDto": {
+   "x": 1597,
+   "y": 1509
+  },
+  "edu.unimag.dto.estudiante.EstudianteCrearDto": {
+   "x": 1381,
+   "y": 1509
+  },
+  "edu.unimag.dto.estudiante.EstudianteActualizarDto": {
+   "x": 1081,
+   "y": 1509
+  },
+  "edu.unimag.dto.facultad.FacultadDto": {
+   "x": 2398,
+   "y": 1509
+  },
+  "edu.unimag.dto.facultad.FacultadCrearDto": {
+   "x": 2189,
+   "y": 1509
+  },
+  "edu.unimag.dto.facultad.FacultadActualizarDto": {
+   "x": 1945,
+   "y": 1509
+  },
+  "edu.unimag.dto.formacion.FormacionProfesorDto": {
+   "x": 3276,
+   "y": 1509
+  },
+  "edu.unimag.dto.formacion.FormacionProfesorCrearDto": {
+   "x": 3028,
+   "y": 1509
+  },
+  "edu.unimag.dto.formacion.FormacionProfesorActualizarDto": {
+   "x": 2746,
+   "y": 1509
+  },
+  "edu.unimag.dto.materia.MateriaDto": {
+   "x": 4124,
+   "y": 1509
+  },
+  "edu.unimag.dto.materia.MateriaCrearDto": {
+   "x": 3880,
+   "y": 1509
+  },
+  "edu.unimag.dto.materia.MateriaActualizarDto": {
+   "x": 3624,
+   "y": 1509
+  },
+  "edu.unimag.dto.validacion.ReglasValidacion": {
+   "x": 987,
+   "y": 1856
+  },
+  "edu.unimag.dto.periodoacademico.PeriodoAcademicoDto": {
+   "x": 5700,
+   "y": 1509
+  },
+  "edu.unimag.dto.periodoacademico.PeriodoAcademicoCrearDto": {
+   "x": 5470,
+   "y": 1509
+  },
+  "edu.unimag.dto.periodoacademico.PeriodoAcademicoActualizarDto": {
+   "x": 5211,
+   "y": 1509
+  },
+  "edu.unimag.dto.planestudio.PlanEstudioDto": {
+   "x": 6512,
+   "y": 1509
+  },
+  "edu.unimag.dto.planestudio.PlanEstudioCrearDto": {
+   "x": 6286,
+   "y": 1509
+  },
+  "edu.unimag.dto.planestudio.PlanEstudioActualizarDto": {
+   "x": 6048,
+   "y": 1509
+  },
+  "edu.unimag.dto.profesor.ProfesorDto": {
+   "x": 7415,
+   "y": 1509
+  },
+  "edu.unimag.dto.profesor.ProfesorCrearDto": {
+   "x": 7206,
+   "y": 1509
+  },
+  "edu.unimag.dto.profesor.ProfesorActualizarDto": {
+   "x": 6906,
+   "y": 1509
+  },
+  "edu.unimag.dto.programa.ProgramaDto": {
+   "x": 596,
+   "y": 1856
+  },
+  "edu.unimag.dto.programa.ProgramaCrearDto": {
+   "x": 305,
+   "y": 1856
+  },
+  "edu.unimag.dto.programa.ProgramaActualizarDto": {
+   "x": 30,
+   "y": 1856
+  },
+  "edu.unimag.dto.matricula.MatriculaDto": {
+   "x": 4756,
+   "y": 1509
+  },
+  "edu.unimag.dto.matricula.MatriculaCrearDto": {
+   "x": 4472,
+   "y": 1509
+  },
+  "edu.unimag.repositorio.CursoProfesorRepositorio": {
+   "x": 7204,
+   "y": 3734
+  },
+  "edu.unimag.repositorio.CursoPeriodoRepositorio": {
+   "x": 6429,
+   "y": 3734
+  },
+  "edu.unimag.repositorio.EstudianteRepositorio": {
+   "x": 6429,
+   "y": 3887
+  },
+  "edu.unimag.repositorio.FacultadRepositorio": {
+   "x": 6882,
+   "y": 3887
+  },
+  "edu.unimag.repositorio.FormacionProfesorRepositorio": {
+   "x": 7400,
+   "y": 3887
+  },
+  "edu.unimag.repositorio.MateriaRepositorio": {
+   "x": 7647,
+   "y": 3887
+  },
+  "edu.unimag.repositorio.PeriodoAcademicoRepositorio": {
+   "x": 6919,
+   "y": 4040
+  },
+  "edu.unimag.repositorio.PlanEstudioRepositorio": {
+   "x": 7499,
+   "y": 4040
+  },
+  "edu.unimag.repositorio.ProfesorRepositorio": {
+   "x": 7702,
+   "y": 4040
+  },
+  "edu.unimag.repositorio.ProgramaRepositorio": {
+   "x": 6429,
+   "y": 4209
+  },
+  "edu.unimag.repositorio.MatriculaRepositorio": {
+   "x": 6429,
+   "y": 4040
+  },
+  "edu.unimag.repositorio.api.CargadorDatos": {
+   "x": 30,
+   "y": 4752
+  },
+  "edu.unimag.repositorio.api.RepositorioBase": {
+   "x": 364,
+   "y": 4752
+  },
+  "edu.unimag.persistencia.CursoProfesorRepositorioImpl": {
+   "x": 5148,
+   "y": 3734
+  },
+  "edu.unimag.persistencia.CursoPeriodoRepositorioImpl": {
+   "x": 4352,
+   "y": 3734
+  },
+  "edu.unimag.persistencia.EstudianteRepositorioImpl": {
+   "x": 4352,
+   "y": 3906
+  },
+  "edu.unimag.persistencia.FacultadRepositorioImpl": {
+   "x": 4878,
+   "y": 3906
+  },
+  "edu.unimag.persistencia.FormacionProfesorRepositorioImpl": {
+   "x": 4352,
+   "y": 4062
+  },
+  "edu.unimag.persistencia.MateriaRepositorioImpl": {
+   "x": 4966,
+   "y": 4062
+  },
+  "edu.unimag.persistencia.PeriodoAcademicoRepositorioImpl": {
+   "x": 4900,
+   "y": 4202
+  },
+  "edu.unimag.persistencia.PlanEstudioRepositorioImpl": {
+   "x": 4352,
+   "y": 4374
+  },
+  "edu.unimag.persistencia.ProfesorRepositorioImpl": {
+   "x": 4889,
+   "y": 4374
+  },
+  "edu.unimag.persistencia.ProgramaRepositorioImpl": {
+   "x": 4352,
+   "y": 4498
+  },
+  "edu.unimag.persistencia.MatriculaRepositorioImpl": {
+   "x": 4352,
+   "y": 4202
+  },
+  "edu.unimag.repositorio.cargador.CursoPeriodoCargador": {
+   "x": 738,
+   "y": 4752
+  },
+  "edu.unimag.repositorio.cargador.EstudianteCargador": {
+   "x": 1181,
+   "y": 4752
+  },
+  "edu.unimag.repositorio.cargador.FacultadCargador": {
+   "x": 1592,
+   "y": 4752
+  },
+  "edu.unimag.repositorio.cargador.MateriaCargador": {
+   "x": 738,
+   "y": 4997
+  },
+  "edu.unimag.repositorio.cargador.PeriodoAcademicoCargador": {
+   "x": 1119,
+   "y": 4997
+  },
+  "edu.unimag.repositorio.cargador.PlanEstudioCargador": {
+   "x": 1618,
+   "y": 4997
+  },
+  "edu.unimag.repositorio.cargador.ProfesorCargador": {
+   "x": 738,
+   "y": 5242
+  },
+  "edu.unimag.repositorio.cargador.ProgramaCargador": {
+   "x": 1127,
+   "y": 5242
+  },
+  "edu.unimag.persistencia.abstracta.RepositorioBaseAbstracto": {
+   "x": 5872,
+   "y": 3734
+  },
+  "edu.unimag.modelo.CursoProfesor": {
+   "x": 5789,
+   "y": 1856
+  },
+  "edu.unimag.modelo.CursoPeriodo": {
+   "x": 4643,
+   "y": 1856
+  },
+  "edu.unimag.modelo.Estudiante": {
+   "x": 4643,
+   "y": 2293
+  },
+  "edu.unimag.modelo.Facultad": {
+   "x": 5808,
+   "y": 2293
+  },
+  "edu.unimag.modelo.FormacionProfesor": {
+   "x": 6368,
+   "y": 2293
+  },
+  "edu.unimag.modelo.Materia": {
+   "x": 4643,
+   "y": 2762
+  },
+  "edu.unimag.modelo.PeriodoAcademico": {
+   "x": 6152,
+   "y": 2762
+  },
+  "edu.unimag.modelo.PlanEstudio": {
+   "x": 4643,
+   "y": 3183
+  },
+  "edu.unimag.modelo.Profesor": {
+   "x": 5625,
+   "y": 3183
+  },
+  "edu.unimag.modelo.Programa": {
+   "x": 6310,
+   "y": 3183
+  },
+  "edu.unimag.modelo.Matricula": {
+   "x": 5497,
+   "y": 2762
+  },
+  "edu.unimag.modelo.pk.CursoProfesorPk": {
+   "x": 2912,
+   "y": 3734
+  },
+  "edu.unimag.modelo.pk.MatriculaPk": {
+   "x": 3377,
+   "y": 3734
+  },
+  "edu.unimag.modelo.constante.PoliticasAcademicas": {
+   "x": 7342,
+   "y": 1856
+  },
+  "edu.unimag.modelo.enumeracion.EstadoProfesorCurso": {
+   "x": 1679,
+   "y": 3734
+  },
+  "edu.unimag.modelo.enumeracion.TipoAsignacion": {
+   "x": 2457,
+   "y": 3734
+  },
+  "edu.unimag.modelo.enumeracion.EstadoEntidad": {
+   "x": 1280,
+   "y": 3734
+  },
+  "edu.unimag.modelo.enumeracion.NivelPrograma": {
+   "x": 2104,
+   "y": 3734
+  },
+  "edu.unimag.modelo.convertidor.EstadoProfesorCursoConverter": {
+   "x": 307,
+   "y": 3734
+  },
+  "edu.unimag.modelo.convertidor.TipoAsignacionConverter": {
+   "x": 898,
+   "y": 3734
+  },
+  "edu.unimag.modelo.convertidor.EstadoEntidadConverter": {
+   "x": 30,
+   "y": 3734
+  },
+  "edu.unimag.modelo.convertidor.NivelProgramaConverter": {
+   "x": 618,
+   "y": 3734
+  }
+ },
+ "view": {
+  "zoom": 0.09812782440284054,
+  "x": -2062,
+  "y": -472
+ },
+ "hidden": [
+  "aggregation",
+  "nesting",
+  "dependency",
+  "bidirectional",
+  "association",
+  "realization",
+  "generalization"
+ ],
+ "packages": {},
+ "edges": {},
+ "hiddenClasses": [],
+ "hideExternal": false
+}

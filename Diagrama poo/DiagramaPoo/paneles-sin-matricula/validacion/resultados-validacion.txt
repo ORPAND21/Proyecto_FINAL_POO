@@ -1,0 +1,21 @@
+01-modelo: enlaces=18/18 OVERLAP=0 PERP=0 CROSS=0 TOTAL=0 [OK]
+02-dto: enlaces=7/7 OVERLAP=0 PERP=0 CROSS=0 TOTAL=0 [OK]
+03-repositorio-persistencia: enlaces=27/27 OVERLAP=0 PERP=0 CROSS=0 TOTAL=0 [OK]
+04-mapeador-realizaciones: enlaces=5/5 OVERLAP=0 PERP=0 CROSS=0 TOTAL=0 [OK]
+05-mapeador-asociaciones: enlaces=7/7 OVERLAP=0 PERP=0 CROSS=0 TOTAL=0 [OK]
+06-servicio-controlador: enlaces=13/13 OVERLAP=0 PERP=0 CROSS=0 TOTAL=0 [OK]
+07-vista-config: enlaces=11/11 OVERLAP=0 PERP=0 CROSS=0 TOTAL=0 [OK]
+08-composicion-transversal: enlaces=24/24 OVERLAP=0 PERP=0 CROSS=0 TOTAL=0 [OK]
+09-agregacion-transversal: enlaces=8/8 OVERLAP=0 PERP=0 CROSS=0 TOTAL=0 [OK]
+10-asociaciones-dto-modelo: enlaces=14/14 OVERLAP=0 PERP=0 CROSS=0 TOTAL=0 [OK]
+11-asociaciones-servicio-mapeador: enlaces=10/10 OVERLAP=0 PERP=0 CROSS=0 TOTAL=0 [OK]
+12-asociaciones-vista-repositorio: enlaces=10/10 OVERLAP=0 PERP=0 CROSS=0 TOTAL=0 [OK]
+13-asociaciones-config-servicio-controlador: enlaces=6/6 OVERLAP=0 PERP=0 CROSS=0 TOTAL=0 [OK]
+14-asociaciones-vista-web-controlador: enlaces=10/10 OVERLAP=0 PERP=0 CROSS=0 TOTAL=0 [OK]
+15-asociaciones-servicio-repositorio-simple: enlaces=5/5 OVERLAP=0 PERP=0 CROSS=0 TOTAL=0 [OK]
+16-asociaciones-servicio-repositorio-curso-profesor-plan: enlaces=8/8 OVERLAP=0 PERP=0 CROSS=0 TOTAL=0 [OK]
+17-asociaciones-servicio-repositorio-periodo-formacion-programa: enlaces=7/7 OVERLAP=0 PERP=0 CROSS=0 TOTAL=0 [OK]
+
+Paneles validados: 17
+Enlaces de los 4 tipos: 190
+Paneles con fallo: 0

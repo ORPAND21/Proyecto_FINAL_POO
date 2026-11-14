@@ -1,0 +1,134 @@
+@startuml
+' Panel 17 - Asociaciones servicio -> repositorio (CursoPeriodo, FormacionProfesor y Programa). Config: left to right, ortho, nodesep 8, ranksep 80.
+' --- Sin iconos de PlantUML: el tipo lo indican las palabras clave ---
+hide circle
+skinparam classAttributeIconSize 0
+set separator none
+' Compartimentos vacios suprimidos (UML 2.5.1 permite no mostrarlos)
+hide empty members
+' Clases externas de Java: no se analizan por dentro (compartimentos ocultos, no vacios)
+hide <<JDK-External>> members
+' --- Tipografia y lineas ---
+skinparam defaultFontName SansSerif
+skinparam defaultFontSize 12
+left to right direction
+skinparam linetype ortho
+skinparam nodesep 8
+skinparam ranksep 80
+skinparam shadowing false
+skinparam roundCorner 0
+skinparam backgroundColor white
+skinparam ArrowColor #34495E
+skinparam ArrowFontColor #34495E
+skinparam ArrowFontSize 11
+skinparam ArrowThickness 1.1
+' --- Clases: encabezado con banda gris, nombre en negrita ---
+skinparam classBorderColor #2C3E50
+skinparam classBorderThickness 1
+skinparam classBackgroundColor #FFFFFF
+skinparam classHeaderBackgroundColor #F4F6F7
+skinparam classFontStyle bold
+skinparam classFontSize 13
+skinparam classAttributeFontSize 12
+skinparam stereotypeFontSize 10
+skinparam stereotypeFontColor #566573
+' --- Paquetes (carpeta, como en UML) ---
+skinparam packageStyle folder
+skinparam packageBorderColor #85929E
+skinparam packageBackgroundColor #FBFCFC
+skinparam packageFontColor #2C3E50
+skinparam packageFontStyle bold
+' --- Paleta pastel por tipo de clasificador ---
+skinparam class<<interface>>BackgroundColor #E8F8F0
+skinparam class<<interface>>HeaderBackgroundColor #D5F5E3
+skinparam interfaceBackgroundColor #E8F8F0
+skinparam interfaceHeaderBackgroundColor #D5F5E3
+skinparam class<<enumeration>>BackgroundColor #FEF9E7
+skinparam class<<enumeration>>HeaderBackgroundColor #FCF3CF
+skinparam class<<annotation>>BackgroundColor #F5EEF8
+skinparam class<<annotation>>HeaderBackgroundColor #EBDEF0
+skinparam class<<record>>BackgroundColor #EBF5FB
+skinparam class<<record>>HeaderBackgroundColor #D6EAF8
+skinparam class<<JDK-External>>BackgroundColor #F2F3F4
+skinparam class<<JDK-External>>BorderColor #AAB7B8
+skinparam interface<<JDK-External>>BackgroundColor #F2F3F4
+skinparam interface<<JDK-External>>BorderColor #AAB7B8
+
+' --- Definicion de Clasificadores (Agrupados por Paquete) ---
+skinparam groupInheritance 2
+
+' --- Paquetes ordenados por capa ---
+package edu.unimag {
+    interface "CursoPeriodoRepositorio" as edu.unimag.repositorio.CursoPeriodoRepositorio <<interface>> {
+    +  {abstract} insertarSiCombinacionNoExiste(idMateria : Integer, idPeriodoAcademico : Integer, nombre : String, cursoPeriodo : CursoPeriodo) : boolean
+    +  {abstract} actualizarSiNoExisteEnOtra(cursoPeriodoModificado : CursoPeriodo, verificarNombre : boolean) : boolean
+    }
+    interface "FacultadRepositorio" as edu.unimag.repositorio.FacultadRepositorio <<interface>> {
+    +  {abstract} insertarSiNombreNoExiste(nombre : String, facultad : Facultad) : boolean
+    +  {abstract} actualizarNombreSiNoExisteEnOtra(idFacultad : Long, nuevoNombre : String) : boolean
+    }
+    interface "FormacionProfesorRepositorio" as edu.unimag.repositorio.FormacionProfesorRepositorio <<interface>> {
+    }
+    interface "MateriaRepositorio" as edu.unimag.repositorio.MateriaRepositorio <<interface>> {
+    }
+    interface "PeriodoAcademicoRepositorio" as edu.unimag.repositorio.PeriodoAcademicoRepositorio <<interface>> {
+    +  {abstract} insertarSiNombreNoExiste(nombre : String, periodo : PeriodoAcademico) : boolean
+    +  {abstract} actualizarNombreSiNoExisteEnOtra(idPeriodoAcademico : Integer, nuevoNombre : String) : boolean
+    }
+    interface "ProfesorRepositorio" as edu.unimag.repositorio.ProfesorRepositorio <<interface>> {
+    }
+    interface "ProgramaRepositorio" as edu.unimag.repositorio.ProgramaRepositorio <<interface>> {
+    +  {abstract} insertarSiNombreNoExiste(nombre : String, programa : Programa) : boolean
+    +  {abstract} actualizarSiNoExisteEnOtra(programaModificado : Programa, verificarNombre : boolean) : boolean
+    }
+    class "CursoPeriodoServicio" as edu.unimag.servicio.CursoPeriodoServicio {
+    -  cursoPeriodoRepositorio : CursoPeriodoRepositorio {readOnly}
+    -  materiaRepositorio : MateriaRepositorio {readOnly}
+    -  periodoAcademicoRepositorio : PeriodoAcademicoRepositorio {readOnly}
+    -  mapeador : CursoPeriodoMapeador {readOnly}
+    --
+    +  <<create>> CursoPeriodoServicio(cursoPeriodoRepositorio : CursoPeriodoRepositorio, materiaRepositorio : MateriaRepositorio, periodoAcademicoRepositorio : PeriodoAcademicoRepositorio, mapeador : CursoPeriodoMapeador)
+    +  registrar(dto : CursoPeriodoCrearDto) : CursoPeriodoDto
+    +  listarTodos() : CursoPeriodoDto [*] {ordered, nonunique}
+    +  actualizar(dto : CursoPeriodoActualizarDto) : CursoPeriodoDto
+    +  eliminar(id : UUID) : boolean
+    -  hidratarYMapearUnico(cursoPeriodo : CursoPeriodo) : CursoPeriodoDto
+    +  buscarPorId(id : UUID) : CursoPeriodoDto
+    }
+    class "FormacionProfesorServicio" as edu.unimag.servicio.FormacionProfesorServicio {
+    -  formacionRepositorio : FormacionProfesorRepositorio {readOnly}
+    -  profesorRepositorio : ProfesorRepositorio {readOnly}
+    -  mapeador : FormacionProfesorMapeador {readOnly}
+    --
+    +  <<create>> FormacionProfesorServicio(formacionRepositorio : FormacionProfesorRepositorio, profesorRepositorio : ProfesorRepositorio, mapeador : FormacionProfesorMapeador)
+    +  registrarFormacion(dto : FormacionProfesorCrearDto) : FormacionProfesorDto
+    +  listarFormaciones() : FormacionProfesorDto [*] {ordered, nonunique}
+    +  actualizarFormacion(dto : FormacionProfesorActualizarDto) : FormacionProfesorDto
+    +  eliminarFormacion(id : Long) : boolean
+    +  listarFormacionesPorProfesor(idProfesor : Long) : FormacionProfesorDto [*] {ordered, nonunique}
+    -  hidratarYMapearUnico(formacion : FormacionProfesor) : FormacionProfesorDto
+    }
+    class "ProgramaServicio" as edu.unimag.servicio.ProgramaServicio {
+    -  programaRepositorio : ProgramaRepositorio {readOnly}
+    -  facultadRepositorio : FacultadRepositorio {readOnly}
+    -  mapeador : ProgramaMapeador {readOnly}
+    --
+    +  <<create>> ProgramaServicio(programaRepositorio : ProgramaRepositorio, facultadRepositorio : FacultadRepositorio, mapeador : ProgramaMapeador)
+    +  registrar(dto : ProgramaCrearDto) : ProgramaDto
+    +  actualizar(dto : ProgramaActualizarDto) : ProgramaDto
+    +  suspender(idPrograma : UUID) : ProgramaDto
+    +  reactivar(idPrograma : UUID) : ProgramaDto
+    +  listarTodos() : ProgramaDto [*] {ordered, nonunique}
+    +  buscarPorId(idPrograma : UUID) : ProgramaDto
+    +  listarPorFacultad(idFacultad : Long) : ProgramaDto [*] {ordered, nonunique}
+    -  hidratarYMapearUnico(programa : Programa) : ProgramaDto
+    -  hidratarYMapearUnico(programa : Programa, facultad : Facultad) : ProgramaDto
+    }
+edu.unimag.servicio.CursoPeriodoServicio --> "cursoPeriodoRepositorio\n1" edu.unimag.repositorio.CursoPeriodoRepositorio
+edu.unimag.servicio.CursoPeriodoServicio --> "materiaRepositorio\n1" edu.unimag.repositorio.MateriaRepositorio
+edu.unimag.servicio.CursoPeriodoServicio --> "periodoAcademicoRepositorio\n1" edu.unimag.repositorio.PeriodoAcademicoRepositorio
+edu.unimag.servicio.FormacionProfesorServicio --> "formacionRepositorio\n1" edu.unimag.repositorio.FormacionProfesorRepositorio
+edu.unimag.servicio.FormacionProfesorServicio --> "profesorRepositorio\n1" edu.unimag.repositorio.ProfesorRepositorio
+edu.unimag.servicio.ProgramaServicio --> "facultadRepositorio\n1" edu.unimag.repositorio.FacultadRepositorio
+edu.unimag.servicio.ProgramaServicio --> "programaRepositorio\n1" edu.unimag.repositorio.ProgramaRepositorio
+@enduml

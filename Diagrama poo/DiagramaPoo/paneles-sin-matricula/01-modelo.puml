@@ -1,0 +1,375 @@
+@startuml
+' Panel 01 - Modelo. Config: left to right, ortho, nodesep 12, ranksep 260.
+' --- Sin iconos de PlantUML: el tipo lo indican las palabras clave ---
+hide circle
+skinparam classAttributeIconSize 0
+set separator none
+' Compartimentos vacios suprimidos (UML 2.5.1 permite no mostrarlos)
+hide empty members
+' Clases externas de Java: no se analizan por dentro (compartimentos ocultos, no vacios)
+hide <<JDK-External>> members
+' --- Tipografia y lineas ---
+skinparam defaultFontName SansSerif
+skinparam defaultFontSize 12
+left to right direction
+skinparam linetype ortho
+skinparam nodesep 12
+skinparam ranksep 260
+skinparam shadowing false
+skinparam roundCorner 0
+skinparam backgroundColor white
+skinparam ArrowColor #34495E
+skinparam ArrowFontColor #34495E
+skinparam ArrowFontSize 11
+skinparam ArrowThickness 1.1
+' --- Clases: encabezado con banda gris, nombre en negrita ---
+skinparam classBorderColor #2C3E50
+skinparam classBorderThickness 1
+skinparam classBackgroundColor #FFFFFF
+skinparam classHeaderBackgroundColor #F4F6F7
+skinparam classFontStyle bold
+skinparam classFontSize 13
+skinparam classAttributeFontSize 12
+skinparam stereotypeFontSize 10
+skinparam stereotypeFontColor #566573
+' --- Paquetes (carpeta, como en UML) ---
+skinparam packageStyle folder
+skinparam packageBorderColor #85929E
+skinparam packageBackgroundColor #FBFCFC
+skinparam packageFontColor #2C3E50
+skinparam packageFontStyle bold
+' --- Paleta pastel por tipo de clasificador ---
+skinparam class<<interface>>BackgroundColor #E8F8F0
+skinparam class<<interface>>HeaderBackgroundColor #D5F5E3
+skinparam interfaceBackgroundColor #E8F8F0
+skinparam interfaceHeaderBackgroundColor #D5F5E3
+skinparam class<<enumeration>>BackgroundColor #FEF9E7
+skinparam class<<enumeration>>HeaderBackgroundColor #FCF3CF
+skinparam class<<annotation>>BackgroundColor #F5EEF8
+skinparam class<<annotation>>HeaderBackgroundColor #EBDEF0
+skinparam class<<record>>BackgroundColor #EBF5FB
+skinparam class<<record>>HeaderBackgroundColor #D6EAF8
+skinparam class<<JDK-External>>BackgroundColor #F2F3F4
+skinparam class<<JDK-External>>BorderColor #AAB7B8
+skinparam interface<<JDK-External>>BackgroundColor #F2F3F4
+skinparam interface<<JDK-External>>BorderColor #AAB7B8
+
+' --- Definicion de Clasificadores (Agrupados por Paquete) ---
+skinparam groupInheritance 2
+
+' --- Paquetes ordenados por capa ---
+package edu.unimag {
+    class "CursoProfesor" as edu.unimag.modelo.CursoProfesor {
+    -  idCursoProfesorPeriodo : CursoProfesorPk
+    -  fechaAsignacion : OffsetDateTime
+    -  tipoAsignacion : TipoAsignacion
+    -  estado : EstadoProfesorCurso
+    --
+    #  <<create>> CursoProfesor()
+    +  <<create>> CursoProfesor(idCursoProfesorPeriodo : CursoProfesorPk, tipoAsignacion : TipoAsignacion)
+    +  <<create>> CursoProfesor(idCursoProfesorPeriodo : CursoProfesorPk, fechaAsignacion : OffsetDateTime, tipoAsignacion : TipoAsignacion, estado : EstadoProfesorCurso)
+    +  getIdCursoProfesorPeriodo() : CursoProfesorPk
+    +  getFechaAsignacion() : OffsetDateTime
+    +  getTipoAsignacion() : TipoAsignacion
+    +  getEstado() : EstadoProfesorCurso
+    +  cambiarTipoAsignacion(nuevo : TipoAsignacion) : void
+    +  retirar() : void
+    +  reactivar() : void
+    +  estaActivo() : boolean
+    +  getIdProfesor() : Long
+    +  getIdCursoPeriodo() : UUID
+    +  getProfesor() : Profesor
+    +  getCursoPeriodo() : CursoPeriodo
+    }
+    class "CursoPeriodo" as edu.unimag.modelo.CursoPeriodo {
+    -  idCursoPeriodo : UUID
+    -  nombreCursoPeriodo : String
+    -  creacionCursoPeriodo : OffsetDateTime
+    -  cupoCursoPeriodo : Integer
+    -  materia : Materia
+    -  periodoAcademico : PeriodoAcademico
+    --
+    #  <<create>> CursoPeriodo()
+    +  <<create>> CursoPeriodo(nombreCursoPeriodo : String, materia : Materia, periodoAcademico : PeriodoAcademico, cupoCursoPeriodo : Integer)
+    +  <<create>> CursoPeriodo(idCursoPeriodo : UUID, nombreCursoPeriodo : String, creacionCursoPeriodo : OffsetDateTime, cupoCursoPeriodo : Integer, materia : Materia, periodoAcademico : PeriodoAcademico)
+    +  getIdCursoPeriodo() : UUID
+    +  getNombreCursoPeriodo() : String
+    +  getCreacionCursoPeriodo() : OffsetDateTime
+    +  getCupoCursoPeriodo() : Integer
+    +  getMateria() : Materia
+    +  getPeriodoAcademico() : PeriodoAcademico
+    +  actualizarNombre(nuevoNombre : String) : void
+    +  actualizarCupo(nuevoCupo : Integer) : void
+    +  tieneCupoDisponible(cantidadInscritos : int) : boolean
+    +  getIdMateria() : Integer
+    +  getIdPeriodoAcademico() : Integer
+    }
+    class "Estudiante" as edu.unimag.modelo.Estudiante {
+    -  idEstudiante : UUID
+    -  codigoEstudiante : String
+    -  nombreEstudiante : String
+    -  direccionEstudiante : String
+    -  correoEstudiante : String
+    -  celularEstudiante : String
+    -  estadoEstudiante : EstadoEntidad
+    --
+    #  <<create>> Estudiante()
+    +  <<create>> Estudiante(codigoEstudiante : String, nombreEstudiante : String, correoEstudiante : String, celularEstudiante : String, direccionEstudiante : String)
+    +  <<create>> Estudiante(idEstudiante : UUID, codigoEstudiante : String, nombreEstudiante : String, correoEstudiante : String, celularEstudiante : String, direccionEstudiante : String, estadoEstudiante : EstadoEntidad)
+    +  getIdEstudiante() : UUID
+    +  getCodigoEstudiante() : String
+    +  getNombreEstudiante() : String
+    +  getDireccionEstudiante() : String
+    +  getCorreoEstudiante() : String
+    +  getCelularEstudiante() : String
+    +  getEstadoEstudiante() : EstadoEntidad
+    +  actualizarCorreo(nuevoCorreo : String) : void
+    +  actualizarCelular(nuevoCelular : String) : void
+    +  actualizarDireccion(nuevaDireccion : String) : void
+    +  cambiarEstado(nuevoEstado : EstadoEntidad) : void
+    +  estaActivo() : boolean
+    }
+    class "Facultad" as edu.unimag.modelo.Facultad {
+    -  idFacultad : Long
+    -  nombreFacultad : String
+    -  estadoFacultad : EstadoEntidad
+    --
+    #  <<create>> Facultad()
+    +  <<create>> Facultad(nombreFacultad : String)
+    +  <<create>> Facultad(idFacultad : Long, nombreFacultad : String, estadoFacultad : EstadoEntidad)
+    +  getIdFacultad() : Long
+    +  getNombreFacultad() : String
+    +  getEstadoFacultad() : EstadoEntidad
+    +  actualizarNombre(nuevoNombre : String) : void
+    +  suspender() : void
+    +  reactivar() : void
+    +  estaActiva() : boolean
+    }
+    class "FormacionProfesor" as edu.unimag.modelo.FormacionProfesor {
+    -  idFormacionProfesor : Long
+    -  profesor : Profesor
+    -  tituloFormacionProfesor : String
+    -  fechaFormacionProfesor : OffsetDateTime
+    --
+    #  <<create>> FormacionProfesor()
+    +  <<create>> FormacionProfesor(profesor : Profesor, tituloFormacionProfesor : String, fechaFormacionProfesor : OffsetDateTime)
+    +  <<create>> FormacionProfesor(idFormacionProfesor : Long, profesor : Profesor, tituloFormacionProfesor : String, fechaFormacionProfesor : OffsetDateTime)
+    +  getIdFormacionProfesor() : Long
+    +  getProfesor() : Profesor
+    +  getTituloFormacionProfesor() : String
+    +  getFechaFormacionProfesor() : OffsetDateTime
+    +  actualizarTitulo(nuevoTitulo : String) : void
+    +  actualizarFecha(nuevaFecha : OffsetDateTime) : void
+    +  getIdProfesor() : Long
+    }
+    class "Materia" as edu.unimag.modelo.Materia {
+    -  idMateria : Integer
+    -  nombreMateria : String
+    -  creditosMateria : Integer
+    -  cupoMaximoMateria : Integer
+    -  estadoMateria : EstadoEntidad
+    --
+    #  <<create>> Materia()
+    +  <<create>> Materia(nombreMateria : String, creditosMateria : Integer, cupoMaximoMateria : Integer)
+    +  <<create>> Materia(idMateria : Integer, nombreMateria : String, creditosMateria : Integer, cupoMaximoMateria : Integer, estadoMateria : EstadoEntidad)
+    +  getIdMateria() : Integer
+    +  getNombreMateria() : String
+    +  getCreditosMateria() : Integer
+    +  getCupoMaximoMateria() : Integer
+    +  getEstadoMateria() : EstadoEntidad
+    +  actualizarNombre(nuevoNombre : String) : void
+    +  actualizarCupo(nuevoCupo : Integer) : void
+    +  actualizarCreditos(nuevosCreditos : Integer) : void
+    +  suspender() : void
+    +  reactivar() : void
+    +  estaActiva() : boolean
+    }
+    class "PeriodoAcademico" as edu.unimag.modelo.PeriodoAcademico {
+    -  idPeriodoAcademico : Integer
+    -  nombrePeriodoAcademico : String
+    -  estadoPeriodoAcademico : EstadoEntidad
+    --
+    #  <<create>> PeriodoAcademico()
+    +  <<create>> PeriodoAcademico(nombrePeriodoAcademico : String)
+    +  <<create>> PeriodoAcademico(idPeriodoAcademico : Integer, nombrePeriodoAcademico : String, estadoPeriodoAcademico : EstadoEntidad)
+    +  getIdPeriodoAcademico() : Integer
+    +  getNombrePeriodoAcademico() : String
+    +  getEstadoPeriodoAcademico() : EstadoEntidad
+    +  corregirNombre(nuevoNombre : String) : void
+    +  suspender() : void
+    +  reactivar() : void
+    +  estaActivo() : boolean
+    }
+    class "PlanEstudio" as edu.unimag.modelo.PlanEstudio {
+    -  idPlanEstudio : Long
+    -  versionPlanEstudio : String
+    -  vigentePlanEstudio : EstadoEntidad
+    -  fechaCreacionPlanEstudio : OffsetDateTime
+    -  programa : Programa
+    --
+    #  <<create>> PlanEstudio()
+    +  <<create>> PlanEstudio(versionPlanEstudio : String, programa : Programa)
+    +  <<create>> PlanEstudio(idPlanEstudio : Long, versionPlanEstudio : String, vigentePlanEstudio : EstadoEntidad, fechaCreacionPlanEstudio : OffsetDateTime, programa : Programa)
+    +  getIdPlanEstudio() : Long
+    +  getVersionPlanEstudio() : String
+    +  getVigentePlanEstudio() : EstadoEntidad
+    +  getFechaCreacionPlanEstudio() : OffsetDateTime
+    +  getPrograma() : Programa
+    +  actualizarVersion(nuevaVersion : String) : void
+    +  activar() : void
+    +  inactivar() : void
+    +  estaActivo() : boolean
+    +  getIdPrograma() : UUID
+    +  getNombrePrograma() : String
+    }
+    class "Profesor" as edu.unimag.modelo.Profesor {
+    -  idProfesor : Long
+    -  nombreProfesor : String
+    -  celularProfesor : String
+    -  estadoProfesor : EstadoEntidad
+    --
+    #  <<create>> Profesor()
+    +  <<create>> Profesor(nombreProfesor : String, celularProfesor : String)
+    +  <<create>> Profesor(idProfesor : Long, nombreProfesor : String, celularProfesor : String, estadoProfesor : EstadoEntidad)
+    +  getIdProfesor() : Long
+    +  getNombreProfesor() : String
+    +  getCelularProfesor() : String
+    +  getEstadoProfesor() : EstadoEntidad
+    +  actualizarNombre(nuevoNombre : String) : void
+    +  actualizarCelular(nuevoCelular : String) : void
+    +  cambiarEstado(nuevoEstado : EstadoEntidad) : void
+    +  estaActivo() : boolean
+    }
+    class "Programa" as edu.unimag.modelo.Programa {
+    -  idPrograma : UUID
+    -  nombrePrograma : String
+    -  nivelPrograma : NivelPrograma
+    -  facultad : Facultad
+    -  estadoPrograma : EstadoEntidad
+    --
+    #  <<create>> Programa()
+    +  <<create>> Programa(nombrePrograma : String, nivelPrograma : NivelPrograma, facultad : Facultad)
+    +  <<create>> Programa(idPrograma : UUID, nombrePrograma : String, nivelPrograma : NivelPrograma, facultad : Facultad, estadoPrograma : EstadoEntidad)
+    +  getIdPrograma() : UUID
+    +  getNombrePrograma() : String
+    +  getNivelPrograma() : NivelPrograma
+    +  getFacultad() : Facultad
+    +  getEstadoPrograma() : EstadoEntidad
+    +  actualizarNombre(nuevoNombre : String) : void
+    +  actualizarNivel(nuevoNivel : NivelPrograma) : void
+    +  cambiarFacultad(nuevaFacultad : Facultad) : void
+    +  suspender() : void
+    +  reactivar() : void
+    +  estaActivo() : boolean
+    +  getIdFacultad() : Long
+    +  getNombreFacultad() : String
+    }
+    class "CursoProfesorPk" as edu.unimag.modelo.pk.CursoProfesorPk {
+    -  cursoPeriodo : CursoPeriodo {readOnly}
+    -  profesor : Profesor {readOnly}
+    --
+    #  <<create>> CursoProfesorPk()
+    +  <<create>> CursoProfesorPk(cursoPeriodo : CursoPeriodo, profesor : Profesor)
+    +  getCursoPeriodo() : CursoPeriodo
+    +  getProfesor() : Profesor
+    +  getIdCursoPeriodo() : UUID
+    +  getIdProfesor() : Long
+    +  hashCode() : int
+    +  equals(obj : Object) : boolean
+    +  toString() : String
+    }
+    class "PoliticasAcademicas {leaf}" as edu.unimag.modelo.constante.PoliticasAcademicas {
+    +  {static} MIN_CREDITOS_MATERIA : Integer = 1 {readOnly}
+    +  {static} MAX_CREDITOS_MATERIA : Integer = 6 {readOnly}
+    +  {static} MIN_CUPO_MATERIA : Integer = 1 {readOnly}
+    +  {static} MAX_CUPO_MATERIA : Integer = 50 {readOnly}
+    +  {static} NOTA_MINIMA : Integer = 0 {readOnly}
+    +  {static} NOTA_MAXIMA : Integer = 500 {readOnly}
+    +  {static} NOTA_APROBACION : Integer = 300 {readOnly}
+    +  {static} PATRON_AUDITORIA : String = "yyyy-MM-dd HH:mm" {readOnly}
+    +  {static} {field} FORMATO_AUDITORIA : DateTimeFormatter = DateTimeFormatter.ofPattern(PATRON_AUDIT... {readOnly}
+    --
+    -  <<create>> PoliticasAcademicas()
+    }
+    enum "EstadoProfesorCurso" as edu.unimag.modelo.enumeracion.EstadoProfesorCurso <<enumeration>> {
+    ACTIVO
+    RETIRADO
+    --
+    -  code : int {readOnly}
+    -  description : String {readOnly}
+    --
+    -  <<create>> EstadoProfesorCurso(code : int, description : String)
+    +  getCode() : int
+    +  getDescription() : String
+    +  cambiarEstado(nuevo : EstadoProfesorCurso) : EstadoProfesorCurso
+    }
+    enum "TipoAsignacion" as edu.unimag.modelo.enumeracion.TipoAsignacion <<enumeration>> {
+    PROFESOR_PRINCIPAL
+    PROFESOR_ACOMPANANTE
+    AUDITOR
+    --
+    -  code : int {readOnly}
+    -  description : String {readOnly}
+    --
+    -  <<create>> TipoAsignacion(code : int, description : String)
+    +  getCode() : int
+    +  getDescription() : String
+    }
+    enum "EstadoEntidad" as edu.unimag.modelo.enumeracion.EstadoEntidad <<enumeration>> {
+    ACTIVO
+    INACTIVO
+    --
+    -  code : int {readOnly}
+    -  description : String {readOnly}
+    --
+    -  <<create>> EstadoEntidad(code : int, description : String)
+    +  getCode() : int
+    +  getDescription() : String
+    +  cambiarEstadoA(nuevoEstado : EstadoEntidad) : EstadoEntidad
+    }
+    enum "NivelPrograma" as edu.unimag.modelo.enumeracion.NivelPrograma <<enumeration>> {
+    TECNICO
+    TECNOLOGICO
+    PREGRADO
+    ESPECIALIZACION
+    MAESTRIA
+    DOCTORADO
+    --
+    -  code : int {readOnly}
+    -  description : String {readOnly}
+    --
+    -  <<create>> NivelPrograma(code : int, description : String)
+    +  getCode() : int
+    +  getDescription() : String
+    }
+    class "EstadoProfesorCursoConverter" as edu.unimag.modelo.convertidor.EstadoProfesorCursoConverter {
+    #  getEnumClass() : Class<EstadoProfesorCurso>
+    }
+    class "TipoAsignacionConverter" as edu.unimag.modelo.convertidor.TipoAsignacionConverter {
+    #  getEnumClass() : Class<TipoAsignacion>
+    }
+    class "EstadoEntidadConverter" as edu.unimag.modelo.convertidor.EstadoEntidadConverter {
+    #  getEnumClass() : Class<EstadoEntidad>
+    }
+    class "NivelProgramaConverter" as edu.unimag.modelo.convertidor.NivelProgramaConverter {
+    #  getEnumClass() : Class<NivelPrograma>
+    }
+edu.unimag.modelo.CursoProfesor --> "idCursoProfesorPeriodo\n1" edu.unimag.modelo.pk.CursoProfesorPk
+edu.unimag.modelo.pk.CursoProfesorPk --> "cursoPeriodo\n1" edu.unimag.modelo.CursoPeriodo
+edu.unimag.modelo.pk.CursoProfesorPk --> "profesor\n1" edu.unimag.modelo.Profesor
+edu.unimag.modelo.CursoProfesor --> "estado\n1" edu.unimag.modelo.enumeracion.EstadoProfesorCurso
+edu.unimag.modelo.CursoProfesor --> "tipoAsignacion\n1" edu.unimag.modelo.enumeracion.TipoAsignacion
+edu.unimag.modelo.CursoPeriodo --> "materia\n1" edu.unimag.modelo.Materia
+edu.unimag.modelo.CursoPeriodo --> "periodoAcademico\n1" edu.unimag.modelo.PeriodoAcademico
+edu.unimag.modelo.Estudiante --> "estadoEstudiante\n1" edu.unimag.modelo.enumeracion.EstadoEntidad
+edu.unimag.modelo.Facultad --> "estadoFacultad\n1" edu.unimag.modelo.enumeracion.EstadoEntidad
+edu.unimag.modelo.FormacionProfesor --> "profesor\n1" edu.unimag.modelo.Profesor
+edu.unimag.modelo.Materia --> "estadoMateria\n1" edu.unimag.modelo.enumeracion.EstadoEntidad
+edu.unimag.modelo.PeriodoAcademico --> "estadoPeriodoAcademico\n1" edu.unimag.modelo.enumeracion.EstadoEntidad
+edu.unimag.modelo.PlanEstudio --> "programa\n1" edu.unimag.modelo.Programa
+edu.unimag.modelo.PlanEstudio --> "vigentePlanEstudio\n1" edu.unimag.modelo.enumeracion.EstadoEntidad
+edu.unimag.modelo.Profesor --> "estadoProfesor\n1" edu.unimag.modelo.enumeracion.EstadoEntidad
+edu.unimag.modelo.Programa --> "facultad\n1" edu.unimag.modelo.Facultad
+edu.unimag.modelo.Programa --> "estadoPrograma\n1" edu.unimag.modelo.enumeracion.EstadoEntidad
+edu.unimag.modelo.Programa --> "nivelPrograma\n1" edu.unimag.modelo.enumeracion.NivelPrograma
+@enduml

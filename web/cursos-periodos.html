@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Cursos por periodo</title>
+    <link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+    <main class="ancho">
+        <nav>
+            <a href="index.html">← Menú principal</a>
+        </nav>
+
+        <h1>Cursos por periodo</h1>
+
+        <section>
+            <h2 id="tituloForm">Registrar curso</h2>
+            <form id="formulario">
+                <label>Nombre del grupo
+                    <input id="nombre" type="text" required>
+                </label>
+                <label>Materia
+                    <select id="materia" required></select>
+                </label>
+                <label>Periodo académico
+                    <select id="periodo" required></select>
+                </label>
+                <label>Cupo
+                    <input id="cupo" type="number" min="1" required>
+                </label>
+                <button id="btnGuardar" type="submit">Guardar</button>
+                <button id="btnCancelar" type="button" class="secundario" hidden>Cancelar</button>
+            </form>
+            <p id="mensaje" role="status"></p>
+        </section>
+
+        <section>
+            <h2>Cursos registrados</h2>
+            <div class="tabla-scroll">
+                <table>
+                    <thead>
+                        <tr><th>Nombre</th><th>Materia</th><th>Periodo</th><th>Cupo</th><th>Acciones</th></tr>
+                    </thead>
+                    <tbody id="tabla"></tbody>
+                </table>
+            </div>
+            <p id="vacio" hidden>No hay cursos registrados.</p>
+        </section>
+    </main>
+
+    <script src="api.js"></script>
+    <script src="cursos-periodos.js"></script>
+</body>
+</html>

@@ -1,0 +1,283 @@
+@startuml
+' Panel 14 - Asociaciones vista web -> controlador. Config: left to right, ortho, nodesep 8, ranksep 80.
+' --- Sin iconos de PlantUML: el tipo lo indican las palabras clave ---
+hide circle
+skinparam classAttributeIconSize 0
+set separator none
+' Compartimentos vacios suprimidos (UML 2.5.1 permite no mostrarlos)
+hide empty members
+' Clases externas de Java: no se analizan por dentro (compartimentos ocultos, no vacios)
+hide <<JDK-External>> members
+' --- Tipografia y lineas ---
+skinparam defaultFontName SansSerif
+skinparam defaultFontSize 12
+left to right direction
+skinparam linetype ortho
+skinparam nodesep 8
+skinparam ranksep 80
+skinparam shadowing false
+skinparam roundCorner 0
+skinparam backgroundColor white
+skinparam ArrowColor #34495E
+skinparam ArrowFontColor #34495E
+skinparam ArrowFontSize 11
+skinparam ArrowThickness 1.1
+' --- Clases: encabezado con banda gris, nombre en negrita ---
+skinparam classBorderColor #2C3E50
+skinparam classBorderThickness 1
+skinparam classBackgroundColor #FFFFFF
+skinparam classHeaderBackgroundColor #F4F6F7
+skinparam classFontStyle bold
+skinparam classFontSize 13
+skinparam classAttributeFontSize 12
+skinparam stereotypeFontSize 10
+skinparam stereotypeFontColor #566573
+' --- Paquetes (carpeta, como en UML) ---
+skinparam packageStyle folder
+skinparam packageBorderColor #85929E
+skinparam packageBackgroundColor #FBFCFC
+skinparam packageFontColor #2C3E50
+skinparam packageFontStyle bold
+' --- Paleta pastel por tipo de clasificador ---
+skinparam class<<interface>>BackgroundColor #E8F8F0
+skinparam class<<interface>>HeaderBackgroundColor #D5F5E3
+skinparam interfaceBackgroundColor #E8F8F0
+skinparam interfaceHeaderBackgroundColor #D5F5E3
+skinparam class<<enumeration>>BackgroundColor #FEF9E7
+skinparam class<<enumeration>>HeaderBackgroundColor #FCF3CF
+skinparam class<<annotation>>BackgroundColor #F5EEF8
+skinparam class<<annotation>>HeaderBackgroundColor #EBDEF0
+skinparam class<<record>>BackgroundColor #EBF5FB
+skinparam class<<record>>HeaderBackgroundColor #D6EAF8
+skinparam class<<JDK-External>>BackgroundColor #F2F3F4
+skinparam class<<JDK-External>>BorderColor #AAB7B8
+skinparam interface<<JDK-External>>BackgroundColor #F2F3F4
+skinparam interface<<JDK-External>>BorderColor #AAB7B8
+
+' --- Definicion de Clasificadores (Agrupados por Paquete) ---
+skinparam groupInheritance 2
+
+' --- Paquetes ordenados por capa ---
+package edu.unimag {
+    class "CursoPeriodoControlador" as edu.unimag.controlador.CursoPeriodoControlador {
+    -  servicio : CursoPeriodoServicio {readOnly}
+    --
+    +  <<create>> CursoPeriodoControlador(servicio : CursoPeriodoServicio)
+    +  registrar(request : CursoPeriodoCrearDto) : CursoPeriodoDto
+    +  listarTodos() : CursoPeriodoDto [*] {ordered, nonunique}
+    +  actualizar(request : CursoPeriodoActualizarDto) : CursoPeriodoDto
+    +  eliminar(id : UUID) : boolean
+    }
+    class "CursoProfesorControlador" as edu.unimag.controlador.CursoProfesorControlador {
+    -  cursoProfesorServicio : CursoProfesorServicio {readOnly}
+    -  profesorServicio : ProfesorServicio {readOnly}
+    -  cursoPeriodoServicio : CursoPeriodoServicio {readOnly}
+    --
+    +  <<create>> CursoProfesorControlador(cursoProfesorServicio : CursoProfesorServicio, profesorServicio : ProfesorServicio, cursoPeriodoServicio : CursoPeriodoServicio)
+    +  asignar(dto : CursoProfesorCrearDto) : CursoProfesorDto
+    +  cambiarTipoAsignacion(dto : CursoProfesorActualizarDto) : CursoProfesorDto
+    +  retirar(idCursoPeriodo : UUID, idProfesor : Long) : CursoProfesorDto
+    +  reactivar(idCursoPeriodo : UUID, idProfesor : Long) : CursoProfesorDto
+    +  listarPorProfesor(idProfesor : Long) : CursoProfesorDto [*] {ordered, nonunique}
+    +  listarPorMateria(idMateria : Integer) : CursoProfesorDto [*] {ordered, nonunique}
+    +  listarPorMateriaPeriodo(idMateria : Integer, idPeriodo : Integer) : CursoProfesorDto [*] {ordered, nonunique}
+    +  listarPorPeriodo(idPeriodo : Integer) : CursoProfesorDto [*] {ordered, nonunique}
+    +  buscarProfesor(idProfesor : Long) : ProfesorDto
+    +  buscarPorCursoPeriodo(idCursoPeriodo : UUID) : CursoPeriodoDto
+    }
+    class "EstudianteControlador" as edu.unimag.controlador.EstudianteControlador {
+    -  servicio : EstudianteServicio {readOnly}
+    --
+    +  <<create>> EstudianteControlador(servicio : EstudianteServicio)
+    +  registrar(request : EstudianteCrearDto) : EstudianteDto
+    +  actualizar(request : EstudianteActualizarDto) : EstudianteDto
+    +  activar(idEstudiante : UUID) : EstudianteDto
+    +  inactivar(idEstudiante : UUID) : EstudianteDto
+    +  validarCodigo(codigo : String) : boolean
+    +  validarNombre(nombre : String) : boolean
+    +  validarCorreo(correo : String) : boolean
+    +  validarCelular(celular : String) : boolean
+    +  buscarPorId(id : UUID) : EstudianteDto
+    +  listarTodos() : EstudianteDto [*] {ordered, nonunique}
+    +  listarActivos() : EstudianteDto [*] {ordered, nonunique}
+    +  listarInactivos() : EstudianteDto [*] {ordered, nonunique}
+    +  contarEstudiantes() : int
+    }
+    class "FacultadControlador" as edu.unimag.controlador.FacultadControlador {
+    -  servicio : FacultadServicio {readOnly}
+    --
+    +  <<create>> FacultadControlador(servicio : FacultadServicio)
+    +  registrar(request : FacultadCrearDto) : FacultadDto
+    +  listarTodas() : FacultadDto [*] {ordered, nonunique}
+    +  actualizar(request : FacultadActualizarDto) : FacultadDto
+    +  suspender(id : Long) : FacultadDto
+    +  reactivar(id : Long) : FacultadDto
+    }
+    class "FormacionProfesorControlador" as edu.unimag.controlador.FormacionProfesorControlador {
+    -  servicio : FormacionProfesorServicio {readOnly}
+    --
+    +  <<create>> FormacionProfesorControlador(servicio : FormacionProfesorServicio)
+    +  registrar(request : FormacionProfesorCrearDto) : FormacionProfesorDto
+    +  listarTodos() : FormacionProfesorDto [*] {ordered, nonunique}
+    +  actualizar(request : FormacionProfesorActualizarDto) : FormacionProfesorDto
+    +  eliminar(id : Long) : boolean
+    +  listarPorProfesor(idProfesor : Long) : FormacionProfesorDto [*] {ordered, nonunique}
+    }
+    class "MateriaControlador" as edu.unimag.controlador.MateriaControlador {
+    -  servicio : MateriaServicio {readOnly}
+    --
+    +  <<create>> MateriaControlador(servicio : MateriaServicio)
+    +  registrar(request : MateriaCrearDto) : MateriaDto
+    +  listarTodas() : MateriaDto [*] {ordered, nonunique}
+    +  actualizar(request : MateriaActualizarDto) : MateriaDto
+    +  suspender(id : Integer) : MateriaDto
+    +  reactivar(id : Integer) : MateriaDto
+    }
+    class "PeriodoAcademicoControlador" as edu.unimag.controlador.PeriodoAcademicoControlador {
+    -  servicio : PeriodoAcademicoServicio {readOnly}
+    --
+    +  <<create>> PeriodoAcademicoControlador(servicio : PeriodoAcademicoServicio)
+    +  registrar(request : PeriodoAcademicoCrearDto) : PeriodoAcademicoDto
+    +  listarTodos() : PeriodoAcademicoDto [*] {ordered, nonunique}
+    +  actualizar(request : PeriodoAcademicoActualizarDto) : PeriodoAcademicoDto
+    +  suspender(id : Integer) : PeriodoAcademicoDto
+    +  reactivar(id : Integer) : PeriodoAcademicoDto
+    }
+    class "PlanEstudioControlador" as edu.unimag.controlador.PlanEstudioControlador {
+    -  servicio : PlanEstudioServicio {readOnly}
+    -  programaServicio : ProgramaServicio {readOnly}
+    --
+    +  <<create>> PlanEstudioControlador(servicio : PlanEstudioServicio, programaServicio : ProgramaServicio)
+    +  registrar(request : PlanEstudioCrearDto) : PlanEstudioDto
+    +  actualizar(request : PlanEstudioActualizarDto) : PlanEstudioDto
+    +  activar(idPlanEstudio : Long) : PlanEstudioDto
+    +  inactivar(idPlanEstudio : Long) : PlanEstudioDto
+    +  listarTodos() : PlanEstudioDto [*] {ordered, nonunique}
+    +  buscarPorId(idPlanEstudio : Long) : PlanEstudioDto
+    +  listarPorPrograma(idPrograma : UUID) : PlanEstudioDto [*] {ordered, nonunique}
+    +  buscarPrograma(idPrograma : UUID) : ProgramaDto
+    }
+    class "ProfesorControlador" as edu.unimag.controlador.ProfesorControlador {
+    -  servicio : ProfesorServicio {readOnly}
+    --
+    +  <<create>> ProfesorControlador(servicio : ProfesorServicio)
+    +  registrar(request : ProfesorCrearDto) : ProfesorDto
+    +  actualizar(request : ProfesorActualizarDto) : ProfesorDto
+    +  validarCelular(celular : String) : boolean
+    +  validarNombre(nombre : String) : boolean
+    +  buscarPorId(id : Long) : ProfesorDto
+    +  listarTodos() : ProfesorDto [*] {ordered, nonunique}
+    +  listarActivos() : ProfesorDto [*] {ordered, nonunique}
+    +  listarInactivos() : ProfesorDto [*] {ordered, nonunique}
+    +  contarProfesores() : int
+    }
+    class "ProgramaControlador" as edu.unimag.controlador.ProgramaControlador {
+    -  servicio : ProgramaServicio {readOnly}
+    --
+    +  <<create>> ProgramaControlador(servicio : ProgramaServicio)
+    +  registrar(request : ProgramaCrearDto) : ProgramaDto
+    +  actualizar(request : ProgramaActualizarDto) : ProgramaDto
+    +  suspender(idPrograma : UUID) : ProgramaDto
+    +  reactivar(idPrograma : UUID) : ProgramaDto
+    +  listarTodos() : ProgramaDto [*] {ordered, nonunique}
+    +  buscarPorId(idPrograma : UUID) : ProgramaDto
+    +  listarPorFacultad(idFacultad : Long) : ProgramaDto [*] {ordered, nonunique}
+    }
+    class "CursoPeriodoWeb" as edu.unimag.vista.web.CursoPeriodoWeb {
+    -  controlador : CursoPeriodoControlador {readOnly}
+    --
+    +  <<create>> CursoPeriodoWeb(controlador : CursoPeriodoControlador)
+    #  atender(ex : HttpExchange, metodo : String, segmentos : String [*] {ordered, nonunique}) : void
+    -  coleccion(ex : HttpExchange, metodo : String) : void
+    -  curso(ex : HttpExchange, metodo : String, id : UUID) : void
+    }
+    class "CursoProfesorWeb" as edu.unimag.vista.web.CursoProfesorWeb {
+    -  controlador : CursoProfesorControlador {readOnly}
+    --
+    +  <<create>> CursoProfesorWeb(controlador : CursoProfesorControlador)
+    #  atender(ex : HttpExchange, metodo : String, segmentos : String [*] {ordered, nonunique}) : void
+    -  coleccion(ex : HttpExchange, metodo : String) : void
+    -  listar(ex : HttpExchange) : void
+    -  asignar(ex : HttpExchange) : void
+    -  tiposAsignacion(ex : HttpExchange, metodo : String) : void
+    -  asignacionConcreta(ex : HttpExchange, metodo : String, segmentos : String [*] {ordered, nonunique}) : void
+    -  accionSobreAsignacion(ex : HttpExchange, metodo : String, segmentos : String [*] {ordered, nonunique}) : void
+    -  tipoDesdeCodigo(valor : String) : TipoAsignacion
+    }
+    class "EstudianteWeb" as edu.unimag.vista.web.EstudianteWeb {
+    -  controlador : EstudianteControlador {readOnly}
+    --
+    +  <<create>> EstudianteWeb(controlador : EstudianteControlador)
+    #  atender(ex : HttpExchange, metodo : String, segmentos : String [*] {ordered, nonunique}) : void
+    -  coleccion(ex : HttpExchange, metodo : String) : void
+    -  estudiante(ex : HttpExchange, metodo : String, id : UUID) : void
+    -  cambiarEstado(ex : HttpExchange, metodo : String, segmentos : String [*] {ordered, nonunique}) : void
+    }
+    class "FacultadWeb" as edu.unimag.vista.web.FacultadWeb {
+    -  controlador : FacultadControlador {readOnly}
+    --
+    +  <<create>> FacultadWeb(controlador : FacultadControlador)
+    #  atender(ex : HttpExchange, metodo : String, segmentos : String [*] {ordered, nonunique}) : void
+    -  coleccion(ex : HttpExchange, metodo : String) : void
+    -  cambiarEstado(ex : HttpExchange, metodo : String, segmentos : String [*] {ordered, nonunique}) : void
+    }
+    class "FormacionProfesorWeb" as edu.unimag.vista.web.FormacionProfesorWeb {
+    -  controlador : FormacionProfesorControlador {readOnly}
+    --
+    +  <<create>> FormacionProfesorWeb(controlador : FormacionProfesorControlador)
+    #  atender(ex : HttpExchange, metodo : String, segmentos : String [*] {ordered, nonunique}) : void
+    -  coleccion(ex : HttpExchange, metodo : String) : void
+    -  formacion(ex : HttpExchange, metodo : String, id : Long) : void
+    }
+    class "MateriaWeb" as edu.unimag.vista.web.MateriaWeb {
+    -  controlador : MateriaControlador {readOnly}
+    --
+    +  <<create>> MateriaWeb(controlador : MateriaControlador)
+    #  atender(ex : HttpExchange, metodo : String, segmentos : String [*] {ordered, nonunique}) : void
+    -  coleccion(ex : HttpExchange, metodo : String) : void
+    -  cambiarEstado(ex : HttpExchange, metodo : String, segmentos : String [*] {ordered, nonunique}) : void
+    }
+    class "PeriodoAcademicoWeb" as edu.unimag.vista.web.PeriodoAcademicoWeb {
+    -  controlador : PeriodoAcademicoControlador {readOnly}
+    --
+    +  <<create>> PeriodoAcademicoWeb(controlador : PeriodoAcademicoControlador)
+    #  atender(ex : HttpExchange, metodo : String, segmentos : String [*] {ordered, nonunique}) : void
+    -  coleccion(ex : HttpExchange, metodo : String) : void
+    -  cambiarEstado(ex : HttpExchange, metodo : String, segmentos : String [*] {ordered, nonunique}) : void
+    }
+    class "PlanEstudioWeb" as edu.unimag.vista.web.PlanEstudioWeb {
+    -  controlador : PlanEstudioControlador {readOnly}
+    --
+    +  <<create>> PlanEstudioWeb(controlador : PlanEstudioControlador)
+    #  atender(ex : HttpExchange, metodo : String, segmentos : String [*] {ordered, nonunique}) : void
+    -  coleccion(ex : HttpExchange, metodo : String) : void
+    -  plan(ex : HttpExchange, metodo : String, id : Long) : void
+    -  cambiarEstado(ex : HttpExchange, metodo : String, segmentos : String [*] {ordered, nonunique}) : void
+    }
+    class "ProfesorWeb" as edu.unimag.vista.web.ProfesorWeb {
+    -  controlador : ProfesorControlador {readOnly}
+    --
+    +  <<create>> ProfesorWeb(controlador : ProfesorControlador)
+    #  atender(ex : HttpExchange, metodo : String, segmentos : String [*] {ordered, nonunique}) : void
+    }
+    class "ProgramaWeb" as edu.unimag.vista.web.ProgramaWeb {
+    -  controlador : ProgramaControlador {readOnly}
+    --
+    +  <<create>> ProgramaWeb(controlador : ProgramaControlador)
+    #  atender(ex : HttpExchange, metodo : String, segmentos : String [*] {ordered, nonunique}) : void
+    -  coleccion(ex : HttpExchange, metodo : String) : void
+    -  niveles(ex : HttpExchange, metodo : String) : void
+    -  programa(ex : HttpExchange, metodo : String, id : UUID) : void
+    -  cambiarEstado(ex : HttpExchange, metodo : String, segmentos : String [*] {ordered, nonunique}) : void
+    }
+edu.unimag.vista.web.CursoProfesorWeb --> "controlador\n1" edu.unimag.controlador.CursoProfesorControlador
+edu.unimag.vista.web.CursoPeriodoWeb --> "controlador\n1" edu.unimag.controlador.CursoPeriodoControlador
+edu.unimag.vista.web.EstudianteWeb --> "controlador\n1" edu.unimag.controlador.EstudianteControlador
+edu.unimag.vista.web.FacultadWeb --> "controlador\n1" edu.unimag.controlador.FacultadControlador
+edu.unimag.vista.web.FormacionProfesorWeb --> "controlador\n1" edu.unimag.controlador.FormacionProfesorControlador
+edu.unimag.vista.web.MateriaWeb --> "controlador\n1" edu.unimag.controlador.MateriaControlador
+edu.unimag.vista.web.PeriodoAcademicoWeb --> "controlador\n1" edu.unimag.controlador.PeriodoAcademicoControlador
+edu.unimag.vista.web.PlanEstudioWeb --> "controlador\n1" edu.unimag.controlador.PlanEstudioControlador
+edu.unimag.vista.web.ProfesorWeb --> "controlador\n1" edu.unimag.controlador.ProfesorControlador
+edu.unimag.vista.web.ProgramaWeb --> "controlador\n1" edu.unimag.controlador.ProgramaControlador
+@enduml

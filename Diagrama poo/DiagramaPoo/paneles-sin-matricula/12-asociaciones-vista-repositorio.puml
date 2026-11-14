@@ -1,0 +1,149 @@
+@startuml
+' Panel 12 - Asociaciones configuracion de modulo -> repositorio. Config: top to bottom, ortho, nodesep 8, ranksep 80.
+' --- Sin iconos de PlantUML: el tipo lo indican las palabras clave ---
+hide circle
+skinparam classAttributeIconSize 0
+set separator none
+' Compartimentos vacios suprimidos (UML 2.5.1 permite no mostrarlos)
+hide empty members
+' Clases externas de Java: no se analizan por dentro (compartimentos ocultos, no vacios)
+hide <<JDK-External>> members
+' --- Tipografia y lineas ---
+skinparam defaultFontName SansSerif
+skinparam defaultFontSize 12
+top to bottom direction
+skinparam linetype ortho
+skinparam nodesep 8
+skinparam ranksep 80
+skinparam shadowing false
+skinparam roundCorner 0
+skinparam backgroundColor white
+skinparam ArrowColor #34495E
+skinparam ArrowFontColor #34495E
+skinparam ArrowFontSize 11
+skinparam ArrowThickness 1.1
+' --- Clases: encabezado con banda gris, nombre en negrita ---
+skinparam classBorderColor #2C3E50
+skinparam classBorderThickness 1
+skinparam classBackgroundColor #FFFFFF
+skinparam classHeaderBackgroundColor #F4F6F7
+skinparam classFontStyle bold
+skinparam classFontSize 13
+skinparam classAttributeFontSize 12
+skinparam stereotypeFontSize 10
+skinparam stereotypeFontColor #566573
+' --- Paquetes (carpeta, como en UML) ---
+skinparam packageStyle folder
+skinparam packageBorderColor #85929E
+skinparam packageBackgroundColor #FBFCFC
+skinparam packageFontColor #2C3E50
+skinparam packageFontStyle bold
+' --- Paleta pastel por tipo de clasificador ---
+skinparam class<<interface>>BackgroundColor #E8F8F0
+skinparam class<<interface>>HeaderBackgroundColor #D5F5E3
+skinparam interfaceBackgroundColor #E8F8F0
+skinparam interfaceHeaderBackgroundColor #D5F5E3
+skinparam class<<enumeration>>BackgroundColor #FEF9E7
+skinparam class<<enumeration>>HeaderBackgroundColor #FCF3CF
+skinparam class<<annotation>>BackgroundColor #F5EEF8
+skinparam class<<annotation>>HeaderBackgroundColor #EBDEF0
+skinparam class<<record>>BackgroundColor #EBF5FB
+skinparam class<<record>>HeaderBackgroundColor #D6EAF8
+skinparam class<<JDK-External>>BackgroundColor #F2F3F4
+skinparam class<<JDK-External>>BorderColor #AAB7B8
+skinparam interface<<JDK-External>>BackgroundColor #F2F3F4
+skinparam interface<<JDK-External>>BorderColor #AAB7B8
+
+' --- Definicion de Clasificadores (Agrupados por Paquete) ---
+skinparam groupInheritance 2
+
+' --- Paquetes ordenados por capa ---
+package edu.unimag {
+    class "ConfiguracionModuloCursoPeriodo" as edu.unimag.config.modulos.ConfiguracionModuloCursoPeriodo {
+    -  cursoPeriodoRepositorio : CursoPeriodoRepositorio {readOnly}
+    -  materiaRepositorio : MateriaRepositorio {readOnly}
+    -  periodoAcademicoRepositorio : PeriodoAcademicoRepositorio {readOnly}
+    -  cursoPeriodoServicio : CursoPeriodoServicio {readOnly}
+    --
+    +  <<create>> ConfiguracionModuloCursoPeriodo(materiaRepositorio : MateriaRepositorio, periodoAcademicoRepositorio : PeriodoAcademicoRepositorio)
+    +  getCursoPeriodoRepositorio() : CursoPeriodoRepositorio
+    +  getCursoPeriodoServicio() : CursoPeriodoServicio
+    +  cerrarRecursos() : void
+    }
+    class "ConfiguracionModuloCursoProfesor" as edu.unimag.config.modulos.ConfiguracionModuloCursoProfesor {
+    -  cursoProfesorRepositorio : CursoProfesorRepositorio {readOnly}
+    -  profesorRepositorio : ProfesorRepositorio {readOnly}
+    -  profesorServicio : ProfesorServicio {readOnly}
+    -  cursoPeriodoRepositorio : CursoPeriodoRepositorio {readOnly}
+    -  cursoPeriodoServicio : CursoPeriodoServicio {readOnly}
+    -  materiaRepositorio : MateriaRepositorio {readOnly}
+    -  periodoAcademicoRepositorio : PeriodoAcademicoRepositorio {readOnly}
+    --
+    +  <<create>> ConfiguracionModuloCursoProfesor(profesorRepositorio : ProfesorRepositorio, profesorServicio : ProfesorServicio, cursoPeriodoRepositorio : CursoPeriodoRepositorio, cursoPeriodoServicio : CursoPeriodoServicio, materiaRepositorio : MateriaRepositorio, periodoAcademicoRepositorio : PeriodoAcademicoRepositorio)
+    +  construirControlador() : CursoProfesorControlador
+    +  cerrarRecursos() : void
+    }
+    class "ConfiguracionModuloFormacionProfesor" as edu.unimag.config.modulos.ConfiguracionModuloFormacionProfesor {
+    -  formacionProfesorRepositorio : FormacionProfesorRepositorio {readOnly}
+    -  profesorRepositorio : ProfesorRepositorio {readOnly}
+    --
+    +  <<create>> ConfiguracionModuloFormacionProfesor(profesorRepoCompartido : ProfesorRepositorio)
+    +  getFormacionRepositorio() : FormacionProfesorRepositorio
+    +  construirControlador() : FormacionProfesorControlador
+    +  cerrarRecursos() : void
+    }
+    class "ConfiguracionModuloPlanEstudio" as edu.unimag.config.modulos.ConfiguracionModuloPlanEstudio {
+    -  planEstudioRepositorio : PlanEstudioRepositorio {readOnly}
+    -  programaRepositorio : ProgramaRepositorio {readOnly}
+    -  programaServicio : ProgramaServicio {readOnly}
+    -  facultadRepositorio : FacultadRepositorio {readOnly}
+    -  planEstudioServicio : PlanEstudioServicio {readOnly}
+    --
+    +  <<create>> ConfiguracionModuloPlanEstudio(programaRepositorio : ProgramaRepositorio, programaServicio : ProgramaServicio, facultadRepositorio : FacultadRepositorio)
+    +  getPlanEstudioRepositorio() : PlanEstudioRepositorio
+    +  getPlanEstudioServicio() : PlanEstudioServicio
+    +  construirControlador() : PlanEstudioControlador
+    +  cerrarRecursos() : void
+    }
+    class "ConfiguracionModuloPrograma" as edu.unimag.config.modulos.ConfiguracionModuloPrograma {
+    -  programaRepositorio : ProgramaRepositorio {readOnly}
+    -  facultadRepositorio : FacultadRepositorio {readOnly}
+    -  programaServicio : ProgramaServicio {readOnly}
+    --
+    +  <<create>> ConfiguracionModuloPrograma(facultadRepositorio : FacultadRepositorio)
+    +  getProgramaRepositorio() : ProgramaRepositorio
+    +  getProgramaServicio() : ProgramaServicio
+    +  construirControlador() : ProgramaControlador
+    +  cerrarRecursos() : void
+    }
+    interface "CursoPeriodoRepositorio" as edu.unimag.repositorio.CursoPeriodoRepositorio <<interface>> {
+    +  {abstract} insertarSiCombinacionNoExiste(idMateria : Integer, idPeriodoAcademico : Integer, nombre : String, cursoPeriodo : CursoPeriodo) : boolean
+    +  {abstract} actualizarSiNoExisteEnOtra(cursoPeriodoModificado : CursoPeriodo, verificarNombre : boolean) : boolean
+    }
+    interface "FacultadRepositorio" as edu.unimag.repositorio.FacultadRepositorio <<interface>> {
+    +  {abstract} insertarSiNombreNoExiste(nombre : String, facultad : Facultad) : boolean
+    +  {abstract} actualizarNombreSiNoExisteEnOtra(idFacultad : Long, nuevoNombre : String) : boolean
+    }
+    interface "MateriaRepositorio" as edu.unimag.repositorio.MateriaRepositorio <<interface>> {
+    }
+    interface "PeriodoAcademicoRepositorio" as edu.unimag.repositorio.PeriodoAcademicoRepositorio <<interface>> {
+    +  {abstract} insertarSiNombreNoExiste(nombre : String, periodo : PeriodoAcademico) : boolean
+    +  {abstract} actualizarNombreSiNoExisteEnOtra(idPeriodoAcademico : Integer, nuevoNombre : String) : boolean
+    }
+    interface "ProfesorRepositorio" as edu.unimag.repositorio.ProfesorRepositorio <<interface>> {
+    }
+    interface "ProgramaRepositorio" as edu.unimag.repositorio.ProgramaRepositorio <<interface>> {
+    +  {abstract} insertarSiNombreNoExiste(nombre : String, programa : Programa) : boolean
+    +  {abstract} actualizarSiNoExisteEnOtra(programaModificado : Programa, verificarNombre : boolean) : boolean
+    }
+edu.unimag.config.modulos.ConfiguracionModuloCursoProfesor --> "cursoPeriodoRepositorio\n1" edu.unimag.repositorio.CursoPeriodoRepositorio
+edu.unimag.config.modulos.ConfiguracionModuloCursoProfesor --> "materiaRepositorio\n1" edu.unimag.repositorio.MateriaRepositorio
+edu.unimag.config.modulos.ConfiguracionModuloCursoProfesor --> "periodoAcademicoRepositorio\n1" edu.unimag.repositorio.PeriodoAcademicoRepositorio
+edu.unimag.config.modulos.ConfiguracionModuloCursoProfesor --> "profesorRepositorio\n1" edu.unimag.repositorio.ProfesorRepositorio
+edu.unimag.config.modulos.ConfiguracionModuloCursoPeriodo --> "materiaRepositorio\n1" edu.unimag.repositorio.MateriaRepositorio
+edu.unimag.config.modulos.ConfiguracionModuloCursoPeriodo --> "periodoAcademicoRepositorio\n1" edu.unimag.repositorio.PeriodoAcademicoRepositorio
+edu.unimag.config.modulos.ConfiguracionModuloFormacionProfesor --> "profesorRepositorio\n1" edu.unimag.repositorio.ProfesorRepositorio
+edu.unimag.config.modulos.ConfiguracionModuloPlanEstudio --> "facultadRepositorio\n1" edu.unimag.repositorio.FacultadRepositorio
+edu.unimag.config.modulos.ConfiguracionModuloPlanEstudio --> "programaRepositorio\n1" edu.unimag.repositorio.ProgramaRepositorio
+edu.unimag.config.modulos.ConfiguracionModuloPrograma --> "facultadRepositorio\n1" edu.unimag.repositorio.FacultadRepositorio
+@enduml

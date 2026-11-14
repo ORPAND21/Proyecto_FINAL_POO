@@ -1,0 +1,4 @@
+1¦Ingenieria¦1~
+2¦Salud¦1~
+3¦Humanidades¦1~
+4¦Educacion¦1~

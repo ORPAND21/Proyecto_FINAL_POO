@@ -1,0 +1,299 @@
+@startuml
+' ============================================================
+' Flujo de Facultad
+' 19 clases, 17 relaciones estructurales dibujadas
+' 11 dependencias de metodo conservadas comentadas al final
+' Recorte del UML completo sin Matricula: mismas clases, miembros y
+' relaciones del flujo. Las dependencias <<use>> no se dibujan para
+' evitar cruces; se conservan comentadas al final, como en el
+' diagrama depurado sin Matricula.
+' Direccion: top to bottom, enrutado ortogonal.
+' Nota: las relaciones ConfiguracionModuloX --> colaborador se escriben
+' como colaborador <-- ConfiguracionModuloX (misma relacion y mismo
+' sentido dibujado) para ordenar la capa de configuracion y reducir cruces.
+' ============================================================
+hide circle
+hide empty members
+skinparam defaultFontName Helvetica
+skinparam defaultFontSize 10
+skinparam classFontSize 11
+skinparam classAttributeFontSize 9
+skinparam classAttributeIconSize 0
+skinparam classRoundCorner 0
+skinparam shadowing false
+skinparam monochrome false
+skinparam classBorderColor black
+skinparam backgroundColor white
+skinparam classBackgroundColor white
+' --- Paleta de colores pastel para Java 17 ---
+skinparam interfaceBackgroundColor #D5F5E3
+skinparam interface<<Interface>>BackgroundColor #D5F5E3
+skinparam class<<Interface>>BackgroundColor #D5F5E3
+skinparam abstractBackgroundColor #FFE5CC
+skinparam class<<Abstract>>BackgroundColor #FFE5CC
+skinparam class<<Record>>BackgroundColor #D0E1FD
+' --- Paquetes ---
+skinparam packageStyle folder
+skinparam packageBorderColor #85929E
+skinparam packageBackgroundColor #FBFCFC
+skinparam packageFontColor #2C3E50
+skinparam packageFontStyle bold
+' --- Flechas y separacion ---
+skinparam ArrowColor #34495E
+skinparam ArrowFontColor #34495E
+skinparam ArrowFontSize 8
+skinparam ArrowThickness 0.9
+skinparam nodesep 22
+skinparam ranksep 75
+top to bottom direction
+skinparam linetype ortho
+title Flujo de Facultad
+
+package edu.unimag.vista.web {
+    class FacultadWeb {
+    -  {readOnly} controlador : FacultadControlador
+    +  FacultadWeb(controlador : FacultadControlador) : void <<Create>>
+    #  atender(ex : HttpExchange, metodo : String, segmentos : List<String>) : void
+    -  coleccion(ex : HttpExchange, metodo : String) : void
+    -  cambiarEstado(ex : HttpExchange, metodo : String, segmentos : List<String>) : void
+}
+    abstract class ManejadorWeb <<Abstract>> {
+    -  {static, readOnly} ORIGENES_PERMITIDOS : Set<String> = Set.of("http://127.0.0.1:5500", "http://localhost:5500")
+    -  {readOnly} rutaBase : String
+    #  ManejadorWeb(rutaBase : String) : void <<Create>>
+    +  getRutaBase() : String
+    #  {abstract} atender(ex : HttpExchange, metodo : String, segmentos : List<String>) : void
+    +  {final} handle(ex : HttpExchange) : void
+    #  responderJson(ex : HttpExchange, codigo : int, cuerpo : Object) : void
+    #  error(mensaje : String) : String
+    #  metodoNoPermitido(ex : HttpExchange, permitidos : String) : void
+    #  exigirMetodo(ex : HttpExchange, metodo : String, esperado : String) : boolean
+    #  noEncontrado(ex : HttpExchange) : void
+    #  leerCuerpo(ex : HttpExchange) : Map<String, String>
+    #  leerConsulta(ex : HttpExchange) : Map<String, String>
+    #  {static} aLong(valor : String, campo : String) : Long
+    #  {static} aInteger(valor : String, campo : String) : Integer
+    #  {static} aUuid(valor : String, campo : String) : UUID
+    #  {static} textoOpcional(campos : Map<String, String>, clave : String) : String
+    #  {static} integerOpcional(campos : Map<String, String>, clave : String) : Integer
+    #  {static} longOpcional(campos : Map<String, String>, clave : String) : Long
+    #  {static} enumDesdeCodigo(tipo : Class<E>, valor : String, campo : String) : E
+    #  {static} enumOpcional(tipo : Class<E>, campos : Map<String, String>, clave : String) : E
+    #  {static} aFecha(valor : String, campo : String) : OffsetDateTime
+    #  {static} fechaOpcional(campos : Map<String, String>, clave : String) : OffsetDateTime
+    -  {static} requerido(valor : String, campo : String) : String
+    -  aplicarCors(ex : HttpExchange) : void
+    -  segmentosDeRuta(ex : HttpExchange) : List<String>
+}
+}
+
+package edu.unimag.controlador {
+    class FacultadControlador {
+    -  {readOnly} servicio : FacultadServicio
+    +  FacultadControlador(servicio : FacultadServicio) : void <<Create>>
+    +  registrar(request : FacultadCrearDto) : FacultadDto
+    +  listarTodas() : List<FacultadDto>
+    +  actualizar(request : FacultadActualizarDto) : FacultadDto
+    +  suspender(id : Long) : FacultadDto
+    +  reactivar(id : Long) : FacultadDto
+}
+}
+
+package edu.unimag.servicio {
+    class FacultadServicio {
+    -  {readOnly} repositorio : FacultadRepositorio
+    -  {readOnly} mapper : FacultadMapeador
+    +  FacultadServicio(repositorio : FacultadRepositorio, mapper : FacultadMapeador) : void <<Create>>
+    +  registrarFacultad(dto : FacultadCrearDto) : FacultadDto
+    +  listarTodas() : List<FacultadDto>
+    +  actualizar(dto : FacultadActualizarDto) : FacultadDto
+    +  suspender(id : Long) : FacultadDto
+    +  reactivar(id : Long) : FacultadDto
+}
+}
+
+package edu.unimag.mapeador {
+    class FacultadMapeador {
+    +  FacultadMapeador() : void <<Create>>
+    +  toDto(entidad : Facultad) : FacultadDto
+    +  toDtoList(entidades : List<Facultad>) : List<FacultadDto>
+}
+}
+
+package edu.unimag.mapeador.api {
+    interface Mapeador<E, R> <<Interface>> {
+    +  {abstract} toDto(entidad : E) : R
+    +  {abstract} toDtoList(entidades : List<E>) : List<R>
+}
+}
+
+package edu.unimag.repositorio.cargador {
+    class FacultadCargador {
+    -  {readOnly} repositorio : FacultadRepositorio
+    -  {readOnly} cache : Map<Long, Facultad>
+    +  FacultadCargador(repositorio : FacultadRepositorio) : void <<Create>>
+    +  cargarTodos() : void
+    +  cargarPorIds(ids : List<Long>) : void
+    +  registrarEnCache(entidad : Facultad) : void
+    +  obtener(id : Long) : Optional<Facultad>
+    +  existe(id : Long) : boolean
+}
+}
+
+package edu.unimag.repositorio {
+    interface FacultadRepositorio <<Interface>> {
+    +  {abstract} insertarSiNombreNoExiste(nombre : String, facultad : Facultad) : boolean
+    +  {abstract} actualizarNombreSiNoExisteEnOtra(idFacultad : Long, nuevoNombre : String) : boolean
+}
+}
+
+package edu.unimag.repositorio.api {
+    interface CargadorDatos<T, ID> <<Interface>> {
+    +  {abstract} cargarTodos() : void
+    +  {abstract} cargarPorIds(ids : List<ID>) : void
+    +  {abstract} registrarEnCache(entidad : T) : void
+    +  {abstract} obtener(id : ID) : Optional<T>
+    +  {abstract} existe(id : ID) : boolean
+}
+    interface RepositorioBase<T, ID> <<Interface>> {
+    +  {abstract} guardar(entidad : T) : T
+    +  {abstract} actualizar(entidad : T) : T
+    +  {abstract} buscarPorId(id : ID) : Optional<T>
+    +  {abstract} eliminar(id : ID) : boolean
+    +  {abstract} listarTodos() : List<T>
+    +  {abstract} contar() : long
+    +  {abstract} cerrar() : void
+}
+}
+
+package edu.unimag.persistencia {
+    class FacultadRepositorioImpl {
+    +  FacultadRepositorioImpl(tpaRepository : TpaRepository<Facultad, Long>) : void <<Create>>
+    +  insertarSiNombreNoExiste(nombre : String, facultad : Facultad) : boolean
+    +  actualizarNombreSiNoExisteEnOtra(idFacultad : Long, nuevoNombre : String) : boolean
+}
+}
+
+package edu.unimag.persistencia.abstracta {
+    abstract class RepositorioBaseAbstracto<T, ID> <<Abstract>> {
+    #  {readOnly} tpaRepository : TpaRepository<T, ID>
+    +  RepositorioBaseAbstracto(tpaRepository : TpaRepository<T, ID>) : void <<Create>>
+    +  guardar(entidad : T) : T
+    +  actualizar(entidad : T) : T
+    +  buscarPorId(id : ID) : Optional<T>
+    +  listarTodos() : List<T>
+    +  contar() : long
+    +  {final} eliminar(id : ID) : boolean
+    +  cerrar() : void
+    #  permiteBorradoFisico() : boolean
+}
+}
+
+package edu.unimag.dto.facultad {
+    class FacultadCrearDto <<Record>> {
+    +  {readOnly} nombre : String
+}
+    class FacultadActualizarDto <<Record>> {
+    +  {readOnly} id : Long
+    +  {readOnly} nuevoNombre : String
+}
+    class FacultadDto <<Record>> {
+    +  {readOnly} id : Long
+    +  {readOnly} nombre : String
+    +  {readOnly} estado : EstadoEntidad
+}
+}
+
+package edu.unimag.modelo {
+    class Facultad {
+    -  idFacultad : Long
+    -  nombreFacultad : String
+    -  estadoFacultad : EstadoEntidad
+    #  Facultad() : void <<Create>>
+    +  Facultad(nombreFacultad : String) : void <<Create>>
+    +  Facultad(idFacultad : Long, nombreFacultad : String, estadoFacultad : EstadoEntidad) : void <<Create>>
+    +  actualizarNombre(nuevoNombre : String) : void
+    +  suspender() : void
+    +  reactivar() : void
+    +  estaActiva() : boolean
+    +  getIdFacultad() : Long
+    +  getNombreFacultad() : String
+    +  getEstadoFacultad() : EstadoEntidad
+}
+}
+
+package edu.unimag.modelo.enumeracion {
+    enum EstadoEntidad {
+    +  {static, readOnly} ACTIVO : EstadoEntidad
+    +  {static, readOnly} INACTIVO : EstadoEntidad
+    -  {readOnly} code : int
+    -  {readOnly} description : String
+    ~  EstadoEntidad(code : int, description : String) : void <<Create>>
+    +  getCode() : int
+    +  getDescription() : String
+    +  cambiarEstadoA(nuevoEstado : EstadoEntidad) : EstadoEntidad
+}
+}
+
+package edu.unimag.config.modulos {
+    class ConfiguracionModuloFacultad {
+    -  {readOnly} facultadRepositorio : FacultadRepositorio
+    +  ConfiguracionModuloFacultad() : void <<Create>>
+    +  getFacultadRepositorio() : FacultadRepositorio
+    +  construirControlador() : FacultadControlador
+    +  cerrarRecursos() : void
+}
+}
+
+package edu.unimag.config.modulos.api {
+    interface ModuloConfigurable <<Interface>> {
+    +  {abstract} cerrarRecursos() : void
+}
+}
+
+' --- Orden de capas (oculto) ---
+edu.unimag.vista.web.FacultadWeb -[hidden]-> edu.unimag.controlador.FacultadControlador
+edu.unimag.controlador.FacultadControlador -[hidden]-> edu.unimag.servicio.FacultadServicio
+edu.unimag.servicio.FacultadServicio -[hidden]-> edu.unimag.mapeador.FacultadMapeador
+edu.unimag.servicio.FacultadServicio -[hidden]-> edu.unimag.repositorio.FacultadRepositorio
+edu.unimag.mapeador.FacultadMapeador -[hidden]-> edu.unimag.repositorio.cargador.FacultadCargador
+edu.unimag.mapeador.FacultadMapeador -[hidden]-> edu.unimag.modelo.Facultad
+edu.unimag.repositorio.FacultadRepositorio -[hidden]-> edu.unimag.persistencia.FacultadRepositorioImpl
+edu.unimag.repositorio.FacultadRepositorio -[hidden]-> edu.unimag.modelo.Facultad
+edu.unimag.persistencia.FacultadRepositorioImpl -[hidden]-> edu.unimag.modelo.Facultad
+edu.unimag.mapeador.FacultadMapeador -[hidden]-> edu.unimag.config.modulos.ConfiguracionModuloFacultad
+edu.unimag.config.modulos.ConfiguracionModuloFacultad -[hidden]-> edu.unimag.repositorio.FacultadRepositorio
+
+' --- Grafo de relaciones estructurales ---
+edu.unimag.vista.web.ManejadorWeb <|-- edu.unimag.vista.web.FacultadWeb
+edu.unimag.mapeador.api.Mapeador <|.. edu.unimag.mapeador.FacultadMapeador
+edu.unimag.repositorio.FacultadRepositorio <|.. edu.unimag.persistencia.FacultadRepositorioImpl
+edu.unimag.repositorio.api.CargadorDatos <|.. edu.unimag.repositorio.cargador.FacultadCargador
+edu.unimag.repositorio.api.RepositorioBase <|-- edu.unimag.repositorio.FacultadRepositorio
+edu.unimag.repositorio.api.RepositorioBase <|.. edu.unimag.persistencia.abstracta.RepositorioBaseAbstracto
+edu.unimag.persistencia.abstracta.RepositorioBaseAbstracto <|-- edu.unimag.persistencia.FacultadRepositorioImpl
+edu.unimag.config.modulos.api.ModuloConfigurable <|.. edu.unimag.config.modulos.ConfiguracionModuloFacultad
+edu.unimag.vista.web.FacultadWeb "1" --> "1" edu.unimag.controlador.FacultadControlador
+edu.unimag.controlador.FacultadControlador "1" --> "1" edu.unimag.servicio.FacultadServicio
+edu.unimag.servicio.FacultadServicio "1" --> "1" edu.unimag.mapeador.FacultadMapeador
+edu.unimag.servicio.FacultadServicio "1" --> "1" edu.unimag.repositorio.FacultadRepositorio
+edu.unimag.repositorio.cargador.FacultadCargador "1" --> "1" edu.unimag.repositorio.FacultadRepositorio
+edu.unimag.repositorio.cargador.FacultadCargador "1" o-- "*" edu.unimag.modelo.Facultad
+edu.unimag.dto.facultad.FacultadDto "1" --> "1" edu.unimag.modelo.enumeracion.EstadoEntidad
+edu.unimag.modelo.Facultad "1" --> "1" edu.unimag.modelo.enumeracion.EstadoEntidad
+edu.unimag.config.modulos.ConfiguracionModuloFacultad "1" *-- "1" edu.unimag.repositorio.FacultadRepositorio
+
+' --- Dependencias de metodo (conservadas como en el UML completo) ---
+' edu.unimag.controlador.FacultadControlador ..> edu.unimag.dto.facultad.FacultadActualizarDto : <<use>>
+' edu.unimag.controlador.FacultadControlador ..> edu.unimag.dto.facultad.FacultadCrearDto : <<use>>
+' edu.unimag.controlador.FacultadControlador ..> edu.unimag.dto.facultad.FacultadDto : <<use>>
+' edu.unimag.servicio.FacultadServicio ..> edu.unimag.dto.facultad.FacultadActualizarDto : <<use>>
+' edu.unimag.servicio.FacultadServicio ..> edu.unimag.dto.facultad.FacultadCrearDto : <<use>>
+' edu.unimag.servicio.FacultadServicio ..> edu.unimag.dto.facultad.FacultadDto : <<use>>
+' edu.unimag.mapeador.FacultadMapeador ..> edu.unimag.dto.facultad.FacultadDto : <<use>>
+' edu.unimag.mapeador.FacultadMapeador ..> edu.unimag.modelo.Facultad : <<use>>
+' edu.unimag.repositorio.FacultadRepositorio ..> edu.unimag.modelo.Facultad : <<use>>
+' edu.unimag.persistencia.FacultadRepositorioImpl ..> edu.unimag.modelo.Facultad : <<use>>
+' edu.unimag.config.modulos.ConfiguracionModuloFacultad ..> edu.unimag.controlador.FacultadControlador : <<use>>
+
+@enduml

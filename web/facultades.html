@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Gestión de Facultades</title>
+    <link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+    <main class="ancho">
+        <nav>
+            <a href="index.html">← Menú principal</a>
+        </nav>
+
+        <h1>Gestión de Facultades</h1>
+
+        <section>
+            <h2 id="tituloForm">Registrar facultad</h2>
+            <form id="formulario">
+                <label>Nombre
+                    <input id="nombre" type="text" required>
+                </label>
+                <button id="btnGuardar" type="submit">Guardar</button>
+                <button id="btnCancelar" type="button" class="secundario" hidden>Cancelar</button>
+            </form>
+            <p id="mensaje" role="status"></p>
+        </section>
+
+        <section>
+            <h2>Facultades registradas</h2>
+            <div class="tabla-scroll">
+                <table>
+                    <thead>
+                        <tr><th>ID</th><th>Nombre</th><th>Estado</th><th>Acciones</th></tr>
+                    </thead>
+                    <tbody id="tabla"></tbody>
+                </table>
+            </div>
+            <p id="vacio" hidden>No hay facultades registradas.</p>
+        </section>
+    </main>
+
+    <script src="api.js"></script>
+    <script src="facultades.js"></script>
+</body>
+</html>

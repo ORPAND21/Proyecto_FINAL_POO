@@ -1,0 +1,693 @@
+@startuml
+' ============================================================
+' Flujo de CursoProfesor
+' 47 clases, 73 relaciones estructurales dibujadas
+' 45 dependencias de metodo conservadas comentadas al final
+' Recorte del UML completo sin Matricula: mismas clases, miembros y
+' relaciones del flujo. Las dependencias <<use>> no se dibujan para
+' evitar cruces; se conservan comentadas al final, como en el
+' diagrama depurado sin Matricula.
+' Direccion: top to bottom, enrutado ortogonal.
+' ============================================================
+hide circle
+hide empty members
+skinparam defaultFontName Helvetica
+skinparam defaultFontSize 10
+skinparam classFontSize 11
+skinparam classAttributeFontSize 9
+skinparam classAttributeIconSize 0
+skinparam classRoundCorner 0
+skinparam shadowing false
+skinparam monochrome false
+skinparam classBorderColor black
+skinparam backgroundColor white
+skinparam classBackgroundColor white
+' --- Paleta de colores pastel para Java 17 ---
+skinparam interfaceBackgroundColor #D5F5E3
+skinparam interface<<Interface>>BackgroundColor #D5F5E3
+skinparam class<<Interface>>BackgroundColor #D5F5E3
+skinparam abstractBackgroundColor #FFE5CC
+skinparam class<<Abstract>>BackgroundColor #FFE5CC
+skinparam class<<Record>>BackgroundColor #D0E1FD
+' --- Paquetes ---
+skinparam packageStyle folder
+skinparam packageBorderColor #85929E
+skinparam packageBackgroundColor #FBFCFC
+skinparam packageFontColor #2C3E50
+skinparam packageFontStyle bold
+' --- Flechas y separacion ---
+skinparam ArrowColor #34495E
+skinparam ArrowFontColor #34495E
+skinparam ArrowFontSize 8
+skinparam ArrowThickness 0.9
+skinparam nodesep 22
+skinparam ranksep 75
+top to bottom direction
+skinparam linetype ortho
+title Flujo de CursoProfesor
+
+package edu.unimag.vista.web {
+    class CursoProfesorWeb {
+    -  {readOnly} controlador : CursoProfesorControlador
+    +  CursoProfesorWeb(controlador : CursoProfesorControlador) : void <<Create>>
+    #  atender(ex : HttpExchange, metodo : String, segmentos : List<String>) : void
+    -  coleccion(ex : HttpExchange, metodo : String) : void
+    -  listar(ex : HttpExchange) : void
+    -  asignar(ex : HttpExchange) : void
+    -  tiposAsignacion(ex : HttpExchange, metodo : String) : void
+    -  asignacionConcreta(ex : HttpExchange, metodo : String, segmentos : List<String>) : void
+    -  accionSobreAsignacion(ex : HttpExchange, metodo : String, segmentos : List<String>) : void
+    -  tipoDesdeCodigo(valor : String) : TipoAsignacion
+}
+    abstract class ManejadorWeb <<Abstract>> {
+    -  {static, readOnly} ORIGENES_PERMITIDOS : Set<String> = Set.of("http://127.0.0.1:5500", "http://localhost:5500")
+    -  {readOnly} rutaBase : String
+    #  ManejadorWeb(rutaBase : String) : void <<Create>>
+    +  getRutaBase() : String
+    #  {abstract} atender(ex : HttpExchange, metodo : String, segmentos : List<String>) : void
+    +  {final} handle(ex : HttpExchange) : void
+    #  responderJson(ex : HttpExchange, codigo : int, cuerpo : Object) : void
+    #  error(mensaje : String) : String
+    #  metodoNoPermitido(ex : HttpExchange, permitidos : String) : void
+    #  exigirMetodo(ex : HttpExchange, metodo : String, esperado : String) : boolean
+    #  noEncontrado(ex : HttpExchange) : void
+    #  leerCuerpo(ex : HttpExchange) : Map<String, String>
+    #  leerConsulta(ex : HttpExchange) : Map<String, String>
+    #  {static} aLong(valor : String, campo : String) : Long
+    #  {static} aInteger(valor : String, campo : String) : Integer
+    #  {static} aUuid(valor : String, campo : String) : UUID
+    #  {static} textoOpcional(campos : Map<String, String>, clave : String) : String
+    #  {static} integerOpcional(campos : Map<String, String>, clave : String) : Integer
+    #  {static} longOpcional(campos : Map<String, String>, clave : String) : Long
+    #  {static} enumDesdeCodigo(tipo : Class<E>, valor : String, campo : String) : E
+    #  {static} enumOpcional(tipo : Class<E>, campos : Map<String, String>, clave : String) : E
+    #  {static} aFecha(valor : String, campo : String) : OffsetDateTime
+    #  {static} fechaOpcional(campos : Map<String, String>, clave : String) : OffsetDateTime
+    -  {static} requerido(valor : String, campo : String) : String
+    -  aplicarCors(ex : HttpExchange) : void
+    -  segmentosDeRuta(ex : HttpExchange) : List<String>
+}
+}
+
+package edu.unimag.controlador {
+    class CursoProfesorControlador {
+    -  {readOnly} cursoProfesorServicio : CursoProfesorServicio
+    -  {readOnly} profesorServicio : ProfesorServicio
+    -  {readOnly} cursoPeriodoServicio : CursoPeriodoServicio
+    +  CursoProfesorControlador(cursoProfesorServicio : CursoProfesorServicio, profesorServicio : ProfesorServicio, cursoPeriodoServicio : CursoPeriodoServicio) : void <<Create>>
+    +  asignar(dto : CursoProfesorCrearDto) : CursoProfesorDto
+    +  cambiarTipoAsignacion(dto : CursoProfesorActualizarDto) : CursoProfesorDto
+    +  retirar(idCursoPeriodo : UUID, idProfesor : Long) : CursoProfesorDto
+    +  reactivar(idCursoPeriodo : UUID, idProfesor : Long) : CursoProfesorDto
+    +  listarPorProfesor(idProfesor : Long) : List<CursoProfesorDto>
+    +  listarPorMateria(idMateria : Integer) : List<CursoProfesorDto>
+    +  listarPorMateriaPeriodo(idMateria : Integer, idPeriodo : Integer) : List<CursoProfesorDto>
+    +  listarPorPeriodo(idPeriodo : Integer) : List<CursoProfesorDto>
+    +  buscarProfesor(idProfesor : Long) : ProfesorDto
+    +  buscarPorCursoPeriodo(idCursoPeriodo : UUID) : CursoPeriodoDto
+}
+}
+
+package edu.unimag.servicio {
+    class CursoProfesorServicio {
+    -  {readOnly} cursoProfesorRepositorio : CursoProfesorRepositorio
+    -  {readOnly} profesorRepositorio : ProfesorRepositorio
+    -  {readOnly} cursoPeriodoRepositorio : CursoPeriodoRepositorio
+    -  {readOnly} materiaRepositorio : MateriaRepositorio
+    -  {readOnly} periodoAcademicoRepositorio : PeriodoAcademicoRepositorio
+    -  {readOnly} mapeador : CursoProfesorMapeador
+    +  CursoProfesorServicio(cursoProfesorRepositorio : CursoProfesorRepositorio, profesorRepositorio : ProfesorRepositorio, cursoPeriodoRepositorio : CursoPeriodoRepositorio, materiaRepositorio : MateriaRepositorio, periodoAcademicoRepositorio : PeriodoAcademicoRepositorio, mapeador : CursoProfesorMapeador) : void <<Create>>
+    +  asignar(dto : CursoProfesorCrearDto) : CursoProfesorDto
+    +  cambiarTipoAsignacion(dto : CursoProfesorActualizarDto) : CursoProfesorDto
+    +  retirar(idCursoPeriodo : UUID, idProfesor : Long) : CursoProfesorDto
+    +  reActivar(idCursoPeriodo : UUID, idProfesor : Long) : CursoProfesorDto
+    +  listarPorProfesor(idProfesor : Long) : List<CursoProfesorDto>
+    +  listarPorMateria(idMateria : Integer) : List<CursoProfesorDto>
+    +  listarPorPeriodo(idPeriodo : Integer) : List<CursoProfesorDto>
+    +  listarPorMateriaYPorPeriodo(idMateria : Integer, idPeriodo : Integer) : List<CursoProfesorDto>
+    -  hidratarYmapearListaGenerico(asignaciones : List<CursoProfesor>, materiaCargadorInicial : MateriaCargador, periodoCargadorInicial : PeriodoAcademicoCargador) : List<CursoProfesorDto>
+    -  hidratarYmapearListaConMateria(asignaciones : List<CursoProfesor>, materia : Materia) : List<CursoProfesorDto>
+    -  hidratarYmapearListaConPeriodo(asignaciones : List<CursoProfesor>, periodo : PeriodoAcademico) : List<CursoProfesorDto>
+    -  hidratarYmapearListaConMateriaYperiodo(asignaciones : List<CursoProfesor>, periodo : PeriodoAcademico, materia : Materia) : List<CursoProfesorDto>
+    -  hidratarYmapearUnico(asignacion : CursoProfesor, profesor : Profesor, cursoPeriodo : CursoPeriodo) : CursoProfesorDto
+    -  hidratarYmapearLista(asignaciones : List<CursoProfesor>, profesor : Profesor) : List<CursoProfesorDto>
+}
+    class ProfesorServicio {
+    -  {readOnly} repositorio : ProfesorRepositorio
+    -  {readOnly} mapper : ProfesorMapeador
+    +  ProfesorServicio(repositorio : ProfesorRepositorio, mapper : ProfesorMapeador) : void <<Create>>
+    +  registrarProfesor(dto : ProfesorCrearDto) : ProfesorDto
+    +  actualizar(dto : ProfesorActualizarDto) : ProfesorDto
+    +  buscarPorId(id : Long) : ProfesorDto
+    +  listarTodos() : List<ProfesorDto>
+    +  listarActivos() : List<ProfesorDto>
+    +  listarInactivos() : List<ProfesorDto>
+    +  estaActivo(id : Long) : boolean
+    +  contarProfesores() : int
+}
+    class CursoPeriodoServicio {
+    -  {readOnly} cursoPeriodoRepositorio : CursoPeriodoRepositorio
+    -  {readOnly} materiaRepositorio : MateriaRepositorio
+    -  {readOnly} periodoAcademicoRepositorio : PeriodoAcademicoRepositorio
+    -  {readOnly} mapeador : CursoPeriodoMapeador
+    +  CursoPeriodoServicio(cursoPeriodoRepositorio : CursoPeriodoRepositorio, materiaRepositorio : MateriaRepositorio, periodoAcademicoRepositorio : PeriodoAcademicoRepositorio, mapeador : CursoPeriodoMapeador) : void <<Create>>
+    +  registrar(dto : CursoPeriodoCrearDto) : CursoPeriodoDto
+    +  listarTodos() : List<CursoPeriodoDto>
+    +  actualizar(dto : CursoPeriodoActualizarDto) : CursoPeriodoDto
+    +  eliminar(id : UUID) : boolean
+    -  hidratarYMapearUnico(cursoPeriodo : CursoPeriodo) : CursoPeriodoDto
+    +  buscarPorId(id : UUID) : CursoPeriodoDto
+}
+}
+
+package edu.unimag.mapeador {
+    class CursoProfesorMapeador {
+    -  {readOnly} profesorMapeador : ProfesorMapeador
+    -  {readOnly} cursoPeriodoMapeador : CursoPeriodoMapeador
+    +  CursoProfesorMapeador(profesorMapeador : ProfesorMapeador, cursoPeriodoMapeador : CursoPeriodoMapeador) : void <<Create>>
+    +  toDtoList(entidades : List<CursoProfesor>, profesorCargador : ProfesorCargador, cursoPeriodoCargador : CursoPeriodoCargador, materiaCargador : MateriaCargador, periodoCargador : PeriodoAcademicoCargador) : List<CursoProfesorDto>
+    -  validarIntegridad(miEntidad : CursoProfesor, profesorCargador : ProfesorCargador, cursoPeriodoCargador : CursoPeriodoCargador, materiaCargador : MateriaCargador, periodoCargador : PeriodoAcademicoCargador) : boolean
+    -  transformarDto(miEntidad : CursoProfesor, profesorCargador : ProfesorCargador, cursoPeriodoCargador : CursoPeriodoCargador, materiaCargador : MateriaCargador, periodoCargador : PeriodoAcademicoCargador) : CursoProfesorDto
+    +  toDto(entidad : CursoProfesor, profesorCargador : ProfesorCargador, cursoPeriodoCargador : CursoPeriodoCargador, materiaCargador : MateriaCargador, periodoCargador : PeriodoAcademicoCargador) : CursoProfesorDto
+}
+    class MateriaMapeador {
+    +  MateriaMapeador() : void <<Create>>
+    +  toDto(entidad : Materia) : MateriaDto
+    +  toDtoList(entidades : List<Materia>) : List<MateriaDto>
+}
+    class CursoPeriodoMapeador {
+    -  {readOnly} materiaMapeador : MateriaMapeador
+    -  {readOnly} periodoAcademicoMapeador : PeriodoAcademicoMapeador
+    +  CursoPeriodoMapeador(materiaMapeador : MateriaMapeador, periodoAcademicoMapeador : PeriodoAcademicoMapeador) : void <<Create>>
+    +  toDtoList(entities : List<CursoPeriodo>, materiaCargador : MateriaCargador, periodoCargador : PeriodoAcademicoCargador) : List<CursoPeriodoDto>
+    +  toDto(entity : CursoPeriodo, materiaCargador : MateriaCargador, periodoCargador : PeriodoAcademicoCargador) : CursoPeriodoDto
+    -  validarIntegridad(entity : CursoPeriodo, materiaCargador : MateriaCargador, periodoCargador : PeriodoAcademicoCargador) : boolean
+    -  transformarADto(entity : CursoPeriodo, materiaCargador : MateriaCargador, periodoCargador : PeriodoAcademicoCargador) : CursoPeriodoDto
+}
+    class PeriodoAcademicoMapeador {
+    +  PeriodoAcademicoMapeador() : void <<Create>>
+    +  toDto(entidad : PeriodoAcademico) : PeriodoAcademicoDto
+    +  toDtoList(entidades : List<PeriodoAcademico>) : List<PeriodoAcademicoDto>
+}
+    class ProfesorMapeador {
+    +  ProfesorMapeador() : void <<Create>>
+    +  toDto(entidad : Profesor) : ProfesorDto
+    +  toDtoList(entidades : List<Profesor>) : List<ProfesorDto>
+}
+}
+
+package edu.unimag.mapeador.api {
+    interface Mapeador<E, R> <<Interface>> {
+    +  {abstract} toDto(entidad : E) : R
+    +  {abstract} toDtoList(entidades : List<E>) : List<R>
+}
+}
+
+package edu.unimag.repositorio.cargador {
+    class MateriaCargador {
+    -  {readOnly} repositorio : MateriaRepositorio
+    -  {readOnly} cache : Map<Integer, Materia>
+    +  MateriaCargador(repositorio : MateriaRepositorio) : void <<Create>>
+    +  cargarTodos() : void
+    +  cargarPorIds(ids : List<Integer>) : void
+    +  registrarEnCache(entidad : Materia) : void
+    +  obtener(id : Integer) : Optional<Materia>
+    +  existe(id : Integer) : boolean
+}
+    class CursoPeriodoCargador {
+    -  {readOnly} repositorio : CursoPeriodoRepositorio
+    -  {readOnly} cache : Map<UUID, CursoPeriodo>
+    +  CursoPeriodoCargador(repositorio : CursoPeriodoRepositorio) : void <<Create>>
+    +  cargarTodos() : void
+    +  cargarPorIds(ids : List<UUID>) : void
+    +  registrarEnCache(entidad : CursoPeriodo) : void
+    +  obtener(id : UUID) : Optional<CursoPeriodo>
+    +  existe(id : UUID) : boolean
+}
+    class ProfesorCargador {
+    -  {readOnly} repositorio : ProfesorRepositorio
+    -  {readOnly} cache : Map<Long, Profesor>
+    +  ProfesorCargador(repositorio : ProfesorRepositorio) : void <<Create>>
+    +  cargarTodos() : void
+    +  cargarPorIds(ids : List<Long>) : void
+    +  registrarEnCache(entidad : Profesor) : void
+    +  obtener(id : Long) : Optional<Profesor>
+    +  existe(id : Long) : boolean
+}
+    class PeriodoAcademicoCargador {
+    -  {readOnly} repositorio : PeriodoAcademicoRepositorio
+    -  {readOnly} cache : Map<Integer, PeriodoAcademico>
+    +  PeriodoAcademicoCargador(repositorio : PeriodoAcademicoRepositorio) : void <<Create>>
+    +  cargarTodos() : void
+    +  cargarPorIds(ids : List<Integer>) : void
+    +  registrarEnCache(entidad : PeriodoAcademico) : void
+    +  obtener(id : Integer) : Optional<PeriodoAcademico>
+    +  existe(id : Integer) : boolean
+}
+}
+
+package edu.unimag.repositorio {
+    interface CursoProfesorRepositorio <<Interface>> {
+    +  {abstract} insertarSiNoExiste(cursoProfesor : CursoProfesor) : boolean
+    +  {abstract} listarPorCursoPeriodo(idCursoPeriodo : UUID) : List<CursoProfesor>
+}
+    interface PeriodoAcademicoRepositorio <<Interface>> {
+    +  {abstract} insertarSiNombreNoExiste(nombre : String, periodo : PeriodoAcademico) : boolean
+    +  {abstract} actualizarNombreSiNoExisteEnOtra(idPeriodoAcademico : Integer, nuevoNombre : String) : boolean
+}
+    interface CursoPeriodoRepositorio <<Interface>> {
+    +  {abstract} insertarSiCombinacionNoExiste(idMateria : Integer, idPeriodoAcademico : Integer, nombre : String, cursoPeriodo : CursoPeriodo) : boolean
+    +  {abstract} actualizarSiNoExisteEnOtra(cursoPeriodoModificado : CursoPeriodo, verificarNombre : boolean) : boolean
+}
+    interface MateriaRepositorio <<Interface>> {
+}
+    interface ProfesorRepositorio <<Interface>> {
+}
+}
+
+package edu.unimag.repositorio.api {
+    interface RepositorioBase<T, ID> <<Interface>> {
+    +  {abstract} guardar(entidad : T) : T
+    +  {abstract} actualizar(entidad : T) : T
+    +  {abstract} buscarPorId(id : ID) : Optional<T>
+    +  {abstract} eliminar(id : ID) : boolean
+    +  {abstract} listarTodos() : List<T>
+    +  {abstract} contar() : long
+    +  {abstract} cerrar() : void
+}
+    interface CargadorDatos<T, ID> <<Interface>> {
+    +  {abstract} cargarTodos() : void
+    +  {abstract} cargarPorIds(ids : List<ID>) : void
+    +  {abstract} registrarEnCache(entidad : T) : void
+    +  {abstract} obtener(id : ID) : Optional<T>
+    +  {abstract} existe(id : ID) : boolean
+}
+}
+
+package edu.unimag.persistencia {
+    class CursoProfesorRepositorioImpl {
+    +  CursoProfesorRepositorioImpl(tpaRepository : TpaRepository<CursoProfesor, CursoProfesorPk>) : void <<Create>>
+    +  insertarSiNoExiste(cursoProfesor : CursoProfesor) : boolean
+    +  listarPorCursoPeriodo(idCursoPeriodo : UUID) : List<CursoProfesor>
+}
+}
+
+package edu.unimag.persistencia.abstracta {
+    abstract class RepositorioBaseAbstracto<T, ID> <<Abstract>> {
+    #  {readOnly} tpaRepository : TpaRepository<T, ID>
+    +  RepositorioBaseAbstracto(tpaRepository : TpaRepository<T, ID>) : void <<Create>>
+    +  guardar(entidad : T) : T
+    +  actualizar(entidad : T) : T
+    +  buscarPorId(id : ID) : Optional<T>
+    +  listarTodos() : List<T>
+    +  contar() : long
+    +  {final} eliminar(id : ID) : boolean
+    +  cerrar() : void
+    #  permiteBorradoFisico() : boolean
+}
+}
+
+package edu.unimag.dto.cursoProfesor {
+    class CursoProfesorCrearDto <<Record>> {
+    +  {readOnly} idCursoPeriodo : UUID
+    +  {readOnly} idProfesor : Long
+    +  {readOnly} tipoAsignacion : TipoAsignacion
+}
+    class CursoProfesorActualizarDto <<Record>> {
+    +  {readOnly} idCursoPeriodo : UUID
+    +  {readOnly} idProfesor : Long
+    +  {readOnly} tipoAsignacion : TipoAsignacion
+}
+    class CursoProfesorDto <<Record>> {
+    +  {readOnly} profesor : ProfesorDto
+    +  {readOnly} cursoPeriodoDto : CursoPeriodoDto
+    +  {readOnly} tipoAsignacion : TipoAsignacion
+    +  {readOnly} estadoProfesorCurso : EstadoProfesorCurso
+    +  {readOnly} fechaAsignacion : OffsetDateTime
+}
+}
+
+package edu.unimag.dto.cursoperiodo {
+    class CursoPeriodoActualizarDto <<Record>> {
+    +  {readOnly} id : UUID
+    +  {readOnly} nuevoNombre : String
+    +  {readOnly} nuevoCupo : Integer
+}
+    class CursoPeriodoCrearDto <<Record>> {
+    +  {readOnly} nombre : String
+    +  {readOnly} idMateria : Integer
+    +  {readOnly} idPeriodoAcademico : Integer
+    +  {readOnly} cupo : Integer
+}
+    class CursoPeriodoDto <<Record>> {
+    +  {readOnly} id : UUID
+    +  {readOnly} nombre : String
+    +  {readOnly} materia : MateriaDto
+    +  {readOnly} periodo : PeriodoAcademicoDto
+    +  {readOnly} cupo : Integer
+    +  {readOnly} fechaCreacion : OffsetDateTime
+}
+}
+
+package edu.unimag.dto.materia {
+    class MateriaDto <<Record>> {
+    +  {readOnly} id : Integer
+    +  {readOnly} nombre : String
+    +  {readOnly} creditos : Integer
+    +  {readOnly} cupoMaximo : Integer
+    +  {readOnly} estado : EstadoEntidad
+}
+}
+
+package edu.unimag.dto.periodoacademico {
+    class PeriodoAcademicoDto <<Record>> {
+    +  {readOnly} id : Integer
+    +  {readOnly} nombre : String
+    +  {readOnly} estado : EstadoEntidad
+}
+}
+
+package edu.unimag.dto.profesor {
+    class ProfesorActualizarDto <<Record>> {
+    +  {readOnly} id : Long
+    +  {readOnly} nuevoNombre : String
+    +  {readOnly} nuevoCelular : String
+    +  {readOnly} nuevoEstado : Integer
+    +  obtenerEstadoComoEnum() : EstadoEntidad
+}
+    class ProfesorDto <<Record>> {
+    +  {readOnly} id : Long
+    +  {readOnly} nombre : String
+    +  {readOnly} celular : String
+    +  {readOnly} estado : EstadoEntidad
+    +  {readOnly} activo : Boolean
+}
+    class ProfesorCrearDto <<Record>> {
+    +  {readOnly} nombre : String
+    +  {readOnly} celular : String
+}
+}
+
+package edu.unimag.modelo {
+    class CursoProfesor {
+    -  idCursoProfesorPeriodo : CursoProfesorPk
+    -  fechaAsignacion : OffsetDateTime
+    -  tipoAsignacion : TipoAsignacion
+    -  estado : EstadoProfesorCurso
+    #  CursoProfesor() : void <<Create>>
+    +  CursoProfesor(idCursoProfesorPeriodo : CursoProfesorPk, tipoAsignacion : TipoAsignacion) : void <<Create>>
+    +  CursoProfesor(idCursoProfesorPeriodo : CursoProfesorPk, fechaAsignacion : OffsetDateTime, tipoAsignacion : TipoAsignacion, estado : EstadoProfesorCurso) : void <<Create>>
+    +  cambiarTipoAsignacion(nuevo : TipoAsignacion) : void
+    +  retirar() : void
+    +  reactivar() : void
+    +  estaActivo() : boolean
+    +  getIdCursoProfesorPeriodo() : CursoProfesorPk
+    +  getFechaAsignacion() : OffsetDateTime
+    +  getTipoAsignacion() : TipoAsignacion
+    +  getEstado() : EstadoProfesorCurso
+    +  getIdProfesor() : Long
+    +  getIdCursoPeriodo() : UUID
+}
+    class Materia {
+    -  idMateria : Integer
+    -  nombreMateria : String
+    -  creditosMateria : Integer
+    -  cupoMaximoMateria : Integer
+    -  estadoMateria : EstadoEntidad
+    #  Materia() : void <<Create>>
+    +  Materia(nombreMateria : String, creditosMateria : Integer, cupoMaximoMateria : Integer) : void <<Create>>
+    +  Materia(idMateria : Integer, nombreMateria : String, creditosMateria : Integer, cupoMaximoMateria : Integer, estadoMateria : EstadoEntidad) : void <<Create>>
+    +  actualizarNombre(nuevoNombre : String) : void
+    +  actualizarCupo(nuevoCupo : Integer) : void
+    +  actualizarCreditos(nuevosCreditos : Integer) : void
+    +  suspender() : void
+    +  reactivar() : void
+    +  estaActiva() : boolean
+    +  getIdMateria() : Integer
+    +  getNombreMateria() : String
+    +  getCreditosMateria() : Integer
+    +  getCupoMaximoMateria() : Integer
+    +  getEstadoMateria() : EstadoEntidad
+}
+    class PeriodoAcademico {
+    -  idPeriodoAcademico : Integer
+    -  nombrePeriodoAcademico : String
+    -  estadoPeriodoAcademico : EstadoEntidad
+    #  PeriodoAcademico() : void <<Create>>
+    +  PeriodoAcademico(nombrePeriodoAcademico : String) : void <<Create>>
+    +  PeriodoAcademico(idPeriodoAcademico : Integer, nombrePeriodoAcademico : String, estadoPeriodoAcademico : EstadoEntidad) : void <<Create>>
+    +  corregirNombre(nuevoNombre : String) : void
+    +  suspender() : void
+    +  reactivar() : void
+    +  estaActivo() : boolean
+    +  getIdPeriodoAcademico() : Integer
+    +  getNombrePeriodoAcademico() : String
+    +  getEstadoPeriodoAcademico() : EstadoEntidad
+}
+    class Profesor {
+    -  idProfesor : Long
+    -  nombreProfesor : String
+    -  celularProfesor : String
+    -  estadoProfesor : EstadoEntidad
+    #  Profesor() : void <<Create>>
+    +  Profesor(nombreProfesor : String, celularProfesor : String) : void <<Create>>
+    +  Profesor(idProfesor : Long, nombreProfesor : String, celularProfesor : String, estadoProfesor : EstadoEntidad) : void <<Create>>
+    +  actualizarNombre(nuevoNombre : String) : void
+    +  actualizarCelular(nuevoCelular : String) : void
+    +  cambiarEstado(nuevoEstado : EstadoEntidad) : void
+    +  estaActivo() : boolean
+    +  getIdProfesor() : Long
+    +  getNombreProfesor() : String
+    +  getCelularProfesor() : String
+    +  getEstadoProfesor() : EstadoEntidad
+}
+    class CursoPeriodo {
+    -  idCursoPeriodo : UUID
+    -  nombreCursoPeriodo : String
+    -  creacionCursoPeriodo : OffsetDateTime
+    -  cupoCursoPeriodo : Integer
+    -  materia : Materia
+    -  periodoAcademico : PeriodoAcademico
+    #  CursoPeriodo() : void <<Create>>
+    +  CursoPeriodo(nombreCursoPeriodo : String, materia : Materia, periodoAcademico : PeriodoAcademico, cupoCursoPeriodo : Integer) : void <<Create>>
+    +  CursoPeriodo(idCursoPeriodo : UUID, nombreCursoPeriodo : String, creacionCursoPeriodo : OffsetDateTime, cupoCursoPeriodo : Integer, materia : Materia, periodoAcademico : PeriodoAcademico) : void <<Create>>
+    +  actualizarNombre(nuevoNombre : String) : void
+    +  actualizarCupo(nuevoCupo : Integer) : void
+    +  tieneCupoDisponible(cantidadInscritos : int) : boolean
+    +  getIdCursoPeriodo() : UUID
+    +  getNombreCursoPeriodo() : String
+    +  getCreacionCursoPeriodo() : OffsetDateTime
+    +  getCupoCursoPeriodo() : Integer
+    +  getMateria() : Materia
+    +  getPeriodoAcademico() : PeriodoAcademico
+    +  getIdMateria() : Integer
+    +  getIdPeriodoAcademico() : Integer
+}
+}
+
+package edu.unimag.modelo.pk {
+    class CursoProfesorPk {
+    -  {readOnly} cursoPeriodo : CursoPeriodo
+    -  {readOnly} profesor : Profesor
+    #  CursoProfesorPk() : void <<Create>>
+    +  CursoProfesorPk(cursoPeriodo : CursoPeriodo, profesor : Profesor) : void <<Create>>
+    +  getCursoPeriodo() : CursoPeriodo
+    +  getProfesor() : Profesor
+    +  getIdCursoPeriodo() : UUID
+    +  getIdProfesor() : Long
+    +  hashCode() : int
+    +  equals(obj : Object) : boolean
+    +  toString() : String
+}
+}
+
+package edu.unimag.modelo.enumeracion {
+    enum TipoAsignacion {
+    +  {static, readOnly} PROFESOR_PRINCIPAL : TipoAsignacion
+    +  {static, readOnly} PROFESOR_ACOMPANANTE : TipoAsignacion
+    +  {static, readOnly} AUDITOR : TipoAsignacion
+    -  {readOnly} code : int
+    -  {readOnly} description : String
+    ~  TipoAsignacion(code : int, description : String) : void <<Create>>
+    +  getCode() : int
+    +  getDescription() : String
+}
+    enum EstadoProfesorCurso {
+    +  {static, readOnly} ACTIVO : EstadoProfesorCurso
+    +  {static, readOnly} RETIRADO : EstadoProfesorCurso
+    -  {readOnly} code : int
+    -  {readOnly} description : String
+    -  EstadoProfesorCurso(code : int, description : String) : void <<Create>>
+    +  getCode() : int
+    +  getDescription() : String
+    +  cambiarEstado(nuevo : EstadoProfesorCurso) : EstadoProfesorCurso
+}
+    enum EstadoEntidad {
+    +  {static, readOnly} ACTIVO : EstadoEntidad
+    +  {static, readOnly} INACTIVO : EstadoEntidad
+    -  {readOnly} code : int
+    -  {readOnly} description : String
+    ~  EstadoEntidad(code : int, description : String) : void <<Create>>
+    +  getCode() : int
+    +  getDescription() : String
+    +  cambiarEstadoA(nuevoEstado : EstadoEntidad) : EstadoEntidad
+}
+}
+
+package edu.unimag.config.modulos {
+    class ConfiguracionModuloCursoProfesor {
+    -  {readOnly} cursoProfesorRepositorio : CursoProfesorRepositorio
+    -  {readOnly} profesorRepositorio : ProfesorRepositorio
+    -  {readOnly} profesorServicio : ProfesorServicio
+    -  {readOnly} cursoPeriodoRepositorio : CursoPeriodoRepositorio
+    -  {readOnly} cursoPeriodoServicio : CursoPeriodoServicio
+    -  {readOnly} materiaRepositorio : MateriaRepositorio
+    -  {readOnly} periodoAcademicoRepositorio : PeriodoAcademicoRepositorio
+    +  ConfiguracionModuloCursoProfesor(profesorRepositorio : ProfesorRepositorio, profesorServicio : ProfesorServicio, cursoPeriodoRepositorio : CursoPeriodoRepositorio, cursoPeriodoServicio : CursoPeriodoServicio, materiaRepositorio : MateriaRepositorio, periodoAcademicoRepositorio : PeriodoAcademicoRepositorio) : void <<Create>>
+    +  construirControlador() : CursoProfesorControlador
+    +  cerrarRecursos() : void
+}
+}
+
+package edu.unimag.config.modulos.api {
+    interface ModuloConfigurable <<Interface>> {
+    +  {abstract} cerrarRecursos() : void
+}
+}
+
+' --- Orden de capas (oculto) ---
+edu.unimag.vista.web.CursoProfesorWeb -[hidden]-> edu.unimag.controlador.CursoProfesorControlador
+edu.unimag.controlador.CursoProfesorControlador -[hidden]-> edu.unimag.servicio.CursoProfesorServicio
+edu.unimag.servicio.CursoProfesorServicio -[hidden]-> edu.unimag.mapeador.CursoProfesorMapeador
+edu.unimag.servicio.CursoProfesorServicio -[hidden]-> edu.unimag.repositorio.CursoProfesorRepositorio
+edu.unimag.mapeador.CursoProfesorMapeador -[hidden]-> edu.unimag.modelo.CursoProfesor
+edu.unimag.repositorio.CursoProfesorRepositorio -[hidden]-> edu.unimag.persistencia.CursoProfesorRepositorioImpl
+edu.unimag.repositorio.CursoProfesorRepositorio -[hidden]-> edu.unimag.modelo.CursoProfesor
+edu.unimag.persistencia.CursoProfesorRepositorioImpl -[hidden]-> edu.unimag.modelo.CursoProfesor
+edu.unimag.modelo.CursoProfesor -[hidden]-> edu.unimag.modelo.pk.CursoProfesorPk
+edu.unimag.mapeador.CursoProfesorMapeador -[hidden]-> edu.unimag.config.modulos.ConfiguracionModuloCursoProfesor
+edu.unimag.config.modulos.ConfiguracionModuloCursoProfesor -[hidden]-> edu.unimag.repositorio.CursoProfesorRepositorio
+
+' --- Grafo de relaciones estructurales ---
+edu.unimag.repositorio.cargador.MateriaCargador "1" --> "1" edu.unimag.repositorio.MateriaRepositorio
+edu.unimag.servicio.CursoProfesorServicio "1" --> "1" edu.unimag.repositorio.ProfesorRepositorio
+edu.unimag.servicio.CursoProfesorServicio "1" --> "1" edu.unimag.mapeador.CursoProfesorMapeador
+edu.unimag.servicio.ProfesorServicio "1" --> "1" edu.unimag.mapeador.ProfesorMapeador
+edu.unimag.vista.web.CursoProfesorWeb "1" --> "1" edu.unimag.controlador.CursoProfesorControlador
+edu.unimag.config.modulos.ConfiguracionModuloCursoProfesor "1" --> "1" edu.unimag.repositorio.CursoPeriodoRepositorio
+edu.unimag.config.modulos.ConfiguracionModuloCursoProfesor "1" *-- "1" edu.unimag.repositorio.CursoProfesorRepositorio
+edu.unimag.repositorio.api.CargadorDatos <|.. edu.unimag.repositorio.cargador.CursoPeriodoCargador
+edu.unimag.servicio.CursoProfesorServicio "1" --> "1" edu.unimag.repositorio.MateriaRepositorio
+edu.unimag.servicio.CursoPeriodoServicio "1" --> "1" edu.unimag.mapeador.CursoPeriodoMapeador
+edu.unimag.servicio.CursoProfesorServicio "1" --> "1" edu.unimag.repositorio.CursoProfesorRepositorio
+edu.unimag.repositorio.cargador.CursoPeriodoCargador "1" --> "1" edu.unimag.repositorio.CursoPeriodoRepositorio
+edu.unimag.repositorio.api.RepositorioBase <|.. edu.unimag.persistencia.abstracta.RepositorioBaseAbstracto
+edu.unimag.modelo.Profesor "1" --> "1" edu.unimag.modelo.enumeracion.EstadoEntidad
+edu.unimag.controlador.CursoProfesorControlador "1" --> "1" edu.unimag.servicio.CursoProfesorServicio
+edu.unimag.mapeador.api.Mapeador <|.. edu.unimag.mapeador.MateriaMapeador
+edu.unimag.repositorio.cargador.ProfesorCargador "1" o-- "*" edu.unimag.modelo.Profesor
+edu.unimag.modelo.pk.CursoProfesorPk "1" --> "1" edu.unimag.modelo.Profesor
+edu.unimag.modelo.CursoProfesor "1" --> "1" edu.unimag.modelo.enumeracion.TipoAsignacion
+edu.unimag.mapeador.CursoPeriodoMapeador "1" --> "1" edu.unimag.mapeador.MateriaMapeador
+edu.unimag.persistencia.abstracta.RepositorioBaseAbstracto <|-- edu.unimag.persistencia.CursoProfesorRepositorioImpl
+edu.unimag.repositorio.cargador.PeriodoAcademicoCargador "1" o-- "*" edu.unimag.modelo.PeriodoAcademico
+edu.unimag.config.modulos.ConfiguracionModuloCursoProfesor "1" --> "1" edu.unimag.repositorio.PeriodoAcademicoRepositorio
+edu.unimag.modelo.Materia "1" --> "1" edu.unimag.modelo.enumeracion.EstadoEntidad
+edu.unimag.modelo.pk.CursoProfesorPk "1" --> "1" edu.unimag.modelo.CursoPeriodo
+edu.unimag.mapeador.CursoProfesorMapeador "1" --> "1" edu.unimag.mapeador.CursoPeriodoMapeador
+edu.unimag.dto.periodoacademico.PeriodoAcademicoDto "1" --> "1" edu.unimag.modelo.enumeracion.EstadoEntidad
+edu.unimag.servicio.CursoPeriodoServicio "1" --> "1" edu.unimag.repositorio.CursoPeriodoRepositorio
+edu.unimag.dto.profesor.ProfesorDto "1" --> "1" edu.unimag.modelo.enumeracion.EstadoEntidad
+edu.unimag.config.modulos.ConfiguracionModuloCursoProfesor "1" --> "1" edu.unimag.servicio.CursoPeriodoServicio
+edu.unimag.repositorio.cargador.PeriodoAcademicoCargador "1" --> "1" edu.unimag.repositorio.PeriodoAcademicoRepositorio
+edu.unimag.dto.materia.MateriaDto "1" --> "1" edu.unimag.modelo.enumeracion.EstadoEntidad
+edu.unimag.repositorio.cargador.CursoPeriodoCargador "1" o-- "*" edu.unimag.modelo.CursoPeriodo
+edu.unimag.servicio.CursoPeriodoServicio "1" --> "1" edu.unimag.repositorio.MateriaRepositorio
+edu.unimag.config.modulos.ConfiguracionModuloCursoProfesor "1" --> "1" edu.unimag.repositorio.MateriaRepositorio
+edu.unimag.modelo.CursoPeriodo "1" --> "1" edu.unimag.modelo.PeriodoAcademico
+edu.unimag.repositorio.api.CargadorDatos <|.. edu.unimag.repositorio.cargador.ProfesorCargador
+edu.unimag.servicio.CursoPeriodoServicio "1" --> "1" edu.unimag.repositorio.PeriodoAcademicoRepositorio
+edu.unimag.dto.cursoProfesor.CursoProfesorDto "1" --> "1" edu.unimag.dto.profesor.ProfesorDto
+edu.unimag.servicio.CursoProfesorServicio "1" --> "1" edu.unimag.repositorio.CursoPeriodoRepositorio
+edu.unimag.dto.cursoProfesor.CursoProfesorCrearDto "1" --> "1" edu.unimag.modelo.enumeracion.TipoAsignacion
+edu.unimag.vista.web.ManejadorWeb <|-- edu.unimag.vista.web.CursoProfesorWeb
+edu.unimag.controlador.CursoProfesorControlador "1" --> "1" edu.unimag.servicio.CursoPeriodoServicio
+edu.unimag.dto.cursoProfesor.CursoProfesorActualizarDto "1" --> "1" edu.unimag.modelo.enumeracion.TipoAsignacion
+edu.unimag.dto.cursoperiodo.CursoPeriodoDto "1" --> "1" edu.unimag.dto.materia.MateriaDto
+edu.unimag.mapeador.CursoProfesorMapeador "1" --> "1" edu.unimag.mapeador.ProfesorMapeador
+edu.unimag.config.modulos.ConfiguracionModuloCursoProfesor "1" --> "1" edu.unimag.servicio.ProfesorServicio
+edu.unimag.repositorio.api.RepositorioBase <|-- edu.unimag.repositorio.PeriodoAcademicoRepositorio
+edu.unimag.dto.cursoProfesor.CursoProfesorDto "1" --> "1" edu.unimag.modelo.enumeracion.EstadoProfesorCurso
+edu.unimag.config.modulos.ConfiguracionModuloCursoProfesor "1" --> "1" edu.unimag.repositorio.ProfesorRepositorio
+edu.unimag.repositorio.cargador.ProfesorCargador "1" --> "1" edu.unimag.repositorio.ProfesorRepositorio
+edu.unimag.dto.cursoperiodo.CursoPeriodoDto "1" --> "1" edu.unimag.dto.periodoacademico.PeriodoAcademicoDto
+edu.unimag.controlador.CursoProfesorControlador "1" --> "1" edu.unimag.servicio.ProfesorServicio
+edu.unimag.dto.cursoProfesor.CursoProfesorDto "1" --> "1" edu.unimag.modelo.enumeracion.TipoAsignacion
+edu.unimag.modelo.CursoProfesor "1" --> "1" edu.unimag.modelo.enumeracion.EstadoProfesorCurso
+edu.unimag.modelo.CursoPeriodo "1" --> "1" edu.unimag.modelo.Materia
+edu.unimag.dto.cursoProfesor.CursoProfesorDto "1" --> "1" edu.unimag.dto.cursoperiodo.CursoPeriodoDto
+edu.unimag.servicio.CursoProfesorServicio "1" --> "1" edu.unimag.repositorio.PeriodoAcademicoRepositorio
+edu.unimag.mapeador.api.Mapeador <|.. edu.unimag.mapeador.ProfesorMapeador
+edu.unimag.repositorio.cargador.MateriaCargador "1" o-- "*" edu.unimag.modelo.Materia
+edu.unimag.modelo.CursoProfesor "1" --> "1" edu.unimag.modelo.pk.CursoProfesorPk
+edu.unimag.repositorio.api.RepositorioBase <|-- edu.unimag.repositorio.MateriaRepositorio
+edu.unimag.mapeador.api.Mapeador <|.. edu.unimag.mapeador.PeriodoAcademicoMapeador
+edu.unimag.repositorio.api.CargadorDatos <|.. edu.unimag.repositorio.cargador.PeriodoAcademicoCargador
+edu.unimag.repositorio.api.RepositorioBase <|-- edu.unimag.repositorio.CursoPeriodoRepositorio
+edu.unimag.repositorio.api.CargadorDatos <|.. edu.unimag.repositorio.cargador.MateriaCargador
+edu.unimag.repositorio.CursoProfesorRepositorio <|.. edu.unimag.persistencia.CursoProfesorRepositorioImpl
+edu.unimag.repositorio.api.RepositorioBase <|-- edu.unimag.repositorio.CursoProfesorRepositorio
+edu.unimag.servicio.ProfesorServicio "1" --> "1" edu.unimag.repositorio.ProfesorRepositorio
+edu.unimag.modelo.PeriodoAcademico "1" --> "1" edu.unimag.modelo.enumeracion.EstadoEntidad
+edu.unimag.repositorio.api.RepositorioBase <|-- edu.unimag.repositorio.ProfesorRepositorio
+edu.unimag.mapeador.CursoPeriodoMapeador "1" --> "1" edu.unimag.mapeador.PeriodoAcademicoMapeador
+edu.unimag.config.modulos.api.ModuloConfigurable <|.. edu.unimag.config.modulos.ConfiguracionModuloCursoProfesor
+
+' --- Dependencias de metodo (conservadas como en el UML completo) ---
+' edu.unimag.servicio.CursoProfesorServicio ..> edu.unimag.dto.cursoProfesor.CursoProfesorCrearDto : <<use>>
+' edu.unimag.controlador.CursoProfesorControlador ..> edu.unimag.dto.cursoProfesor.CursoProfesorCrearDto : <<use>>
+' edu.unimag.controlador.CursoProfesorControlador ..> edu.unimag.dto.cursoProfesor.CursoProfesorActualizarDto : <<use>>
+' edu.unimag.servicio.CursoPeriodoServicio ..> edu.unimag.dto.cursoperiodo.CursoPeriodoActualizarDto : <<use>>
+' edu.unimag.controlador.CursoProfesorControlador ..> edu.unimag.dto.cursoProfesor.CursoProfesorDto : <<use>>
+' edu.unimag.mapeador.CursoPeriodoMapeador ..> edu.unimag.repositorio.cargador.PeriodoAcademicoCargador : <<use>>
+' edu.unimag.repositorio.PeriodoAcademicoRepositorio ..> edu.unimag.modelo.PeriodoAcademico : <<use>>
+' edu.unimag.vista.web.CursoProfesorWeb ..> edu.unimag.modelo.enumeracion.TipoAsignacion : <<use>>
+' edu.unimag.repositorio.CursoProfesorRepositorio ..> edu.unimag.modelo.CursoProfesor : <<use>>
+' edu.unimag.mapeador.PeriodoAcademicoMapeador ..> edu.unimag.dto.periodoacademico.PeriodoAcademicoDto : <<use>>
+' edu.unimag.dto.profesor.ProfesorActualizarDto ..> edu.unimag.modelo.enumeracion.EstadoEntidad : <<use>>
+' edu.unimag.servicio.CursoPeriodoServicio ..> edu.unimag.dto.cursoperiodo.CursoPeriodoDto : <<use>>
+' edu.unimag.mapeador.CursoPeriodoMapeador ..> edu.unimag.dto.cursoperiodo.CursoPeriodoDto : <<use>>
+' edu.unimag.mapeador.CursoPeriodoMapeador ..> edu.unimag.modelo.CursoPeriodo : <<use>>
+' edu.unimag.servicio.CursoProfesorServicio ..> edu.unimag.dto.cursoProfesor.CursoProfesorDto : <<use>>
+' edu.unimag.mapeador.CursoProfesorMapeador ..> edu.unimag.repositorio.cargador.PeriodoAcademicoCargador : <<use>>
+' edu.unimag.mapeador.CursoPeriodoMapeador ..> edu.unimag.repositorio.cargador.MateriaCargador : <<use>>
+' edu.unimag.servicio.CursoPeriodoServicio ..> edu.unimag.modelo.CursoPeriodo : <<use>>
+' edu.unimag.persistencia.CursoProfesorRepositorioImpl ..> edu.unimag.modelo.CursoProfesor : <<use>>
+' edu.unimag.servicio.ProfesorServicio ..> edu.unimag.dto.profesor.ProfesorDto : <<use>>
+' edu.unimag.servicio.CursoProfesorServicio ..> edu.unimag.modelo.PeriodoAcademico : <<use>>
+' edu.unimag.repositorio.CursoPeriodoRepositorio ..> edu.unimag.modelo.CursoPeriodo : <<use>>
+' edu.unimag.mapeador.ProfesorMapeador ..> edu.unimag.dto.profesor.ProfesorDto : <<use>>
+' edu.unimag.controlador.CursoProfesorControlador ..> edu.unimag.dto.cursoperiodo.CursoPeriodoDto : <<use>>
+' edu.unimag.servicio.CursoProfesorServicio ..> edu.unimag.repositorio.cargador.MateriaCargador : <<use>>
+' edu.unimag.servicio.ProfesorServicio ..> edu.unimag.dto.profesor.ProfesorCrearDto : <<use>>
+' edu.unimag.mapeador.CursoProfesorMapeador ..> edu.unimag.repositorio.cargador.MateriaCargador : <<use>>
+' edu.unimag.mapeador.MateriaMapeador ..> edu.unimag.dto.materia.MateriaDto : <<use>>
+' edu.unimag.mapeador.ProfesorMapeador ..> edu.unimag.modelo.Profesor : <<use>>
+' edu.unimag.config.modulos.ConfiguracionModuloCursoProfesor ..> edu.unimag.controlador.CursoProfesorControlador : <<use>>
+' edu.unimag.servicio.CursoPeriodoServicio ..> edu.unimag.dto.cursoperiodo.CursoPeriodoCrearDto : <<use>>
+' edu.unimag.controlador.CursoProfesorControlador ..> edu.unimag.dto.profesor.ProfesorDto : <<use>>
+' edu.unimag.mapeador.CursoProfesorMapeador ..> edu.unimag.repositorio.cargador.ProfesorCargador : <<use>>
+' edu.unimag.mapeador.CursoProfesorMapeador ..> edu.unimag.modelo.CursoProfesor : <<use>>
+' edu.unimag.servicio.CursoProfesorServicio ..> edu.unimag.repositorio.cargador.PeriodoAcademicoCargador : <<use>>
+' edu.unimag.servicio.CursoProfesorServicio ..> edu.unimag.modelo.CursoProfesor : <<use>>
+' edu.unimag.mapeador.PeriodoAcademicoMapeador ..> edu.unimag.modelo.PeriodoAcademico : <<use>>
+' edu.unimag.mapeador.CursoProfesorMapeador ..> edu.unimag.repositorio.cargador.CursoPeriodoCargador : <<use>>
+' edu.unimag.mapeador.CursoProfesorMapeador ..> edu.unimag.dto.cursoProfesor.CursoProfesorDto : <<use>>
+' edu.unimag.servicio.CursoProfesorServicio ..> edu.unimag.dto.cursoProfesor.CursoProfesorActualizarDto : <<use>>
+' edu.unimag.servicio.CursoProfesorServicio ..> edu.unimag.modelo.Materia : <<use>>
+' edu.unimag.servicio.CursoProfesorServicio ..> edu.unimag.modelo.Profesor : <<use>>
+' edu.unimag.servicio.CursoProfesorServicio ..> edu.unimag.modelo.CursoPeriodo : <<use>>
+' edu.unimag.mapeador.MateriaMapeador ..> edu.unimag.modelo.Materia : <<use>>
+' edu.unimag.servicio.ProfesorServicio ..> edu.unimag.dto.profesor.ProfesorActualizarDto : <<use>>
+
+@enduml

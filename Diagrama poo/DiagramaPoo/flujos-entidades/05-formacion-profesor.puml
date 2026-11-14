@@ -1,0 +1,346 @@
+@startuml
+' ============================================================
+' Flujo de FormacionProfesor
+' 23 clases, 23 relaciones estructurales dibujadas
+' 13 dependencias de metodo conservadas comentadas al final
+' Recorte del UML completo sin Matricula: mismas clases, miembros y
+' relaciones del flujo. Las dependencias <<use>> no se dibujan para
+' evitar cruces; se conservan comentadas al final, como en el
+' diagrama depurado sin Matricula.
+' Direccion: top to bottom, enrutado ortogonal.
+' Nota: las relaciones ConfiguracionModuloX --> colaborador se escriben
+' como colaborador <-- ConfiguracionModuloX (misma relacion y mismo
+' sentido dibujado) para ordenar la capa de configuracion y reducir cruces.
+' ============================================================
+hide circle
+hide empty members
+skinparam defaultFontName Helvetica
+skinparam defaultFontSize 10
+skinparam classFontSize 11
+skinparam classAttributeFontSize 9
+skinparam classAttributeIconSize 0
+skinparam classRoundCorner 0
+skinparam shadowing false
+skinparam monochrome false
+skinparam classBorderColor black
+skinparam backgroundColor white
+skinparam classBackgroundColor white
+' --- Paleta de colores pastel para Java 17 ---
+skinparam interfaceBackgroundColor #D5F5E3
+skinparam interface<<Interface>>BackgroundColor #D5F5E3
+skinparam class<<Interface>>BackgroundColor #D5F5E3
+skinparam abstractBackgroundColor #FFE5CC
+skinparam class<<Abstract>>BackgroundColor #FFE5CC
+skinparam class<<Record>>BackgroundColor #D0E1FD
+' --- Paquetes ---
+skinparam packageStyle folder
+skinparam packageBorderColor #85929E
+skinparam packageBackgroundColor #FBFCFC
+skinparam packageFontColor #2C3E50
+skinparam packageFontStyle bold
+' --- Flechas y separacion ---
+skinparam ArrowColor #34495E
+skinparam ArrowFontColor #34495E
+skinparam ArrowFontSize 8
+skinparam ArrowThickness 0.9
+skinparam nodesep 22
+skinparam ranksep 75
+top to bottom direction
+skinparam linetype ortho
+title Flujo de FormacionProfesor
+
+package edu.unimag.vista.web {
+    class FormacionProfesorWeb {
+    -  {readOnly} controlador : FormacionProfesorControlador
+    +  FormacionProfesorWeb(controlador : FormacionProfesorControlador) : void <<Create>>
+    #  atender(ex : HttpExchange, metodo : String, segmentos : List<String>) : void
+    -  coleccion(ex : HttpExchange, metodo : String) : void
+    -  formacion(ex : HttpExchange, metodo : String, id : Long) : void
+}
+    abstract class ManejadorWeb <<Abstract>> {
+    -  {static, readOnly} ORIGENES_PERMITIDOS : Set<String> = Set.of("http://127.0.0.1:5500", "http://localhost:5500")
+    -  {readOnly} rutaBase : String
+    #  ManejadorWeb(rutaBase : String) : void <<Create>>
+    +  getRutaBase() : String
+    #  {abstract} atender(ex : HttpExchange, metodo : String, segmentos : List<String>) : void
+    +  {final} handle(ex : HttpExchange) : void
+    #  responderJson(ex : HttpExchange, codigo : int, cuerpo : Object) : void
+    #  error(mensaje : String) : String
+    #  metodoNoPermitido(ex : HttpExchange, permitidos : String) : void
+    #  exigirMetodo(ex : HttpExchange, metodo : String, esperado : String) : boolean
+    #  noEncontrado(ex : HttpExchange) : void
+    #  leerCuerpo(ex : HttpExchange) : Map<String, String>
+    #  leerConsulta(ex : HttpExchange) : Map<String, String>
+    #  {static} aLong(valor : String, campo : String) : Long
+    #  {static} aInteger(valor : String, campo : String) : Integer
+    #  {static} aUuid(valor : String, campo : String) : UUID
+    #  {static} textoOpcional(campos : Map<String, String>, clave : String) : String
+    #  {static} integerOpcional(campos : Map<String, String>, clave : String) : Integer
+    #  {static} longOpcional(campos : Map<String, String>, clave : String) : Long
+    #  {static} enumDesdeCodigo(tipo : Class<E>, valor : String, campo : String) : E
+    #  {static} enumOpcional(tipo : Class<E>, campos : Map<String, String>, clave : String) : E
+    #  {static} aFecha(valor : String, campo : String) : OffsetDateTime
+    #  {static} fechaOpcional(campos : Map<String, String>, clave : String) : OffsetDateTime
+    -  {static} requerido(valor : String, campo : String) : String
+    -  aplicarCors(ex : HttpExchange) : void
+    -  segmentosDeRuta(ex : HttpExchange) : List<String>
+}
+}
+
+package edu.unimag.controlador {
+    class FormacionProfesorControlador {
+    -  {readOnly} servicio : FormacionProfesorServicio
+    +  FormacionProfesorControlador(servicio : FormacionProfesorServicio) : void <<Create>>
+    +  registrar(request : FormacionProfesorCrearDto) : FormacionProfesorDto
+    +  listarTodos() : List<FormacionProfesorDto>
+    +  actualizar(request : FormacionProfesorActualizarDto) : FormacionProfesorDto
+    +  eliminar(id : Long) : boolean
+    +  listarPorProfesor(idProfesor : Long) : List<FormacionProfesorDto>
+}
+}
+
+package edu.unimag.servicio {
+    class FormacionProfesorServicio {
+    -  {readOnly} formacionRepositorio : FormacionProfesorRepositorio
+    -  {readOnly} profesorRepositorio : ProfesorRepositorio
+    -  {readOnly} mapeador : FormacionProfesorMapeador
+    +  FormacionProfesorServicio(formacionRepositorio : FormacionProfesorRepositorio, profesorRepositorio : ProfesorRepositorio, mapeador : FormacionProfesorMapeador) : void <<Create>>
+    +  registrarFormacion(dto : FormacionProfesorCrearDto) : FormacionProfesorDto
+    +  listarFormaciones() : List<FormacionProfesorDto>
+    +  actualizarFormacion(dto : FormacionProfesorActualizarDto) : FormacionProfesorDto
+    +  eliminarFormacion(id : Long) : boolean
+    +  listarFormacionesPorProfesor(idProfesor : Long) : List<FormacionProfesorDto>
+    -  hidratarYMapearUnico(formacion : FormacionProfesor) : FormacionProfesorDto
+}
+}
+
+package edu.unimag.mapeador {
+    class FormacionProfesorMapeador {
+    -  {readOnly} profesorMapeador : ProfesorMapeador
+    +  FormacionProfesorMapeador(profesorMapeador : ProfesorMapeador) : void <<Create>>
+    +  toDto(entity : FormacionProfesor, profesorCargador : ProfesorCargador) : FormacionProfesorDto
+    +  toDtoList(entidades : List<FormacionProfesor>, profesorCargador : ProfesorCargador) : List<FormacionProfesorDto>
+}
+    class ProfesorMapeador {
+    +  ProfesorMapeador() : void <<Create>>
+    +  toDto(entidad : Profesor) : ProfesorDto
+    +  toDtoList(entidades : List<Profesor>) : List<ProfesorDto>
+}
+}
+
+package edu.unimag.mapeador.api {
+    interface Mapeador<E, R> <<Interface>> {
+    +  {abstract} toDto(entidad : E) : R
+    +  {abstract} toDtoList(entidades : List<E>) : List<R>
+}
+}
+
+package edu.unimag.repositorio.cargador {
+    class ProfesorCargador {
+    -  {readOnly} repositorio : ProfesorRepositorio
+    -  {readOnly} cache : Map<Long, Profesor>
+    +  ProfesorCargador(repositorio : ProfesorRepositorio) : void <<Create>>
+    +  cargarTodos() : void
+    +  cargarPorIds(ids : List<Long>) : void
+    +  registrarEnCache(entidad : Profesor) : void
+    +  obtener(id : Long) : Optional<Profesor>
+    +  existe(id : Long) : boolean
+}
+}
+
+package edu.unimag.repositorio {
+    interface FormacionProfesorRepositorio <<Interface>> {
+}
+    interface ProfesorRepositorio <<Interface>> {
+}
+}
+
+package edu.unimag.repositorio.api {
+    interface CargadorDatos<T, ID> <<Interface>> {
+    +  {abstract} cargarTodos() : void
+    +  {abstract} cargarPorIds(ids : List<ID>) : void
+    +  {abstract} registrarEnCache(entidad : T) : void
+    +  {abstract} obtener(id : ID) : Optional<T>
+    +  {abstract} existe(id : ID) : boolean
+}
+    interface RepositorioBase<T, ID> <<Interface>> {
+    +  {abstract} guardar(entidad : T) : T
+    +  {abstract} actualizar(entidad : T) : T
+    +  {abstract} buscarPorId(id : ID) : Optional<T>
+    +  {abstract} eliminar(id : ID) : boolean
+    +  {abstract} listarTodos() : List<T>
+    +  {abstract} contar() : long
+    +  {abstract} cerrar() : void
+}
+}
+
+package edu.unimag.persistencia {
+    class FormacionProfesorRepositorioImpl {
+    +  FormacionProfesorRepositorioImpl(tpaRepository : TpaRepository<FormacionProfesor, Long>) : void <<Create>>
+    #  permiteBorradoFisico() : boolean
+}
+}
+
+package edu.unimag.persistencia.abstracta {
+    abstract class RepositorioBaseAbstracto<T, ID> <<Abstract>> {
+    #  {readOnly} tpaRepository : TpaRepository<T, ID>
+    +  RepositorioBaseAbstracto(tpaRepository : TpaRepository<T, ID>) : void <<Create>>
+    +  guardar(entidad : T) : T
+    +  actualizar(entidad : T) : T
+    +  buscarPorId(id : ID) : Optional<T>
+    +  listarTodos() : List<T>
+    +  contar() : long
+    +  {final} eliminar(id : ID) : boolean
+    +  cerrar() : void
+    #  permiteBorradoFisico() : boolean
+}
+}
+
+package edu.unimag.dto.formacion {
+    class FormacionProfesorCrearDto <<Record>> {
+    +  {readOnly} idProfesor : Long
+    +  {readOnly} titulo : String
+    +  {readOnly} fecha : OffsetDateTime
+}
+    class FormacionProfesorActualizarDto <<Record>> {
+    +  {readOnly} id : Long
+    +  {readOnly} nuevoTitulo : String
+    +  {readOnly} nuevaFecha : OffsetDateTime
+}
+    class FormacionProfesorDto <<Record>> {
+    +  {readOnly} id : Long
+    +  {readOnly} profesor : ProfesorDto
+    +  {readOnly} titulo : String
+    +  {readOnly} fecha : OffsetDateTime
+}
+}
+
+package edu.unimag.dto.profesor {
+    class ProfesorDto <<Record>> {
+    +  {readOnly} id : Long
+    +  {readOnly} nombre : String
+    +  {readOnly} celular : String
+    +  {readOnly} estado : EstadoEntidad
+    +  {readOnly} activo : Boolean
+}
+}
+
+package edu.unimag.modelo {
+    class FormacionProfesor {
+    -  idFormacionProfesor : Long
+    -  profesor : Profesor
+    -  tituloFormacionProfesor : String
+    -  fechaFormacionProfesor : OffsetDateTime
+    #  FormacionProfesor() : void <<Create>>
+    +  FormacionProfesor(profesor : Profesor, tituloFormacionProfesor : String, fechaFormacionProfesor : OffsetDateTime) : void <<Create>>
+    +  FormacionProfesor(idFormacionProfesor : Long, profesor : Profesor, tituloFormacionProfesor : String, fechaFormacionProfesor : OffsetDateTime) : void <<Create>>
+    +  actualizarTitulo(nuevoTitulo : String) : void
+    +  actualizarFecha(nuevaFecha : OffsetDateTime) : void
+    +  getIdFormacionProfesor() : Long
+    +  getProfesor() : Profesor
+    +  getTituloFormacionProfesor() : String
+    +  getFechaFormacionProfesor() : OffsetDateTime
+    +  getIdProfesor() : Long
+}
+    class Profesor {
+    -  idProfesor : Long
+    -  nombreProfesor : String
+    -  celularProfesor : String
+    -  estadoProfesor : EstadoEntidad
+    #  Profesor() : void <<Create>>
+    +  Profesor(nombreProfesor : String, celularProfesor : String) : void <<Create>>
+    +  Profesor(idProfesor : Long, nombreProfesor : String, celularProfesor : String, estadoProfesor : EstadoEntidad) : void <<Create>>
+    +  actualizarNombre(nuevoNombre : String) : void
+    +  actualizarCelular(nuevoCelular : String) : void
+    +  cambiarEstado(nuevoEstado : EstadoEntidad) : void
+    +  estaActivo() : boolean
+    +  getIdProfesor() : Long
+    +  getNombreProfesor() : String
+    +  getCelularProfesor() : String
+    +  getEstadoProfesor() : EstadoEntidad
+}
+}
+
+package edu.unimag.modelo.enumeracion {
+    enum EstadoEntidad {
+    +  {static, readOnly} ACTIVO : EstadoEntidad
+    +  {static, readOnly} INACTIVO : EstadoEntidad
+    -  {readOnly} code : int
+    -  {readOnly} description : String
+    ~  EstadoEntidad(code : int, description : String) : void <<Create>>
+    +  getCode() : int
+    +  getDescription() : String
+    +  cambiarEstadoA(nuevoEstado : EstadoEntidad) : EstadoEntidad
+}
+}
+
+package edu.unimag.config.modulos {
+    class ConfiguracionModuloFormacionProfesor {
+    -  {readOnly} formacionProfesorRepositorio : FormacionProfesorRepositorio
+    -  {readOnly} profesorRepositorio : ProfesorRepositorio
+    +  ConfiguracionModuloFormacionProfesor(profesorRepoCompartido : ProfesorRepositorio) : void <<Create>>
+    +  getFormacionRepositorio() : FormacionProfesorRepositorio
+    +  construirControlador() : FormacionProfesorControlador
+    +  cerrarRecursos() : void
+}
+}
+
+package edu.unimag.config.modulos.api {
+    interface ModuloConfigurable <<Interface>> {
+    +  {abstract} cerrarRecursos() : void
+}
+}
+
+' --- Orden de capas (oculto) ---
+edu.unimag.vista.web.FormacionProfesorWeb -[hidden]-> edu.unimag.controlador.FormacionProfesorControlador
+edu.unimag.controlador.FormacionProfesorControlador -[hidden]-> edu.unimag.servicio.FormacionProfesorServicio
+edu.unimag.servicio.FormacionProfesorServicio -[hidden]-> edu.unimag.mapeador.FormacionProfesorMapeador
+edu.unimag.servicio.FormacionProfesorServicio -[hidden]-> edu.unimag.repositorio.FormacionProfesorRepositorio
+edu.unimag.mapeador.FormacionProfesorMapeador -[hidden]-> edu.unimag.modelo.FormacionProfesor
+edu.unimag.repositorio.FormacionProfesorRepositorio -[hidden]-> edu.unimag.persistencia.FormacionProfesorRepositorioImpl
+edu.unimag.repositorio.FormacionProfesorRepositorio -[hidden]-> edu.unimag.modelo.FormacionProfesor
+edu.unimag.persistencia.FormacionProfesorRepositorioImpl -[hidden]-> edu.unimag.modelo.FormacionProfesor
+edu.unimag.mapeador.FormacionProfesorMapeador -[hidden]-> edu.unimag.config.modulos.ConfiguracionModuloFormacionProfesor
+edu.unimag.config.modulos.ConfiguracionModuloFormacionProfesor -[hidden]-> edu.unimag.repositorio.FormacionProfesorRepositorio
+
+' --- Grafo de relaciones estructurales ---
+edu.unimag.vista.web.ManejadorWeb <|-- edu.unimag.vista.web.FormacionProfesorWeb
+edu.unimag.mapeador.api.Mapeador <|.. edu.unimag.mapeador.ProfesorMapeador
+edu.unimag.repositorio.FormacionProfesorRepositorio <|.. edu.unimag.persistencia.FormacionProfesorRepositorioImpl
+edu.unimag.repositorio.api.CargadorDatos <|.. edu.unimag.repositorio.cargador.ProfesorCargador
+edu.unimag.repositorio.api.RepositorioBase <|-- edu.unimag.repositorio.FormacionProfesorRepositorio
+edu.unimag.repositorio.api.RepositorioBase <|-- edu.unimag.repositorio.ProfesorRepositorio
+edu.unimag.repositorio.api.RepositorioBase <|.. edu.unimag.persistencia.abstracta.RepositorioBaseAbstracto
+edu.unimag.persistencia.abstracta.RepositorioBaseAbstracto <|-- edu.unimag.persistencia.FormacionProfesorRepositorioImpl
+edu.unimag.config.modulos.api.ModuloConfigurable <|.. edu.unimag.config.modulos.ConfiguracionModuloFormacionProfesor
+edu.unimag.vista.web.FormacionProfesorWeb "1" --> "1" edu.unimag.controlador.FormacionProfesorControlador
+edu.unimag.controlador.FormacionProfesorControlador "1" --> "1" edu.unimag.servicio.FormacionProfesorServicio
+edu.unimag.servicio.FormacionProfesorServicio "1" --> "1" edu.unimag.mapeador.FormacionProfesorMapeador
+edu.unimag.servicio.FormacionProfesorServicio "1" --> "1" edu.unimag.repositorio.FormacionProfesorRepositorio
+edu.unimag.servicio.FormacionProfesorServicio "1" --> "1" edu.unimag.repositorio.ProfesorRepositorio
+edu.unimag.mapeador.FormacionProfesorMapeador "1" --> "1" edu.unimag.mapeador.ProfesorMapeador
+edu.unimag.repositorio.cargador.ProfesorCargador "1" --> "1" edu.unimag.repositorio.ProfesorRepositorio
+edu.unimag.repositorio.cargador.ProfesorCargador "1" o-- "*" edu.unimag.modelo.Profesor
+edu.unimag.dto.formacion.FormacionProfesorDto "1" --> "1" edu.unimag.dto.profesor.ProfesorDto
+edu.unimag.dto.profesor.ProfesorDto "1" --> "1" edu.unimag.modelo.enumeracion.EstadoEntidad
+edu.unimag.modelo.FormacionProfesor "1" --> "1" edu.unimag.modelo.Profesor
+edu.unimag.modelo.Profesor "1" --> "1" edu.unimag.modelo.enumeracion.EstadoEntidad
+edu.unimag.config.modulos.ConfiguracionModuloFormacionProfesor "1" *-- "1" edu.unimag.repositorio.FormacionProfesorRepositorio
+edu.unimag.repositorio.ProfesorRepositorio "1" <-- "1" edu.unimag.config.modulos.ConfiguracionModuloFormacionProfesor
+
+' --- Dependencias de metodo (conservadas como en el UML completo) ---
+' edu.unimag.controlador.FormacionProfesorControlador ..> edu.unimag.dto.formacion.FormacionProfesorActualizarDto : <<use>>
+' edu.unimag.controlador.FormacionProfesorControlador ..> edu.unimag.dto.formacion.FormacionProfesorCrearDto : <<use>>
+' edu.unimag.controlador.FormacionProfesorControlador ..> edu.unimag.dto.formacion.FormacionProfesorDto : <<use>>
+' edu.unimag.servicio.FormacionProfesorServicio ..> edu.unimag.dto.formacion.FormacionProfesorActualizarDto : <<use>>
+' edu.unimag.servicio.FormacionProfesorServicio ..> edu.unimag.dto.formacion.FormacionProfesorCrearDto : <<use>>
+' edu.unimag.servicio.FormacionProfesorServicio ..> edu.unimag.dto.formacion.FormacionProfesorDto : <<use>>
+' edu.unimag.servicio.FormacionProfesorServicio ..> edu.unimag.modelo.FormacionProfesor : <<use>>
+' edu.unimag.mapeador.FormacionProfesorMapeador ..> edu.unimag.repositorio.cargador.ProfesorCargador : <<use>>
+' edu.unimag.mapeador.FormacionProfesorMapeador ..> edu.unimag.dto.formacion.FormacionProfesorDto : <<use>>
+' edu.unimag.mapeador.ProfesorMapeador ..> edu.unimag.dto.profesor.ProfesorDto : <<use>>
+' edu.unimag.mapeador.FormacionProfesorMapeador ..> edu.unimag.modelo.FormacionProfesor : <<use>>
+' edu.unimag.mapeador.ProfesorMapeador ..> edu.unimag.modelo.Profesor : <<use>>
+' edu.unimag.config.modulos.ConfiguracionModuloFormacionProfesor ..> edu.unimag.controlador.FormacionProfesorControlador : <<use>>
+
+@enduml

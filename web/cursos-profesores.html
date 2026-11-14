@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Asignación de profesores a cursos</title>
+    <link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+    <main class="ancho">
+        <nav>
+            <a href="index.html">← Menú principal</a>
+        </nav>
+
+        <h1>Asignación de profesores a cursos</h1>
+
+        <section>
+            <h2>Asignar profesor a curso</h2>
+            <form id="formAsignar">
+                <label>Profesor
+                    <select id="selProfesor" required></select>
+                </label>
+                <label>Curso del periodo
+                    <select id="selCurso" required></select>
+                </label>
+                <label>Tipo de asignación
+                    <select id="selTipo" required></select>
+                </label>
+                <button type="submit">Asignar</button>
+            </form>
+            <p id="msgAsignar" role="status"></p>
+        </section>
+
+        <section>
+            <h2>Consultar asignaciones</h2>
+            <form id="formFiltro">
+                <label>Consultar por
+                    <select id="filtroTipo">
+                        <option value="profesor">Profesor</option>
+                        <option value="materia">Materia</option>
+                        <option value="periodo">Periodo</option>
+                        <option value="materiaPeriodo">Materia y periodo</option>
+                    </select>
+                </label>
+                <label id="grupoProfesor">Profesor
+                    <select id="filtroProfesor"></select>
+                </label>
+                <label id="grupoMateria" hidden>Materia
+                    <select id="filtroMateria"></select>
+                </label>
+                <label id="grupoPeriodo" hidden>Periodo
+                    <select id="filtroPeriodo"></select>
+                </label>
+                <button type="submit">Consultar</button>
+            </form>
+            <p id="msgLista" role="status"></p>
+
+            <div class="tabla-scroll">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Profesor</th>
+                            <th>Curso</th>
+                            <th>Materia</th>
+                            <th>Periodo</th>
+                            <th>Tipo</th>
+                            <th>Estado</th>
+                            <th>Fecha</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabla"></tbody>
+                </table>
+            </div>
+            <p id="vacio" hidden>No hay asignaciones para esa consulta.</p>
+        </section>
+    </main>
+
+    <script src="api.js"></script>
+    <script src="cursos-profesores.js"></script>
+</body>
+</html>

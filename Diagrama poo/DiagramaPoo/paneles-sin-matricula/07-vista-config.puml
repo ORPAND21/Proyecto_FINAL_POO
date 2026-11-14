@@ -1,0 +1,377 @@
+@startuml
+' Panel 07 - Vista + configuracion. Config: left to right, polyline, nodesep 12, ranksep 260.
+' --- Sin iconos de PlantUML: el tipo lo indican las palabras clave ---
+hide circle
+skinparam classAttributeIconSize 0
+set separator none
+' Compartimentos vacios suprimidos (UML 2.5.1 permite no mostrarlos)
+hide empty members
+' Clases externas de Java: no se analizan por dentro (compartimentos ocultos, no vacios)
+hide <<JDK-External>> members
+' --- Tipografia y lineas ---
+skinparam defaultFontName SansSerif
+skinparam defaultFontSize 12
+left to right direction
+skinparam linetype polyline
+skinparam nodesep 12
+skinparam ranksep 260
+skinparam shadowing false
+skinparam roundCorner 0
+skinparam backgroundColor white
+skinparam ArrowColor #34495E
+skinparam ArrowFontColor #34495E
+skinparam ArrowFontSize 11
+skinparam ArrowThickness 1.1
+' --- Clases: encabezado con banda gris, nombre en negrita ---
+skinparam classBorderColor #2C3E50
+skinparam classBorderThickness 1
+skinparam classBackgroundColor #FFFFFF
+skinparam classHeaderBackgroundColor #F4F6F7
+skinparam classFontStyle bold
+skinparam classFontSize 13
+skinparam classAttributeFontSize 12
+skinparam stereotypeFontSize 10
+skinparam stereotypeFontColor #566573
+' --- Paquetes (carpeta, como en UML) ---
+skinparam packageStyle folder
+skinparam packageBorderColor #85929E
+skinparam packageBackgroundColor #FBFCFC
+skinparam packageFontColor #2C3E50
+skinparam packageFontStyle bold
+' --- Paleta pastel por tipo de clasificador ---
+skinparam class<<interface>>BackgroundColor #E8F8F0
+skinparam class<<interface>>HeaderBackgroundColor #D5F5E3
+skinparam interfaceBackgroundColor #E8F8F0
+skinparam interfaceHeaderBackgroundColor #D5F5E3
+skinparam class<<enumeration>>BackgroundColor #FEF9E7
+skinparam class<<enumeration>>HeaderBackgroundColor #FCF3CF
+skinparam class<<annotation>>BackgroundColor #F5EEF8
+skinparam class<<annotation>>HeaderBackgroundColor #EBDEF0
+skinparam class<<record>>BackgroundColor #EBF5FB
+skinparam class<<record>>HeaderBackgroundColor #D6EAF8
+skinparam class<<JDK-External>>BackgroundColor #F2F3F4
+skinparam class<<JDK-External>>BorderColor #AAB7B8
+skinparam interface<<JDK-External>>BackgroundColor #F2F3F4
+skinparam interface<<JDK-External>>BorderColor #AAB7B8
+
+' --- Definicion de Clasificadores (Agrupados por Paquete) ---
+skinparam groupInheritance 2
+
+' --- Paquetes ordenados por capa ---
+package edu.unimag {
+    class "AppWeb" as edu.unimag.AppWeb {
+    -  {static} PUERTO : int = 8080 {readOnly}
+    --
+    +  {static} main(args : String [*] {ordered, nonunique}) : void
+    -  {static} iniciarAplicacion() : void
+    }
+    class "ConfiguracionDependenciasWeb" as edu.unimag.config.ConfiguracionDependenciasWeb {
+    -  {field} modulosConfigurados : ModuloConfigurable [*] = new ArrayList<>() {readOnly, ordered, nonunique}
+    -  profesorControlador : ProfesorControlador {readOnly}
+    -  estudianteControlador : EstudianteControlador {readOnly}
+    -  facultadControlador : FacultadControlador {readOnly}
+    -  materiaControlador : MateriaControlador {readOnly}
+    -  periodoAcademicoControlador : PeriodoAcademicoControlador {readOnly}
+    -  formacionProfesorControlador : FormacionProfesorControlador {readOnly}
+    -  programaControlador : ProgramaControlador {readOnly}
+    -  cursoPeriodoControlador : CursoPeriodoControlador {readOnly}
+    -  planEstudioControlador : PlanEstudioControlador {readOnly}
+    -  cursoProfesorControlador : CursoProfesorControlador {readOnly}
+    --
+    +  <<create>> ConfiguracionDependenciasWeb()
+    +  getProfesorControlador() : ProfesorControlador
+    +  getEstudianteControlador() : EstudianteControlador
+    +  getFacultadControlador() : FacultadControlador
+    +  getMateriaControlador() : MateriaControlador
+    +  getPeriodoAcademicoControlador() : PeriodoAcademicoControlador
+    +  getFormacionProfesorControlador() : FormacionProfesorControlador
+    +  getProgramaControlador() : ProgramaControlador
+    +  getCursoPeriodoControlador() : CursoPeriodoControlador
+    +  getPlanEstudioControlador() : PlanEstudioControlador
+    +  getCursoProfesorControlador() : CursoProfesorControlador
+    +  close() : void
+    }
+    enum "RutaPersistencia" as edu.unimag.config.RutaPersistencia <<enumeration>> {
+    PROFESORES
+    FACULTADES
+    ESTUDIANTES
+    FORMACIONES_PROFESORES
+    MATERIAS
+    PERIODOS_ACADEMICOS
+    CURSOS_PERIODOS
+    CURSOS_PROFESORES
+    PROGRAMAS
+    PLANES_ESTUDIO
+    --
+    -  ruta : Path {readOnly}
+    --
+    -  <<create>> RutaPersistencia(nombreArchivo : String)
+    +  obtenerRuta() : Path
+    }
+    class "CursoProfesorWeb" as edu.unimag.vista.web.CursoProfesorWeb {
+    -  controlador : CursoProfesorControlador {readOnly}
+    --
+    +  <<create>> CursoProfesorWeb(controlador : CursoProfesorControlador)
+    #  atender(ex : HttpExchange, metodo : String, segmentos : String [*] {ordered, nonunique}) : void
+    -  coleccion(ex : HttpExchange, metodo : String) : void
+    -  listar(ex : HttpExchange) : void
+    -  asignar(ex : HttpExchange) : void
+    -  tiposAsignacion(ex : HttpExchange, metodo : String) : void
+    -  asignacionConcreta(ex : HttpExchange, metodo : String, segmentos : String [*] {ordered, nonunique}) : void
+    -  accionSobreAsignacion(ex : HttpExchange, metodo : String, segmentos : String [*] {ordered, nonunique}) : void
+    -  tipoDesdeCodigo(valor : String) : TipoAsignacion
+    }
+    class "CursoPeriodoWeb" as edu.unimag.vista.web.CursoPeriodoWeb {
+    -  controlador : CursoPeriodoControlador {readOnly}
+    --
+    +  <<create>> CursoPeriodoWeb(controlador : CursoPeriodoControlador)
+    #  atender(ex : HttpExchange, metodo : String, segmentos : String [*] {ordered, nonunique}) : void
+    -  coleccion(ex : HttpExchange, metodo : String) : void
+    -  curso(ex : HttpExchange, metodo : String, id : UUID) : void
+    }
+    class "EstudianteWeb" as edu.unimag.vista.web.EstudianteWeb {
+    -  controlador : EstudianteControlador {readOnly}
+    --
+    +  <<create>> EstudianteWeb(controlador : EstudianteControlador)
+    #  atender(ex : HttpExchange, metodo : String, segmentos : String [*] {ordered, nonunique}) : void
+    -  coleccion(ex : HttpExchange, metodo : String) : void
+    -  estudiante(ex : HttpExchange, metodo : String, id : UUID) : void
+    -  cambiarEstado(ex : HttpExchange, metodo : String, segmentos : String [*] {ordered, nonunique}) : void
+    }
+    class "FacultadWeb" as edu.unimag.vista.web.FacultadWeb {
+    -  controlador : FacultadControlador {readOnly}
+    --
+    +  <<create>> FacultadWeb(controlador : FacultadControlador)
+    #  atender(ex : HttpExchange, metodo : String, segmentos : String [*] {ordered, nonunique}) : void
+    -  coleccion(ex : HttpExchange, metodo : String) : void
+    -  cambiarEstado(ex : HttpExchange, metodo : String, segmentos : String [*] {ordered, nonunique}) : void
+    }
+    class "FormacionProfesorWeb" as edu.unimag.vista.web.FormacionProfesorWeb {
+    -  controlador : FormacionProfesorControlador {readOnly}
+    --
+    +  <<create>> FormacionProfesorWeb(controlador : FormacionProfesorControlador)
+    #  atender(ex : HttpExchange, metodo : String, segmentos : String [*] {ordered, nonunique}) : void
+    -  coleccion(ex : HttpExchange, metodo : String) : void
+    -  formacion(ex : HttpExchange, metodo : String, id : Long) : void
+    }
+    abstract class "ManejadorWeb {abstract}" as edu.unimag.vista.web.ManejadorWeb #FDEBD0 {
+    -  {static} {field} ORIGENES_PERMITIDOS : String [*] = Set.of("http://127.0.0.1:5500", "http://... {readOnly}
+    -  rutaBase : String {readOnly}
+    --
+    #  <<create>> ManejadorWeb(rutaBase : String)
+    +  getRutaBase() : String
+    #  {abstract} atender(ex : HttpExchange, metodo : String, segmentos : String [*] {ordered, nonunique}) : void
+    +  handle(ex : HttpExchange) : void
+    #  responderJson(ex : HttpExchange, codigo : int, cuerpo : Object) : void
+    #  error(mensaje : String) : String
+    #  metodoNoPermitido(ex : HttpExchange, permitidos : String) : void
+    #  exigirMetodo(ex : HttpExchange, metodo : String, esperado : String) : boolean
+    #  noEncontrado(ex : HttpExchange) : void
+    #  leerCuerpo(ex : HttpExchange) : Map<String, String>
+    #  leerConsulta(ex : HttpExchange) : Map<String, String>
+    #  {static} aLong(valor : String, campo : String) : Long
+    #  {static} aInteger(valor : String, campo : String) : Integer
+    #  {static} aUuid(valor : String, campo : String) : UUID
+    #  {static} textoOpcional(campos : Map<String, String>, clave : String) : String
+    #  {static} integerOpcional(campos : Map<String, String>, clave : String) : Integer
+    #  {static} longOpcional(campos : Map<String, String>, clave : String) : Long
+    #  {static} enumDesdeCodigo<E > Enum<E> & CodedEnum>(tipo : Class<E>, valor : String, campo : String) : E
+    #  {static} enumOpcional<E > Enum<E> & CodedEnum>(tipo : Class<E>, campos : Map<String, String>, clave : String) : E
+    #  {static} aFecha(valor : String, campo : String) : OffsetDateTime
+    #  {static} fechaOpcional(campos : Map<String, String>, clave : String) : OffsetDateTime
+    -  {static} requerido(valor : String, campo : String) : String
+    -  aplicarCors(ex : HttpExchange) : void
+    -  segmentosDeRuta(ex : HttpExchange) : String [*] {ordered, nonunique}
+    }
+    class "MateriaWeb" as edu.unimag.vista.web.MateriaWeb {
+    -  controlador : MateriaControlador {readOnly}
+    --
+    +  <<create>> MateriaWeb(controlador : MateriaControlador)
+    #  atender(ex : HttpExchange, metodo : String, segmentos : String [*] {ordered, nonunique}) : void
+    -  coleccion(ex : HttpExchange, metodo : String) : void
+    -  cambiarEstado(ex : HttpExchange, metodo : String, segmentos : String [*] {ordered, nonunique}) : void
+    }
+    class "ServidorWeb" as edu.unimag.vista.web.ServidorWeb {
+    -  servidor : HttpServer {readOnly}
+    -  carpetaWeb : Path {readOnly}
+    --
+    +  <<create>> ServidorWeb(puerto : int, carpetaWeb : Path, manejadores : ManejadorWeb [*] {ordered, nonunique})
+    +  iniciar() : void
+    +  detener() : void
+    -  manejarArchivos(ex : HttpExchange) : void
+    -  responderError(ex : HttpExchange, codigo : int, mensaje : String) : void
+    -  tipoContenido(nombre : String) : String
+    }
+    class "PeriodoAcademicoWeb" as edu.unimag.vista.web.PeriodoAcademicoWeb {
+    -  controlador : PeriodoAcademicoControlador {readOnly}
+    --
+    +  <<create>> PeriodoAcademicoWeb(controlador : PeriodoAcademicoControlador)
+    #  atender(ex : HttpExchange, metodo : String, segmentos : String [*] {ordered, nonunique}) : void
+    -  coleccion(ex : HttpExchange, metodo : String) : void
+    -  cambiarEstado(ex : HttpExchange, metodo : String, segmentos : String [*] {ordered, nonunique}) : void
+    }
+    class "PlanEstudioWeb" as edu.unimag.vista.web.PlanEstudioWeb {
+    -  controlador : PlanEstudioControlador {readOnly}
+    --
+    +  <<create>> PlanEstudioWeb(controlador : PlanEstudioControlador)
+    #  atender(ex : HttpExchange, metodo : String, segmentos : String [*] {ordered, nonunique}) : void
+    -  coleccion(ex : HttpExchange, metodo : String) : void
+    -  plan(ex : HttpExchange, metodo : String, id : Long) : void
+    -  cambiarEstado(ex : HttpExchange, metodo : String, segmentos : String [*] {ordered, nonunique}) : void
+    }
+    class "ProfesorWeb" as edu.unimag.vista.web.ProfesorWeb {
+    -  controlador : ProfesorControlador {readOnly}
+    --
+    +  <<create>> ProfesorWeb(controlador : ProfesorControlador)
+    #  atender(ex : HttpExchange, metodo : String, segmentos : String [*] {ordered, nonunique}) : void
+    }
+    class "ProgramaWeb" as edu.unimag.vista.web.ProgramaWeb {
+    -  controlador : ProgramaControlador {readOnly}
+    --
+    +  <<create>> ProgramaWeb(controlador : ProgramaControlador)
+    #  atender(ex : HttpExchange, metodo : String, segmentos : String [*] {ordered, nonunique}) : void
+    -  coleccion(ex : HttpExchange, metodo : String) : void
+    -  niveles(ex : HttpExchange, metodo : String) : void
+    -  programa(ex : HttpExchange, metodo : String, id : UUID) : void
+    -  cambiarEstado(ex : HttpExchange, metodo : String, segmentos : String [*] {ordered, nonunique}) : void
+    }
+    class "Json {leaf}" as edu.unimag.vista.web.Json {
+    -  <<create>> Json()
+    +  {static} aJson(valor : Object) : String
+    -  {static} escribir(v : Object, sb : StringBuilder) : void
+    -  {static} texto(s : String, sb : StringBuilder) : void
+    +  {static} leerObjetoPlano(json : String) : Map<String, String>
+    }
+    class "Lector {leaf}" as edu.unimag.vista.web.Json.Lector {
+    -  s : String {readOnly}
+    -  i : int = 0
+    --
+    ~  <<create>> Lector(s : String)
+    ~  objeto() : Map<String, String>
+    -  valor() : String
+    -  cadena() : String
+    -  saltar() : void
+    -  mirar() : char
+    -  tomar() : char
+    -  esperar(esperado : char) : void
+    }
+    class "ConfiguracionModuloCursoProfesor" as edu.unimag.config.modulos.ConfiguracionModuloCursoProfesor {
+    -  cursoProfesorRepositorio : CursoProfesorRepositorio {readOnly}
+    -  profesorRepositorio : ProfesorRepositorio {readOnly}
+    -  profesorServicio : ProfesorServicio {readOnly}
+    -  cursoPeriodoRepositorio : CursoPeriodoRepositorio {readOnly}
+    -  cursoPeriodoServicio : CursoPeriodoServicio {readOnly}
+    -  materiaRepositorio : MateriaRepositorio {readOnly}
+    -  periodoAcademicoRepositorio : PeriodoAcademicoRepositorio {readOnly}
+    --
+    +  <<create>> ConfiguracionModuloCursoProfesor(profesorRepositorio : ProfesorRepositorio, profesorServicio : ProfesorServicio, cursoPeriodoRepositorio : CursoPeriodoRepositorio, cursoPeriodoServicio : CursoPeriodoServicio, materiaRepositorio : MateriaRepositorio, periodoAcademicoRepositorio : PeriodoAcademicoRepositorio)
+    +  construirControlador() : CursoProfesorControlador
+    +  cerrarRecursos() : void
+    }
+    class "ConfiguracionModuloCursoPeriodo" as edu.unimag.config.modulos.ConfiguracionModuloCursoPeriodo {
+    -  cursoPeriodoRepositorio : CursoPeriodoRepositorio {readOnly}
+    -  materiaRepositorio : MateriaRepositorio {readOnly}
+    -  periodoAcademicoRepositorio : PeriodoAcademicoRepositorio {readOnly}
+    -  cursoPeriodoServicio : CursoPeriodoServicio {readOnly}
+    --
+    +  <<create>> ConfiguracionModuloCursoPeriodo(materiaRepositorio : MateriaRepositorio, periodoAcademicoRepositorio : PeriodoAcademicoRepositorio)
+    +  getCursoPeriodoRepositorio() : CursoPeriodoRepositorio
+    +  getCursoPeriodoServicio() : CursoPeriodoServicio
+    +  cerrarRecursos() : void
+    }
+    class "ConfiguracionModuloEstudiante" as edu.unimag.config.modulos.ConfiguracionModuloEstudiante {
+    -  estudianteRepositorio : EstudianteRepositorio {readOnly}
+    -  estudianteServicio : EstudianteServicio {readOnly}
+    --
+    +  <<create>> ConfiguracionModuloEstudiante()
+    +  getEstudianteRepositorio() : EstudianteRepositorio
+    +  getEstudianteServicio() : EstudianteServicio
+    +  construirControlador() : EstudianteControlador
+    +  cerrarRecursos() : void
+    }
+    class "ConfiguracionModuloFacultad" as edu.unimag.config.modulos.ConfiguracionModuloFacultad {
+    -  facultadRepositorio : FacultadRepositorio {readOnly}
+    --
+    +  <<create>> ConfiguracionModuloFacultad()
+    +  getFacultadRepositorio() : FacultadRepositorio
+    +  construirControlador() : FacultadControlador
+    +  cerrarRecursos() : void
+    }
+    class "ConfiguracionModuloFormacionProfesor" as edu.unimag.config.modulos.ConfiguracionModuloFormacionProfesor {
+    -  formacionProfesorRepositorio : FormacionProfesorRepositorio {readOnly}
+    -  profesorRepositorio : ProfesorRepositorio {readOnly}
+    --
+    +  <<create>> ConfiguracionModuloFormacionProfesor(profesorRepoCompartido : ProfesorRepositorio)
+    +  getFormacionRepositorio() : FormacionProfesorRepositorio
+    +  construirControlador() : FormacionProfesorControlador
+    +  cerrarRecursos() : void
+    }
+    class "ConfiguracionModuloMateria" as edu.unimag.config.modulos.ConfiguracionModuloMateria {
+    -  materiaRepositorio : MateriaRepositorio {readOnly}
+    -  materiaServicio : MateriaServicio {readOnly}
+    --
+    +  <<create>> ConfiguracionModuloMateria()
+    +  getMateriaRepositorio() : MateriaRepositorio
+    +  getMateriaServicio() : MateriaServicio
+    +  construirControlador() : MateriaControlador
+    +  cerrarRecursos() : void
+    }
+    class "ConfiguracionModuloPeriodoAcademico" as edu.unimag.config.modulos.ConfiguracionModuloPeriodoAcademico {
+    -  periodoAcademicoRepositorio : PeriodoAcademicoRepositorio {readOnly}
+    -  periodoAcademicoServicio : PeriodoAcademicoServicio {readOnly}
+    --
+    +  <<create>> ConfiguracionModuloPeriodoAcademico()
+    +  getPeriodoAcademicoRepositorio() : PeriodoAcademicoRepositorio
+    +  getPeriodoAcademicoServicio() : PeriodoAcademicoServicio
+    +  construirControlador() : PeriodoAcademicoControlador
+    +  cerrarRecursos() : void
+    }
+    class "ConfiguracionModuloPlanEstudio" as edu.unimag.config.modulos.ConfiguracionModuloPlanEstudio {
+    -  planEstudioRepositorio : PlanEstudioRepositorio {readOnly}
+    -  programaRepositorio : ProgramaRepositorio {readOnly}
+    -  programaServicio : ProgramaServicio {readOnly}
+    -  facultadRepositorio : FacultadRepositorio {readOnly}
+    -  planEstudioServicio : PlanEstudioServicio {readOnly}
+    --
+    +  <<create>> ConfiguracionModuloPlanEstudio(programaRepositorio : ProgramaRepositorio, programaServicio : ProgramaServicio, facultadRepositorio : FacultadRepositorio)
+    +  getPlanEstudioRepositorio() : PlanEstudioRepositorio
+    +  getPlanEstudioServicio() : PlanEstudioServicio
+    +  construirControlador() : PlanEstudioControlador
+    +  cerrarRecursos() : void
+    }
+    class "ConfiguracionModuloProfesor" as edu.unimag.config.modulos.ConfiguracionModuloProfesor {
+    -  profesorRepositorio : ProfesorRepositorio {readOnly}
+    -  profesorServicio : ProfesorServicio {readOnly}
+    --
+    +  <<create>> ConfiguracionModuloProfesor()
+    +  getProfesorRepositorio() : ProfesorRepositorio
+    +  getProfesorServicio() : ProfesorServicio
+    +  construirControlador() : ProfesorControlador
+    +  cerrarRecursos() : void
+    }
+    class "ConfiguracionModuloPrograma" as edu.unimag.config.modulos.ConfiguracionModuloPrograma {
+    -  programaRepositorio : ProgramaRepositorio {readOnly}
+    -  facultadRepositorio : FacultadRepositorio {readOnly}
+    -  programaServicio : ProgramaServicio {readOnly}
+    --
+    +  <<create>> ConfiguracionModuloPrograma(facultadRepositorio : FacultadRepositorio)
+    +  getProgramaRepositorio() : ProgramaRepositorio
+    +  getProgramaServicio() : ProgramaServicio
+    +  construirControlador() : ProgramaControlador
+    +  cerrarRecursos() : void
+    }
+    interface "ModuloConfigurable" as edu.unimag.config.modulos.api.ModuloConfigurable <<interface>> {
+    +  {abstract} cerrarRecursos() : void
+    }
+edu.unimag.config.modulos.api.ModuloConfigurable <|.. edu.unimag.config.modulos.ConfiguracionModuloCursoProfesor
+edu.unimag.config.modulos.api.ModuloConfigurable <|.. edu.unimag.config.modulos.ConfiguracionModuloCursoPeriodo
+edu.unimag.config.modulos.api.ModuloConfigurable <|.. edu.unimag.config.modulos.ConfiguracionModuloEstudiante
+edu.unimag.config.modulos.api.ModuloConfigurable <|.. edu.unimag.config.modulos.ConfiguracionModuloFacultad
+edu.unimag.config.modulos.api.ModuloConfigurable <|.. edu.unimag.config.modulos.ConfiguracionModuloFormacionProfesor
+edu.unimag.config.modulos.api.ModuloConfigurable <|.. edu.unimag.config.modulos.ConfiguracionModuloMateria
+edu.unimag.config.modulos.api.ModuloConfigurable <|.. edu.unimag.config.modulos.ConfiguracionModuloPeriodoAcademico
+edu.unimag.config.modulos.api.ModuloConfigurable <|.. edu.unimag.config.modulos.ConfiguracionModuloPlanEstudio
+edu.unimag.config.modulos.api.ModuloConfigurable <|.. edu.unimag.config.modulos.ConfiguracionModuloProfesor
+edu.unimag.config.modulos.api.ModuloConfigurable <|.. edu.unimag.config.modulos.ConfiguracionModuloPrograma
+edu.unimag.config.ConfiguracionDependenciasWeb o--> "modulosConfigurados\n*" edu.unimag.config.modulos.api.ModuloConfigurable
+@enduml

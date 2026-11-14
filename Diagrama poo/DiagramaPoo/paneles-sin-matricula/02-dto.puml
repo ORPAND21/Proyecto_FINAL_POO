@@ -1,0 +1,255 @@
+@startuml
+' Panel 02 - DTO. Config: left to right, ortho, nodesep 12, ranksep 260.
+' --- Sin iconos de PlantUML: el tipo lo indican las palabras clave ---
+hide circle
+skinparam classAttributeIconSize 0
+set separator none
+' Compartimentos vacios suprimidos (UML 2.5.1 permite no mostrarlos)
+hide empty members
+' Clases externas de Java: no se analizan por dentro (compartimentos ocultos, no vacios)
+hide <<JDK-External>> members
+' --- Tipografia y lineas ---
+skinparam defaultFontName SansSerif
+skinparam defaultFontSize 12
+left to right direction
+skinparam linetype ortho
+skinparam nodesep 12
+skinparam ranksep 260
+skinparam shadowing false
+skinparam roundCorner 0
+skinparam backgroundColor white
+skinparam ArrowColor #34495E
+skinparam ArrowFontColor #34495E
+skinparam ArrowFontSize 11
+skinparam ArrowThickness 1.1
+' --- Clases: encabezado con banda gris, nombre en negrita ---
+skinparam classBorderColor #2C3E50
+skinparam classBorderThickness 1
+skinparam classBackgroundColor #FFFFFF
+skinparam classHeaderBackgroundColor #F4F6F7
+skinparam classFontStyle bold
+skinparam classFontSize 13
+skinparam classAttributeFontSize 12
+skinparam stereotypeFontSize 10
+skinparam stereotypeFontColor #566573
+' --- Paquetes (carpeta, como en UML) ---
+skinparam packageStyle folder
+skinparam packageBorderColor #85929E
+skinparam packageBackgroundColor #FBFCFC
+skinparam packageFontColor #2C3E50
+skinparam packageFontStyle bold
+' --- Paleta pastel por tipo de clasificador ---
+skinparam class<<interface>>BackgroundColor #E8F8F0
+skinparam class<<interface>>HeaderBackgroundColor #D5F5E3
+skinparam interfaceBackgroundColor #E8F8F0
+skinparam interfaceHeaderBackgroundColor #D5F5E3
+skinparam class<<enumeration>>BackgroundColor #FEF9E7
+skinparam class<<enumeration>>HeaderBackgroundColor #FCF3CF
+skinparam class<<annotation>>BackgroundColor #F5EEF8
+skinparam class<<annotation>>HeaderBackgroundColor #EBDEF0
+skinparam class<<record>>BackgroundColor #EBF5FB
+skinparam class<<record>>HeaderBackgroundColor #D6EAF8
+skinparam class<<JDK-External>>BackgroundColor #F2F3F4
+skinparam class<<JDK-External>>BorderColor #AAB7B8
+skinparam interface<<JDK-External>>BackgroundColor #F2F3F4
+skinparam interface<<JDK-External>>BorderColor #AAB7B8
+
+' --- Definicion de Clasificadores (Agrupados por Paquete) ---
+skinparam groupInheritance 2
+
+' --- Paquetes ordenados por capa ---
+package edu.unimag {
+    class "CursoProfesorDto" as edu.unimag.dto.cursoProfesor.CursoProfesorDto <<record>> {
+    +  profesor : ProfesorDto {readOnly}
+    +  cursoPeriodoDto : CursoPeriodoDto {readOnly}
+    +  tipoAsignacion : TipoAsignacion {readOnly}
+    +  estadoProfesorCurso : EstadoProfesorCurso {readOnly}
+    +  fechaAsignacion : OffsetDateTime {readOnly}
+    }
+    class "CursoProfesorCrearDto" as edu.unimag.dto.cursoProfesor.CursoProfesorCrearDto <<record>> {
+    +  idCursoPeriodo : UUID {readOnly}
+    +  idProfesor : Long {readOnly}
+    +  tipoAsignacion : TipoAsignacion {readOnly}
+    }
+    class "CursoProfesorActualizarDto" as edu.unimag.dto.cursoProfesor.CursoProfesorActualizarDto <<record>> {
+    +  idCursoPeriodo : UUID {readOnly}
+    +  idProfesor : Long {readOnly}
+    +  tipoAsignacion : TipoAsignacion {readOnly}
+    }
+    class "CursoPeriodoDto" as edu.unimag.dto.cursoperiodo.CursoPeriodoDto <<record>> {
+    +  id : UUID {readOnly}
+    +  nombre : String {readOnly}
+    +  materia : MateriaDto {readOnly}
+    +  periodo : PeriodoAcademicoDto {readOnly}
+    +  cupo : Integer {readOnly}
+    +  fechaCreacion : OffsetDateTime {readOnly}
+    }
+    class "CursoPeriodoCrearDto" as edu.unimag.dto.cursoperiodo.CursoPeriodoCrearDto <<record>> {
+    +  nombre : String {readOnly}
+    +  idMateria : Integer {readOnly}
+    +  idPeriodoAcademico : Integer {readOnly}
+    +  cupo : Integer {readOnly}
+    }
+    class "CursoPeriodoActualizarDto" as edu.unimag.dto.cursoperiodo.CursoPeriodoActualizarDto <<record>> {
+    +  id : UUID {readOnly}
+    +  nuevoNombre : String {readOnly}
+    +  nuevoCupo : Integer {readOnly}
+    }
+    class "EstudianteDto" as edu.unimag.dto.estudiante.EstudianteDto <<record>> {
+    +  id : UUID {readOnly}
+    +  codigo : String {readOnly}
+    +  nombre : String {readOnly}
+    +  correo : String {readOnly}
+    +  celular : String {readOnly}
+    +  direccion : String {readOnly}
+    +  estado : EstadoEntidad {readOnly}
+    +  activo : Boolean {readOnly}
+    }
+    class "EstudianteCrearDto" as edu.unimag.dto.estudiante.EstudianteCrearDto <<record>> {
+    +  codigo : String {readOnly}
+    +  nombre : String {readOnly}
+    +  correo : String {readOnly}
+    +  celular : String {readOnly}
+    +  direccion : String {readOnly}
+    }
+    class "EstudianteActualizarDto" as edu.unimag.dto.estudiante.EstudianteActualizarDto <<record>> {
+    +  id : UUID {readOnly}
+    +  correo : String {readOnly}
+    +  celular : String {readOnly}
+    +  direccion : String {readOnly}
+    +  nuevoEstado : Integer {readOnly}
+    --
+    +  obtenerEstadoComoEnum() : EstadoEntidad
+    }
+    class "FacultadDto" as edu.unimag.dto.facultad.FacultadDto <<record>> {
+    +  id : Long {readOnly}
+    +  nombre : String {readOnly}
+    +  estado : EstadoEntidad {readOnly}
+    }
+    class "FacultadCrearDto" as edu.unimag.dto.facultad.FacultadCrearDto <<record>> {
+    +  nombre : String {readOnly}
+    }
+    class "FacultadActualizarDto" as edu.unimag.dto.facultad.FacultadActualizarDto <<record>> {
+    +  id : Long {readOnly}
+    +  nuevoNombre : String {readOnly}
+    }
+    class "FormacionProfesorDto" as edu.unimag.dto.formacion.FormacionProfesorDto <<record>> {
+    +  id : Long {readOnly}
+    +  profesor : ProfesorDto {readOnly}
+    +  titulo : String {readOnly}
+    +  fecha : OffsetDateTime {readOnly}
+    }
+    class "FormacionProfesorCrearDto" as edu.unimag.dto.formacion.FormacionProfesorCrearDto <<record>> {
+    +  idProfesor : Long {readOnly}
+    +  titulo : String {readOnly}
+    +  fecha : OffsetDateTime {readOnly}
+    }
+    class "FormacionProfesorActualizarDto" as edu.unimag.dto.formacion.FormacionProfesorActualizarDto <<record>> {
+    +  id : Long {readOnly}
+    +  nuevoTitulo : String {readOnly}
+    +  nuevaFecha : OffsetDateTime {readOnly}
+    }
+    class "MateriaDto" as edu.unimag.dto.materia.MateriaDto <<record>> {
+    +  id : Integer {readOnly}
+    +  nombre : String {readOnly}
+    +  creditos : Integer {readOnly}
+    +  cupoMaximo : Integer {readOnly}
+    +  estado : EstadoEntidad {readOnly}
+    }
+    class "MateriaCrearDto" as edu.unimag.dto.materia.MateriaCrearDto <<record>> {
+    +  nombre : String {readOnly}
+    +  creditos : Integer {readOnly}
+    +  cupoMaximo : Integer {readOnly}
+    }
+    class "MateriaActualizarDto" as edu.unimag.dto.materia.MateriaActualizarDto <<record>> {
+    +  id : Integer {readOnly}
+    +  nuevoNombre : String {readOnly}
+    +  nuevosCreditos : Integer {readOnly}
+    +  nuevoCupo : Integer {readOnly}
+    }
+    class "ReglasValidacion {leaf}" as edu.unimag.dto.validacion.ReglasValidacion {
+    -  <<create>> ReglasValidacion()
+    +  {static} limpiarRequerido(valor : String, mensajeError : String) : String
+    +  {static} limpiarUuidRequerido(valor : UUID, mensajeError : String) : UUID
+    +  {static} limpiarEnteroRequerido(valor : Integer, mensajeError : String) : Integer
+    +  {static} limpiarLongRequerido(valor : Long, mensajeError : String) : Long
+    +  {static} limpiarCorreo(correo : String) : String
+    +  {static} limpiarCelular(celular : String) : String
+    +  {static} limpiarEnteroEnRango(valor : Integer, min : int, max : int, mensajeError : String) : Integer
+    +  {static} limpiarEnteroPositivo(valor : Integer, mensajeError : String) : Integer
+    +  {static} limpiarBigDecimalPositivo(valor : BigDecimal, mensajeError : String) : BigDecimal
+    +  {static} limpiarBigDecimalNoNegativo(valor : BigDecimal, mensajeError : String) : BigDecimal
+    +  {static} limpiarListaRequerida<T>(lista : T [*] {ordered, nonunique}, mensajeError : String) : T [*] {ordered, nonunique}
+    }
+    class "PeriodoAcademicoDto" as edu.unimag.dto.periodoacademico.PeriodoAcademicoDto <<record>> {
+    +  id : Integer {readOnly}
+    +  nombre : String {readOnly}
+    +  estado : EstadoEntidad {readOnly}
+    }
+    class "PeriodoAcademicoCrearDto" as edu.unimag.dto.periodoacademico.PeriodoAcademicoCrearDto <<record>> {
+    +  nombre : String {readOnly}
+    }
+    class "PeriodoAcademicoActualizarDto" as edu.unimag.dto.periodoacademico.PeriodoAcademicoActualizarDto <<record>> {
+    +  id : Integer {readOnly}
+    +  nuevoNombre : String {readOnly}
+    }
+    class "PlanEstudioDto" as edu.unimag.dto.planestudio.PlanEstudioDto <<record>> {
+    +  id : Long {readOnly}
+    +  version : String {readOnly}
+    +  estado : EstadoEntidad {readOnly}
+    +  fechaCreacion : OffsetDateTime {readOnly}
+    +  programa : ProgramaDto {readOnly}
+    }
+    class "PlanEstudioCrearDto" as edu.unimag.dto.planestudio.PlanEstudioCrearDto <<record>> {
+    +  version : String {readOnly}
+    +  idPrograma : UUID {readOnly}
+    }
+    class "PlanEstudioActualizarDto" as edu.unimag.dto.planestudio.PlanEstudioActualizarDto <<record>> {
+    +  id : Long {readOnly}
+    +  nuevaVersion : String {readOnly}
+    }
+    class "ProfesorDto" as edu.unimag.dto.profesor.ProfesorDto <<record>> {
+    +  id : Long {readOnly}
+    +  nombre : String {readOnly}
+    +  celular : String {readOnly}
+    +  estado : EstadoEntidad {readOnly}
+    +  activo : Boolean {readOnly}
+    }
+    class "ProfesorCrearDto" as edu.unimag.dto.profesor.ProfesorCrearDto <<record>> {
+    +  nombre : String {readOnly}
+    +  celular : String {readOnly}
+    }
+    class "ProfesorActualizarDto" as edu.unimag.dto.profesor.ProfesorActualizarDto <<record>> {
+    +  id : Long {readOnly}
+    +  nuevoNombre : String {readOnly}
+    +  nuevoCelular : String {readOnly}
+    +  nuevoEstado : Integer {readOnly}
+    --
+    +  obtenerEstadoComoEnum() : EstadoEntidad
+    }
+    class "ProgramaDto" as edu.unimag.dto.programa.ProgramaDto <<record>> {
+    +  id : UUID {readOnly}
+    +  nombre : String {readOnly}
+    +  nivelPrograma : NivelPrograma {readOnly}
+    +  facultad : FacultadDto {readOnly}
+    +  estado : EstadoEntidad {readOnly}
+    }
+    class "ProgramaCrearDto" as edu.unimag.dto.programa.ProgramaCrearDto <<record>> {
+    +  nombre : String {readOnly}
+    +  nivelPrograma : NivelPrograma {readOnly}
+    +  idFacultad : Long {readOnly}
+    }
+    class "ProgramaActualizarDto" as edu.unimag.dto.programa.ProgramaActualizarDto <<record>> {
+    +  id : UUID {readOnly}
+    +  nuevoNombre : String {readOnly}
+    +  nuevoNivel : NivelPrograma {readOnly}
+    +  nuevoIdFacultad : Long {readOnly}
+    }
+edu.unimag.dto.cursoProfesor.CursoProfesorDto --> "cursoPeriodoDto\n1" edu.unimag.dto.cursoperiodo.CursoPeriodoDto
+edu.unimag.dto.cursoProfesor.CursoProfesorDto --> "profesor\n1" edu.unimag.dto.profesor.ProfesorDto
+edu.unimag.dto.cursoperiodo.CursoPeriodoDto --> "materia\n1" edu.unimag.dto.materia.MateriaDto
+edu.unimag.dto.cursoperiodo.CursoPeriodoDto --> "periodo\n1" edu.unimag.dto.periodoacademico.PeriodoAcademicoDto
+edu.unimag.dto.formacion.FormacionProfesorDto --> "profesor\n1" edu.unimag.dto.profesor.ProfesorDto
+edu.unimag.dto.planestudio.PlanEstudioDto --> "programa\n1" edu.unimag.dto.programa.ProgramaDto
+edu.unimag.dto.programa.ProgramaDto --> "facultad\n1" edu.unimag.dto.facultad.FacultadDto
+@enduml

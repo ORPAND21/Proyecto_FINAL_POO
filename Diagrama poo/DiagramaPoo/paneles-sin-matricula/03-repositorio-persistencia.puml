@@ -1,0 +1,281 @@
+@startuml
+' Panel 03 - Repositorio + persistencia. Config: left to right, polyline, nodesep 8, ranksep 80.
+' --- Sin iconos de PlantUML: el tipo lo indican las palabras clave ---
+hide circle
+skinparam classAttributeIconSize 0
+set separator none
+' Compartimentos vacios suprimidos (UML 2.5.1 permite no mostrarlos)
+hide empty members
+' Clases externas de Java: no se analizan por dentro (compartimentos ocultos, no vacios)
+hide <<JDK-External>> members
+' --- Tipografia y lineas ---
+skinparam defaultFontName SansSerif
+skinparam defaultFontSize 12
+left to right direction
+skinparam linetype polyline
+skinparam nodesep 8
+skinparam ranksep 80
+skinparam shadowing false
+skinparam roundCorner 0
+skinparam backgroundColor white
+skinparam ArrowColor #34495E
+skinparam ArrowFontColor #34495E
+skinparam ArrowFontSize 11
+skinparam ArrowThickness 1.1
+' --- Clases: encabezado con banda gris, nombre en negrita ---
+skinparam classBorderColor #2C3E50
+skinparam classBorderThickness 1
+skinparam classBackgroundColor #FFFFFF
+skinparam classHeaderBackgroundColor #F4F6F7
+skinparam classFontStyle bold
+skinparam classFontSize 13
+skinparam classAttributeFontSize 12
+skinparam stereotypeFontSize 10
+skinparam stereotypeFontColor #566573
+' --- Paquetes (carpeta, como en UML) ---
+skinparam packageStyle folder
+skinparam packageBorderColor #85929E
+skinparam packageBackgroundColor #FBFCFC
+skinparam packageFontColor #2C3E50
+skinparam packageFontStyle bold
+' --- Paleta pastel por tipo de clasificador ---
+skinparam class<<interface>>BackgroundColor #E8F8F0
+skinparam class<<interface>>HeaderBackgroundColor #D5F5E3
+skinparam interfaceBackgroundColor #E8F8F0
+skinparam interfaceHeaderBackgroundColor #D5F5E3
+skinparam class<<enumeration>>BackgroundColor #FEF9E7
+skinparam class<<enumeration>>HeaderBackgroundColor #FCF3CF
+skinparam class<<annotation>>BackgroundColor #F5EEF8
+skinparam class<<annotation>>HeaderBackgroundColor #EBDEF0
+skinparam class<<record>>BackgroundColor #EBF5FB
+skinparam class<<record>>HeaderBackgroundColor #D6EAF8
+skinparam class<<JDK-External>>BackgroundColor #F2F3F4
+skinparam class<<JDK-External>>BorderColor #AAB7B8
+skinparam interface<<JDK-External>>BackgroundColor #F2F3F4
+skinparam interface<<JDK-External>>BorderColor #AAB7B8
+
+' --- Definicion de Clasificadores (Agrupados por Paquete) ---
+skinparam groupInheritance 2
+
+' --- Paquetes ordenados por capa ---
+package edu.unimag {
+    interface "CursoProfesorRepositorio" as edu.unimag.repositorio.CursoProfesorRepositorio <<interface>> {
+    +  {abstract} insertarSiNoExiste(cursoProfesor : CursoProfesor) : boolean
+    +  {abstract} listarPorCursoPeriodo(idCursoPeriodo : UUID) : CursoProfesor [*] {ordered, nonunique}
+    }
+    interface "CursoPeriodoRepositorio" as edu.unimag.repositorio.CursoPeriodoRepositorio <<interface>> {
+    +  {abstract} insertarSiCombinacionNoExiste(idMateria : Integer, idPeriodoAcademico : Integer, nombre : String, cursoPeriodo : CursoPeriodo) : boolean
+    +  {abstract} actualizarSiNoExisteEnOtra(cursoPeriodoModificado : CursoPeriodo, verificarNombre : boolean) : boolean
+    }
+    interface "EstudianteRepositorio" as edu.unimag.repositorio.EstudianteRepositorio <<interface>> {
+    +  {abstract} insertarSiCodigoNoExiste(codigo : String, estudiante : Estudiante) : boolean
+    }
+    interface "FacultadRepositorio" as edu.unimag.repositorio.FacultadRepositorio <<interface>> {
+    +  {abstract} insertarSiNombreNoExiste(nombre : String, facultad : Facultad) : boolean
+    +  {abstract} actualizarNombreSiNoExisteEnOtra(idFacultad : Long, nuevoNombre : String) : boolean
+    }
+    interface "FormacionProfesorRepositorio" as edu.unimag.repositorio.FormacionProfesorRepositorio <<interface>> {
+    }
+    interface "MateriaRepositorio" as edu.unimag.repositorio.MateriaRepositorio <<interface>> {
+    }
+    interface "PeriodoAcademicoRepositorio" as edu.unimag.repositorio.PeriodoAcademicoRepositorio <<interface>> {
+    +  {abstract} insertarSiNombreNoExiste(nombre : String, periodo : PeriodoAcademico) : boolean
+    +  {abstract} actualizarNombreSiNoExisteEnOtra(idPeriodoAcademico : Integer, nuevoNombre : String) : boolean
+    }
+    interface "PlanEstudioRepositorio" as edu.unimag.repositorio.PlanEstudioRepositorio <<interface>> {
+    }
+    interface "ProfesorRepositorio" as edu.unimag.repositorio.ProfesorRepositorio <<interface>> {
+    }
+    interface "ProgramaRepositorio" as edu.unimag.repositorio.ProgramaRepositorio <<interface>> {
+    +  {abstract} insertarSiNombreNoExiste(nombre : String, programa : Programa) : boolean
+    +  {abstract} actualizarSiNoExisteEnOtra(programaModificado : Programa, verificarNombre : boolean) : boolean
+    }
+    interface "CargadorDatos" as edu.unimag.repositorio.api.CargadorDatos<T, ID> <<interface>> {
+    +  {abstract} cargarTodos() : void
+    +  {abstract} cargarPorIds(ids : ID [*] {ordered, nonunique}) : void
+    +  {abstract} registrarEnCache(entidad : T) : void
+    +  {abstract} obtener(id : ID) : T [0..1]
+    +  {abstract} existe(id : ID) : boolean
+    }
+    interface "RepositorioBase" as edu.unimag.repositorio.api.RepositorioBase<T, ID> <<interface>> {
+    +  {abstract} guardar(entidad : T) : T
+    +  {abstract} actualizar(entidad : T) : T
+    +  {abstract} buscarPorId(id : ID) : T [0..1]
+    +  {abstract} eliminar(id : ID) : boolean
+    +  {abstract} listarTodos() : T [*] {ordered, nonunique}
+    +  {abstract} contar() : long
+    +  {abstract} cerrar() : void
+    }
+    class "CursoProfesorRepositorioImpl" as edu.unimag.persistencia.CursoProfesorRepositorioImpl {
+    +  <<create>> CursoProfesorRepositorioImpl(tpaRepository : TpaRepository<CursoProfesor, CursoProfesorPk>)
+    +  insertarSiNoExiste(cursoProfesor : CursoProfesor) : boolean
+    +  listarPorCursoPeriodo(idCursoPeriodo : UUID) : CursoProfesor [*] {ordered, nonunique}
+    }
+    class "CursoPeriodoRepositorioImpl" as edu.unimag.persistencia.CursoPeriodoRepositorioImpl {
+    +  <<create>> CursoPeriodoRepositorioImpl(tpaRepository : TpaRepository<CursoPeriodo, UUID>)
+    #  permiteBorradoFisico() : boolean
+    +  insertarSiCombinacionNoExiste(idMateria : Integer, idPeriodoAcademico : Integer, nombre : String, cursoPeriodo : CursoPeriodo) : boolean
+    +  actualizarSiNoExisteEnOtra(cursoPeriodoModificado : CursoPeriodo, verificarNombre : boolean) : boolean
+    }
+    class "EstudianteRepositorioImpl" as edu.unimag.persistencia.EstudianteRepositorioImpl {
+    +  <<create>> EstudianteRepositorioImpl(tpaRepository : TpaRepository<Estudiante, UUID>)
+    #  permiteBorradoFisico() : boolean
+    +  insertarSiCodigoNoExiste(codigo : String, estudiante : Estudiante) : boolean
+    }
+    class "FacultadRepositorioImpl" as edu.unimag.persistencia.FacultadRepositorioImpl {
+    +  <<create>> FacultadRepositorioImpl(tpaRepository : TpaRepository<Facultad, Long>)
+    +  insertarSiNombreNoExiste(nombre : String, facultad : Facultad) : boolean
+    +  actualizarNombreSiNoExisteEnOtra(idFacultad : Long, nuevoNombre : String) : boolean
+    }
+    class "FormacionProfesorRepositorioImpl" as edu.unimag.persistencia.FormacionProfesorRepositorioImpl {
+    +  <<create>> FormacionProfesorRepositorioImpl(tpaRepository : TpaRepository<FormacionProfesor, Long>)
+    #  permiteBorradoFisico() : boolean
+    }
+    class "MateriaRepositorioImpl" as edu.unimag.persistencia.MateriaRepositorioImpl {
+    +  <<create>> MateriaRepositorioImpl(tpaRepository : TpaRepository<Materia, Integer>)
+    }
+    class "PeriodoAcademicoRepositorioImpl" as edu.unimag.persistencia.PeriodoAcademicoRepositorioImpl {
+    +  <<create>> PeriodoAcademicoRepositorioImpl(tpaRepository : TpaRepository<PeriodoAcademico, Integer>)
+    +  insertarSiNombreNoExiste(nombre : String, periodo : PeriodoAcademico) : boolean
+    +  actualizarNombreSiNoExisteEnOtra(idPeriodoAcademico : Integer, nuevoNombre : String) : boolean
+    }
+    class "PlanEstudioRepositorioImpl" as edu.unimag.persistencia.PlanEstudioRepositorioImpl {
+    +  <<create>> PlanEstudioRepositorioImpl(tpaRepository : TpaRepository<PlanEstudio, Long>)
+    }
+    class "ProfesorRepositorioImpl" as edu.unimag.persistencia.ProfesorRepositorioImpl {
+    +  <<create>> ProfesorRepositorioImpl(tpaRepository : TpaRepository<Profesor, Long>)
+    }
+    class "ProgramaRepositorioImpl" as edu.unimag.persistencia.ProgramaRepositorioImpl {
+    +  <<create>> ProgramaRepositorioImpl(tpaRepository : TpaRepository<Programa, UUID>)
+    +  insertarSiNombreNoExiste(nombre : String, programa : Programa) : boolean
+    +  actualizarSiNoExisteEnOtra(programaModificado : Programa, verificarNombre : boolean) : boolean
+    }
+    class "CursoPeriodoCargador" as edu.unimag.repositorio.cargador.CursoPeriodoCargador {
+    -  repositorio : CursoPeriodoRepositorio {readOnly}
+    -  cache : Map<UUID, CursoPeriodo> {readOnly}
+    --
+    +  <<create>> CursoPeriodoCargador(repositorio : CursoPeriodoRepositorio)
+    +  cargarTodos() : void
+    +  cargarPorIds(ids : UUID [*] {ordered, nonunique}) : void
+    +  registrarEnCache(entidad : CursoPeriodo) : void
+    +  obtener(id : UUID) : CursoPeriodo [0..1]
+    +  existe(id : UUID) : boolean
+    }
+    class "EstudianteCargador" as edu.unimag.repositorio.cargador.EstudianteCargador {
+    -  repositorio : EstudianteRepositorio {readOnly}
+    -  cache : Map<UUID, Estudiante> {readOnly}
+    --
+    +  <<create>> EstudianteCargador(repositorio : EstudianteRepositorio)
+    +  cargarTodos() : void
+    +  cargarPorIds(ids : UUID [*] {ordered, nonunique}) : void
+    +  registrarEnCache(entidad : Estudiante) : void
+    +  obtener(id : UUID) : Estudiante [0..1]
+    +  existe(id : UUID) : boolean
+    }
+    class "FacultadCargador" as edu.unimag.repositorio.cargador.FacultadCargador {
+    -  repositorio : FacultadRepositorio {readOnly}
+    -  cache : Map<Long, Facultad> {readOnly}
+    --
+    +  <<create>> FacultadCargador(repositorio : FacultadRepositorio)
+    +  cargarTodos() : void
+    +  cargarPorIds(ids : Long [*] {ordered, nonunique}) : void
+    +  registrarEnCache(entidad : Facultad) : void
+    +  obtener(id : Long) : Facultad [0..1]
+    +  existe(id : Long) : boolean
+    }
+    class "MateriaCargador" as edu.unimag.repositorio.cargador.MateriaCargador {
+    -  repositorio : MateriaRepositorio {readOnly}
+    -  cache : Map<Integer, Materia> {readOnly}
+    --
+    +  <<create>> MateriaCargador(repositorio : MateriaRepositorio)
+    +  cargarTodos() : void
+    +  cargarPorIds(ids : Integer [*] {ordered, nonunique}) : void
+    +  registrarEnCache(entidad : Materia) : void
+    +  obtener(id : Integer) : Materia [0..1]
+    +  existe(id : Integer) : boolean
+    }
+    class "PeriodoAcademicoCargador" as edu.unimag.repositorio.cargador.PeriodoAcademicoCargador {
+    -  repositorio : PeriodoAcademicoRepositorio {readOnly}
+    -  cache : Map<Integer, PeriodoAcademico> {readOnly}
+    --
+    +  <<create>> PeriodoAcademicoCargador(repositorio : PeriodoAcademicoRepositorio)
+    +  cargarTodos() : void
+    +  cargarPorIds(ids : Integer [*] {ordered, nonunique}) : void
+    +  registrarEnCache(entidad : PeriodoAcademico) : void
+    +  obtener(id : Integer) : PeriodoAcademico [0..1]
+    +  existe(id : Integer) : boolean
+    }
+    class "PlanEstudioCargador" as edu.unimag.repositorio.cargador.PlanEstudioCargador {
+    -  repositorio : PlanEstudioRepositorio {readOnly}
+    -  cache : Map<Long, PlanEstudio> {readOnly}
+    --
+    +  <<create>> PlanEstudioCargador(repositorio : PlanEstudioRepositorio)
+    +  cargarTodos() : void
+    +  cargarPorIds(ids : Long [*] {ordered, nonunique}) : void
+    +  registrarEnCache(entidad : PlanEstudio) : void
+    +  obtener(id : Long) : PlanEstudio [0..1]
+    +  existe(id : Long) : boolean
+    }
+    class "ProfesorCargador" as edu.unimag.repositorio.cargador.ProfesorCargador {
+    -  repositorio : ProfesorRepositorio {readOnly}
+    -  cache : Map<Long, Profesor> {readOnly}
+    --
+    +  <<create>> ProfesorCargador(repositorio : ProfesorRepositorio)
+    +  cargarTodos() : void
+    +  cargarPorIds(ids : Long [*] {ordered, nonunique}) : void
+    +  registrarEnCache(entidad : Profesor) : void
+    +  obtener(id : Long) : Profesor [0..1]
+    +  existe(id : Long) : boolean
+    }
+    class "ProgramaCargador" as edu.unimag.repositorio.cargador.ProgramaCargador {
+    -  repositorio : ProgramaRepositorio {readOnly}
+    -  cache : Map<UUID, Programa> {readOnly}
+    --
+    +  <<create>> ProgramaCargador(repositorio : ProgramaRepositorio)
+    +  cargarTodos() : void
+    +  cargarPorIds(ids : UUID [*] {ordered, nonunique}) : void
+    +  registrarEnCache(entidad : Programa) : void
+    +  obtener(id : UUID) : Programa [0..1]
+    +  existe(id : UUID) : boolean
+    }
+    abstract class "RepositorioBaseAbstracto {abstract}" as edu.unimag.persistencia.abstracta.RepositorioBaseAbstracto<T, ID> #FDEBD0 {
+    #  tpaRepository : TpaRepository<T, ID> {readOnly}
+    --
+    +  <<create>> RepositorioBaseAbstracto(tpaRepository : TpaRepository<T, ID>)
+    +  guardar(entidad : T) : T
+    +  actualizar(entidad : T) : T
+    +  buscarPorId(id : ID) : T [0..1]
+    +  listarTodos() : T [*] {ordered, nonunique}
+    +  contar() : long
+    +  eliminar(id : ID) : boolean
+    +  cerrar() : void
+    #  permiteBorradoFisico() : boolean
+    }
+edu.unimag.repositorio.CursoProfesorRepositorio <|.. edu.unimag.persistencia.CursoProfesorRepositorioImpl
+edu.unimag.repositorio.CursoPeriodoRepositorio <|.. edu.unimag.persistencia.CursoPeriodoRepositorioImpl
+edu.unimag.repositorio.EstudianteRepositorio <|.. edu.unimag.persistencia.EstudianteRepositorioImpl
+edu.unimag.repositorio.FacultadRepositorio <|.. edu.unimag.persistencia.FacultadRepositorioImpl
+edu.unimag.repositorio.FormacionProfesorRepositorio <|.. edu.unimag.persistencia.FormacionProfesorRepositorioImpl
+edu.unimag.repositorio.api.CargadorDatos <|.. edu.unimag.repositorio.cargador.CursoPeriodoCargador : <T -> CursoPeriodo, ID -> UUID>
+edu.unimag.repositorio.api.CargadorDatos <|.. edu.unimag.repositorio.cargador.EstudianteCargador : <T -> Estudiante, ID -> UUID>
+edu.unimag.repositorio.api.CargadorDatos <|.. edu.unimag.repositorio.cargador.FacultadCargador : <T -> Facultad, ID -> Long>
+edu.unimag.repositorio.MateriaRepositorio <|.. edu.unimag.persistencia.MateriaRepositorioImpl
+edu.unimag.repositorio.api.CargadorDatos <|.. edu.unimag.repositorio.cargador.MateriaCargador : <T -> Materia, ID -> Integer>
+edu.unimag.repositorio.api.RepositorioBase <|.. edu.unimag.persistencia.abstracta.RepositorioBaseAbstracto : <T -> T, ID -> ID>
+edu.unimag.repositorio.api.CargadorDatos <|.. edu.unimag.repositorio.cargador.PeriodoAcademicoCargador : <T -> PeriodoAcademico, ID -> Integer>
+edu.unimag.repositorio.api.CargadorDatos <|.. edu.unimag.repositorio.cargador.PlanEstudioCargador : <T -> PlanEstudio, ID -> Long>
+edu.unimag.repositorio.api.CargadorDatos <|.. edu.unimag.repositorio.cargador.ProfesorCargador : <T -> Profesor, ID -> Long>
+edu.unimag.repositorio.api.CargadorDatos <|.. edu.unimag.repositorio.cargador.ProgramaCargador : <T -> Programa, ID -> UUID>
+edu.unimag.repositorio.PeriodoAcademicoRepositorio <|.. edu.unimag.persistencia.PeriodoAcademicoRepositorioImpl
+edu.unimag.repositorio.PlanEstudioRepositorio <|.. edu.unimag.persistencia.PlanEstudioRepositorioImpl
+edu.unimag.repositorio.ProfesorRepositorio <|.. edu.unimag.persistencia.ProfesorRepositorioImpl
+edu.unimag.repositorio.ProgramaRepositorio <|.. edu.unimag.persistencia.ProgramaRepositorioImpl
+edu.unimag.repositorio.cargador.CursoPeriodoCargador --> "repositorio\n1" edu.unimag.repositorio.CursoPeriodoRepositorio
+edu.unimag.repositorio.cargador.EstudianteCargador --> "repositorio\n1" edu.unimag.repositorio.EstudianteRepositorio
+edu.unimag.repositorio.cargador.FacultadCargador --> "repositorio\n1" edu.unimag.repositorio.FacultadRepositorio
+edu.unimag.repositorio.cargador.MateriaCargador --> "repositorio\n1" edu.unimag.repositorio.MateriaRepositorio
+edu.unimag.repositorio.cargador.PeriodoAcademicoCargador --> "repositorio\n1" edu.unimag.repositorio.PeriodoAcademicoRepositorio
+edu.unimag.repositorio.cargador.PlanEstudioCargador --> "repositorio\n1" edu.unimag.repositorio.PlanEstudioRepositorio
+edu.unimag.repositorio.cargador.ProfesorCargador --> "repositorio\n1" edu.unimag.repositorio.ProfesorRepositorio
+edu.unimag.repositorio.cargador.ProgramaCargador --> "repositorio\n1" edu.unimag.repositorio.ProgramaRepositorio
+@enduml

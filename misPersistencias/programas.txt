@@ -1,0 +1,4 @@
+f7826865-afdd-41bf-b141-54eb0ae942f2¦Ingenieria de sistemas¦3¦1¦1~
+82dedda6-5770-426a-a044-28695eb50382¦Ingenieria agronomica¦3¦1¦1~
+7890b1c5-d292-4a8b-81f1-1af555dc775c¦Medicina¦3¦2¦1~
+871b96ee-1f97-4b60-b5b8-97b7a2f7c48f¦Enfermeria¦3¦2¦1~
