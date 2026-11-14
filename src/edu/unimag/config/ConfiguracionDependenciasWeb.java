@@ -151,7 +151,8 @@ public class ConfiguracionDependenciasWeb implements AutoCloseable {
             this.programaControlador = new ProgramaControlador(configPrograma.getProgramaServicio());
             this.cursoPeriodoControlador = new CursoPeriodoControlador(
                     configCursoPeriodo.getCursoPeriodoServicio(),
-                    configCursoProfesor.getCursoProfesorServicio());
+                    configCursoProfesor.getCursoProfesorServicio(),
+                    configCursoEstudiante.getCursoEstudianteServicio());
             this.planEstudioControlador = new PlanEstudioControlador(
                     configPlanEstudio.getPlanEstudioServicio(),
                     configPrograma.getProgramaServicio());

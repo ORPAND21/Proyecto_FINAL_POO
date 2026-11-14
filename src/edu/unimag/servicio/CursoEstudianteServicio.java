@@ -281,6 +281,18 @@ public class CursoEstudianteServicio {
         return hidratarYmapearListaConPeriodo(delPeriodo, periodoAcademico);
     }
 
+    //validacion para borrar un curso: no debe tener inscripciones
+    //(cubre tambien monitorias, porque una monitoria exige una inscripcion admitida
+    // y las inscripciones no se borran fisicamente)
+    public boolean tieneInscripciones(UUID idCursoPeriodo) {
+        for (CursoEstudiante inscripcion : cursoEstudianteRepositorio.listarTodos()) {
+            if (inscripcion.getIdCursoPeriodo().equals(idCursoPeriodo)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     //metodos auxiliares de hidratacion
     private List<CursoEstudianteDto> hidratarYmapearListaGenerico(
             List<CursoEstudiante> inscripciones,
