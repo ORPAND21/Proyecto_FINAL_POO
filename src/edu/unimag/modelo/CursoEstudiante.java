@@ -63,6 +63,7 @@ public class CursoEstudiante {
     }
 
     public void reAsignarCurso() {
+        
         estado = estado.cambiarEstadoA(EstadoInscripcion.ADMITIDO);
     }
 

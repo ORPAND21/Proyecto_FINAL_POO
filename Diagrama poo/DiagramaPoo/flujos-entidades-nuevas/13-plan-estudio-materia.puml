@@ -1,0 +1,676 @@
+@startuml
+' ============================================================
+' Flujo de PlanEstudioMateria
+' 46 clases, 71 relaciones estructurales y 46
+' dependencias de metodo <<use>> dibujadas.
+' Recorte del UML completo: mismas clases, miembros y relaciones
+' del flujo. Se conservan TODAS las relaciones, incluidas las
+' dependencias <<use>>.
+' Direccion: top to bottom, enrutado ortogonal.
+' ============================================================
+hide circle
+hide empty members
+skinparam defaultFontName Helvetica
+skinparam defaultFontSize 10
+skinparam classFontSize 11
+skinparam classAttributeFontSize 9
+skinparam classAttributeIconSize 0
+skinparam classRoundCorner 0
+skinparam shadowing false
+skinparam monochrome false
+skinparam classBorderColor black
+skinparam backgroundColor white
+skinparam classBackgroundColor white
+' --- Paleta de colores pastel para Java 17 ---
+skinparam interfaceBackgroundColor #D5F5E3
+skinparam interface<<Interface>>BackgroundColor #D5F5E3
+skinparam class<<Interface>>BackgroundColor #D5F5E3
+skinparam abstractBackgroundColor #FFE5CC
+skinparam class<<Abstract>>BackgroundColor #FFE5CC
+skinparam class<<Record>>BackgroundColor #D0E1FD
+' --- Paquetes ---
+skinparam packageStyle folder
+skinparam packageBorderColor #85929E
+skinparam packageBackgroundColor #FBFCFC
+skinparam packageFontColor #2C3E50
+skinparam packageFontStyle bold
+' --- Flechas y separacion ---
+skinparam ArrowColor #34495E
+skinparam ArrowFontColor #34495E
+skinparam ArrowFontSize 8
+skinparam ArrowThickness 0.9
+skinparam nodesep 16
+skinparam ranksep 55
+top to bottom direction
+skinparam linetype ortho
+title Flujo de PlanEstudioMateria
+
+package edu.unimag.vista.web {
+    class PlanEstudioMateriaWeb {
+    -  {readOnly} controlador : PlanEstudioMateriaControlador
+    +  PlanEstudioMateriaWeb(controlador : PlanEstudioMateriaControlador) : void <<Create>>
+    #  atender(ex : HttpExchange, metodo : String, segmentos : List<String>) : void
+    -  coleccion(ex : HttpExchange, metodo : String) : void
+    -  listar(ex : HttpExchange) : void
+    -  asignar(ex : HttpExchange) : void
+    -  asignacionConcreta(ex : HttpExchange, metodo : String, segmentos : List<String>) : void
+}
+    abstract class ManejadorWeb <<Abstract>> {
+    -  {static, readOnly} ORIGENES_PERMITIDOS : Set<String> = Set.of("http://127.0.0.1:5500", "http://localhost:5500")
+    -  {readOnly} rutaBase : String
+    #  ManejadorWeb(rutaBase : String) : void <<Create>>
+    +  getRutaBase() : String
+    #  {abstract} atender(ex : HttpExchange, metodo : String, segmentos : List<String>) : void
+    +  {final} handle(ex : HttpExchange) : void
+    #  responderJson(ex : HttpExchange, codigo : int, cuerpo : Object) : void
+    #  error(mensaje : String) : String
+    #  metodoNoPermitido(ex : HttpExchange, permitidos : String) : void
+    #  exigirMetodo(ex : HttpExchange, metodo : String, esperado : String) : boolean
+    #  noEncontrado(ex : HttpExchange) : void
+    #  leerCuerpo(ex : HttpExchange) : Map<String, String>
+    #  leerConsulta(ex : HttpExchange) : Map<String, String>
+    #  {static} aLong(valor : String, campo : String) : Long
+    #  {static} aInteger(valor : String, campo : String) : Integer
+    #  {static} aUuid(valor : String, campo : String) : UUID
+    #  {static} textoOpcional(campos : Map<String, String>, clave : String) : String
+    #  {static} integerOpcional(campos : Map<String, String>, clave : String) : Integer
+    #  {static} longOpcional(campos : Map<String, String>, clave : String) : Long
+    #  {static} enumDesdeCodigo(tipo : Class<E>, valor : String, campo : String) : E
+    #  {static} enumOpcional(tipo : Class<E>, campos : Map<String, String>, clave : String) : E
+    #  {static} aFecha(valor : String, campo : String) : OffsetDateTime
+    #  {static} fechaOpcional(campos : Map<String, String>, clave : String) : OffsetDateTime
+    -  {static} requerido(valor : String, campo : String) : String
+    -  aplicarCors(ex : HttpExchange) : void
+    -  segmentosDeRuta(ex : HttpExchange) : List<String>
+}
+}
+
+package edu.unimag.controlador {
+    class PlanEstudioMateriaControlador {
+    -  {readOnly} planEstudioMateriaServicio : PlanEstudioMateriaServicio
+    -  {readOnly} planEstudioServicio : PlanEstudioServicio
+    -  {readOnly} materiaServicio : MateriaServicio
+    +  PlanEstudioMateriaControlador(planEstudioMateriaServicio : PlanEstudioMateriaServicio, planEstudioServicio : PlanEstudioServicio, materiaServicio : MateriaServicio) : void <<Create>>
+    +  asignar(dto : PlanEstudioMateriaCrearDto) : PlanEstudioMateriaDto
+    +  actualizar(dto : PlanEstudioMateriaActualizarDto) : PlanEstudioMateriaDto
+    +  quitar(idPlanEstudio : Long, idMateria : Integer) : boolean
+    +  listarPorPlan(idPlanEstudio : Long) : List<PlanEstudioMateriaDto>
+    +  listarPorMateria(idMateria : Integer) : List<PlanEstudioMateriaDto>
+    +  buscarPlanEstudio(idPlanEstudio : Long) : PlanEstudioDto
+    +  buscarMateria(idMateria : Integer) : MateriaDto
+}
+}
+
+package edu.unimag.servicio {
+    class PlanEstudioMateriaServicio {
+    -  {readOnly} planEstudioMateriaRepositorio : PlanEstudioMateriaRepositorio
+    -  {readOnly} planEstudioRepositorio : PlanEstudioRepositorio
+    -  {readOnly} materiaRepositorio : MateriaRepositorio
+    -  {readOnly} programaRepositorio : ProgramaRepositorio
+    -  {readOnly} facultadRepositorio : FacultadRepositorio
+    -  {readOnly} mapeador : PlanEstudioMateriaMapeador
+    +  PlanEstudioMateriaServicio(planEstudioMateriaRepositorio : PlanEstudioMateriaRepositorio, planEstudioRepositorio : PlanEstudioRepositorio, materiaRepositorio : MateriaRepositorio, programaRepositorio : ProgramaRepositorio, facultadRepositorio : FacultadRepositorio, mapeador : PlanEstudioMateriaMapeador) : void <<Create>>
+    +  asignar(dto : PlanEstudioMateriaCrearDto) : PlanEstudioMateriaDto
+    +  actualizar(dto : PlanEstudioMateriaActualizarDto) : PlanEstudioMateriaDto
+    +  quitar(idPlanEstudio : Long, idMateria : Integer) : boolean
+    +  listarPorPlan(idPlanEstudio : Long) : List<PlanEstudioMateriaDto>
+    +  listarPorMateria(idMateria : Integer) : List<PlanEstudioMateriaDto>
+    -  hidratarYmapearListaGenerico(asignaciones : List<PlanEstudioMateria>, planCargadorInicial : PlanEstudioCargador, materiaCargadorInicial : MateriaCargador) : List<PlanEstudioMateriaDto>
+    -  hidratarYmapearListaConPlan(asignaciones : List<PlanEstudioMateria>, planEstudio : PlanEstudio) : List<PlanEstudioMateriaDto>
+    -  hidratarYmapearListaConMateria(asignaciones : List<PlanEstudioMateria>, materia : Materia) : List<PlanEstudioMateriaDto>
+    -  hidratarYmapearUnico(asignacion : PlanEstudioMateria, planEstudio : PlanEstudio, materia : Materia) : PlanEstudioMateriaDto
+}
+    class MateriaServicio {
+    -  {readOnly} repositorio : MateriaRepositorio
+    -  {readOnly} mapper : MateriaMapeador
+    +  MateriaServicio(repositorio : MateriaRepositorio, mapper : MateriaMapeador) : void <<Create>>
+    +  registrarMateria(dto : MateriaCrearDto) : MateriaDto
+    +  listarTodas() : List<MateriaDto>
+    +  actualizar(dto : MateriaActualizarDto) : MateriaDto
+    +  suspender(id : Integer) : MateriaDto
+    +  reactivar(id : Integer) : MateriaDto
+    +  buscarPorId(id : Integer) : MateriaDto
+}
+    class PlanEstudioServicio {
+    -  {readOnly} planEstudioRepositorio : PlanEstudioRepositorio
+    -  {readOnly} programaRepositorio : ProgramaRepositorio
+    -  {readOnly} facultadRepositorio : FacultadRepositorio
+    -  {readOnly} mapeador : PlanEstudioMapeador
+    +  PlanEstudioServicio(planEstudioRepositorio : PlanEstudioRepositorio, programaRepositorio : ProgramaRepositorio, facultadRepositorio : FacultadRepositorio, mapeador : PlanEstudioMapeador) : void <<Create>>
+    +  registrar(dto : PlanEstudioCrearDto) : PlanEstudioDto
+    +  actualizar(dto : PlanEstudioActualizarDto) : PlanEstudioDto
+    +  activar(idPlanEstudio : Long) : PlanEstudioDto
+    +  inactivar(idPlanEstudio : Long) : PlanEstudioDto
+    +  listarTodos() : List<PlanEstudioDto>
+    +  buscarPorId(idPlanEstudio : Long) : PlanEstudioDto
+    +  listarPorPrograma(idPrograma : UUID) : List<PlanEstudioDto>
+    -  hidratarYMapearUnico(plan : PlanEstudio) : PlanEstudioDto
+    -  hidratarYMapearUnico(plan : PlanEstudio, programa : Programa) : PlanEstudioDto
+    -  hidratarYMapearUnico(plan : PlanEstudio, programa : Programa, facultad : Facultad) : PlanEstudioDto
+}
+}
+
+package edu.unimag.mapeador {
+    class PlanEstudioMateriaMapeador {
+    -  {readOnly} planEstudioMapeador : PlanEstudioMapeador
+    -  {readOnly} materiaMapeador : MateriaMapeador
+    +  PlanEstudioMateriaMapeador(planEstudioMapeador : PlanEstudioMapeador, materiaMapeador : MateriaMapeador) : void <<Create>>
+    +  toDtoList(entidades : List<PlanEstudioMateria>, planEstudioCargador : PlanEstudioCargador, materiaCargador : MateriaCargador, programaCargador : ProgramaCargador, facultadCargador : FacultadCargador) : List<PlanEstudioMateriaDto>
+    -  validarIntegridad(miEntidad : PlanEstudioMateria, planEstudioCargador : PlanEstudioCargador, materiaCargador : MateriaCargador, programaCargador : ProgramaCargador, facultadCargador : FacultadCargador) : boolean
+    -  transformarDto(miEntidad : PlanEstudioMateria, planEstudioCargador : PlanEstudioCargador, materiaCargador : MateriaCargador, programaCargador : ProgramaCargador, facultadCargador : FacultadCargador) : PlanEstudioMateriaDto
+    +  toDto(entidad : PlanEstudioMateria, planEstudioCargador : PlanEstudioCargador, materiaCargador : MateriaCargador, programaCargador : ProgramaCargador, facultadCargador : FacultadCargador) : PlanEstudioMateriaDto
+}
+    class FacultadMapeador {
+    +  FacultadMapeador() : void <<Create>>
+    +  toDto(entidad : Facultad) : FacultadDto
+    +  toDtoList(entidades : List<Facultad>) : List<FacultadDto>
+}
+    class MateriaMapeador {
+    +  MateriaMapeador() : void <<Create>>
+    +  toDto(entidad : Materia) : MateriaDto
+    +  toDtoList(entidades : List<Materia>) : List<MateriaDto>
+}
+    class PlanEstudioMapeador {
+    -  {readOnly} programaMapeador : ProgramaMapeador
+    +  PlanEstudioMapeador(programaMapeador : ProgramaMapeador) : void <<Create>>
+    +  toDtoList(entidades : List<PlanEstudio>, programaCargador : ProgramaCargador, facultadCargador : FacultadCargador) : List<PlanEstudioDto>
+    +  toDto(entity : PlanEstudio, programaCargador : ProgramaCargador, facultadCargador : FacultadCargador) : PlanEstudioDto
+    -  validarIntegridad(entity : PlanEstudio, programaCargador : ProgramaCargador, facultadCargador : FacultadCargador) : boolean
+    -  transformarADto(entity : PlanEstudio, programaCargador : ProgramaCargador, facultadCargador : FacultadCargador) : PlanEstudioDto
+}
+    class ProgramaMapeador {
+    -  {readOnly} facultadMapeador : FacultadMapeador
+    +  ProgramaMapeador(facultadMapeador : FacultadMapeador) : void <<Create>>
+    +  toDtoList(entidades : List<Programa>, facultadCargador : FacultadCargador) : List<ProgramaDto>
+    +  toDto(entity : Programa, facultadCargador : FacultadCargador) : ProgramaDto
+    -  validarIntegridad(entity : Programa, facultadCargador : FacultadCargador) : boolean
+    -  transformarADto(entity : Programa, facultadCargador : FacultadCargador) : ProgramaDto
+}
+}
+
+package edu.unimag.mapeador.api {
+    interface Mapeador<E, R> <<Interface>> {
+    +  {abstract} toDto(entidad : E) : R
+    +  {abstract} toDtoList(entidades : List<E>) : List<R>
+}
+}
+
+package edu.unimag.modelo {
+    class PlanEstudioMateria {
+    -  idPlanEstudioMateria : PlanEstudioMateriaPk
+    -  semestrePlanEstudioMateria : Integer
+    -  ordenPlanEstudioMateria : Integer
+    #  PlanEstudioMateria() : void <<Create>>
+    +  PlanEstudioMateria(id : PlanEstudioMateriaPk, semestre : Integer, orden : Integer) : void <<Create>>
+    +  reubicarSemestre(nuevoSemestre : Integer) : void
+    +  actualizarOrden(nuevoOrden : Integer) : void
+    +  getIdPlanEstudioMateria() : PlanEstudioMateriaPk
+    +  getSemestrePlanEstudioMateria() : Integer
+    +  getOrdenPlanEstudioMateria() : Integer
+    +  getIdPlanEstudio() : Long
+    +  getIdMateria() : Integer
+    +  getPlanEstudio() : PlanEstudio
+    +  getMateria() : Materia
+}
+    class Facultad {
+    -  idFacultad : Long
+    -  nombreFacultad : String
+    -  estadoFacultad : EstadoEntidad
+    #  Facultad() : void <<Create>>
+    +  Facultad(nombreFacultad : String) : void <<Create>>
+    +  Facultad(idFacultad : Long, nombreFacultad : String, estadoFacultad : EstadoEntidad) : void <<Create>>
+    +  actualizarNombre(nuevoNombre : String) : void
+    +  suspender() : void
+    +  reactivar() : void
+    +  estaActiva() : boolean
+    +  getIdFacultad() : Long
+    +  getNombreFacultad() : String
+    +  getEstadoFacultad() : EstadoEntidad
+}
+    class Materia {
+    -  idMateria : Integer
+    -  nombreMateria : String
+    -  creditosMateria : Integer
+    -  cupoMaximoMateria : Integer
+    -  estadoMateria : EstadoEntidad
+    #  Materia() : void <<Create>>
+    +  Materia(nombreMateria : String, creditosMateria : Integer, cupoMaximoMateria : Integer) : void <<Create>>
+    +  Materia(idMateria : Integer, nombreMateria : String, creditosMateria : Integer, cupoMaximoMateria : Integer, estadoMateria : EstadoEntidad) : void <<Create>>
+    +  actualizarNombre(nuevoNombre : String) : void
+    +  actualizarCupo(nuevoCupo : Integer) : void
+    +  actualizarCreditos(nuevosCreditos : Integer) : void
+    +  suspender() : void
+    +  reactivar() : void
+    +  estaActiva() : boolean
+    +  getIdMateria() : Integer
+    +  getNombreMateria() : String
+    +  getCreditosMateria() : Integer
+    +  getCupoMaximoMateria() : Integer
+    +  getEstadoMateria() : EstadoEntidad
+    +  hashCode() : int
+    +  equals(obj : Object) : boolean
+}
+    class PlanEstudio {
+    -  idPlanEstudio : Long
+    -  versionPlanEstudio : String
+    -  vigentePlanEstudio : EstadoEntidad
+    -  fechaCreacionPlanEstudio : OffsetDateTime
+    -  programa : Programa
+    #  PlanEstudio() : void <<Create>>
+    +  PlanEstudio(versionPlanEstudio : String, programa : Programa) : void <<Create>>
+    +  PlanEstudio(idPlanEstudio : Long, versionPlanEstudio : String, vigentePlanEstudio : EstadoEntidad, fechaCreacionPlanEstudio : OffsetDateTime, programa : Programa) : void <<Create>>
+    +  actualizarVersion(nuevaVersion : String) : void
+    +  activar() : void
+    +  inactivar() : void
+    +  estaActivo() : boolean
+    +  getIdPlanEstudio() : Long
+    +  getVersionPlanEstudio() : String
+    +  getVigentePlanEstudio() : EstadoEntidad
+    +  getFechaCreacionPlanEstudio() : OffsetDateTime
+    +  getPrograma() : Programa
+    +  getIdPrograma() : UUID
+    +  getNombrePrograma() : String
+    +  hashCode() : int
+    +  equals(obj : Object) : boolean
+}
+    class Programa {
+    -  idPrograma : UUID
+    -  nombrePrograma : String
+    -  nivelPrograma : NivelPrograma
+    -  facultad : Facultad
+    -  estadoPrograma : EstadoEntidad
+    #  Programa() : void <<Create>>
+    +  Programa(nombrePrograma : String, nivelPrograma : NivelPrograma, facultad : Facultad) : void <<Create>>
+    +  Programa(idPrograma : UUID, nombrePrograma : String, nivelPrograma : NivelPrograma, facultad : Facultad, estadoPrograma : EstadoEntidad) : void <<Create>>
+    +  actualizarNombre(nuevoNombre : String) : void
+    +  actualizarNivel(nuevoNivel : NivelPrograma) : void
+    +  cambiarFacultad(nuevaFacultad : Facultad) : void
+    +  suspender() : void
+    +  reactivar() : void
+    +  estaActivo() : boolean
+    +  getIdPrograma() : UUID
+    +  getNombrePrograma() : String
+    +  getNivelPrograma() : NivelPrograma
+    +  getFacultad() : Facultad
+    +  getEstadoPrograma() : EstadoEntidad
+    +  getIdFacultad() : Long
+    +  getNombreFacultad() : String
+}
+}
+
+package edu.unimag.modelo.pk {
+    class PlanEstudioMateriaPk {
+    -  {readOnly} planEstudio : PlanEstudio
+    -  {readOnly} materia : Materia
+    #  PlanEstudioMateriaPk() : void <<Create>>
+    +  PlanEstudioMateriaPk(planEstudio : PlanEstudio, materia : Materia) : void <<Create>>
+    +  getPlanEstudio() : PlanEstudio
+    +  getMateria() : Materia
+    +  getIdPlanEstudio() : Long
+    +  getIdMateria() : Integer
+    +  hashCode() : int
+    +  equals(obj : Object) : boolean
+    +  toString() : String
+}
+}
+
+package edu.unimag.modelo.enumeracion {
+    enum EstadoEntidad {
+    +  {static, readOnly} ACTIVO : EstadoEntidad
+    +  {static, readOnly} INACTIVO : EstadoEntidad
+    -  {readOnly} code : int
+    -  {readOnly} description : String
+    ~  EstadoEntidad(code : int, description : String) : void <<Create>>
+    +  getCode() : int
+    +  getDescription() : String
+    +  cambiarEstadoA(nuevoEstado : EstadoEntidad) : EstadoEntidad
+}
+    enum NivelPrograma {
+    +  {static, readOnly} TECNICO : NivelPrograma
+    +  {static, readOnly} TECNOLOGICO : NivelPrograma
+    +  {static, readOnly} PREGRADO : NivelPrograma
+    +  {static, readOnly} ESPECIALIZACION : NivelPrograma
+    +  {static, readOnly} MAESTRIA : NivelPrograma
+    +  {static, readOnly} DOCTORADO : NivelPrograma
+    -  {readOnly} code : int
+    -  {readOnly} description : String
+    ~  NivelPrograma(code : int, description : String) : void <<Create>>
+    +  getCode() : int
+    +  getDescription() : String
+}
+}
+
+package edu.unimag.repositorio.cargador {
+    class FacultadCargador {
+    -  {readOnly} repositorio : FacultadRepositorio
+    -  {readOnly} cache : Map<Long, Facultad>
+    +  FacultadCargador(repositorio : FacultadRepositorio) : void <<Create>>
+    +  cargarTodos() : void
+    +  cargarPorIds(ids : List<Long>) : void
+    +  registrarEnCache(entidad : Facultad) : void
+    +  obtener(id : Long) : Optional<Facultad>
+    +  existe(id : Long) : boolean
+}
+    class MateriaCargador {
+    -  {readOnly} repositorio : MateriaRepositorio
+    -  {readOnly} cache : Map<Integer, Materia>
+    +  MateriaCargador(repositorio : MateriaRepositorio) : void <<Create>>
+    +  cargarTodos() : void
+    +  cargarPorIds(ids : List<Integer>) : void
+    +  registrarEnCache(entidad : Materia) : void
+    +  obtener(id : Integer) : Optional<Materia>
+    +  existe(id : Integer) : boolean
+}
+    class PlanEstudioCargador {
+    -  {readOnly} repositorio : PlanEstudioRepositorio
+    -  {readOnly} cache : Map<Long, PlanEstudio>
+    +  PlanEstudioCargador(repositorio : PlanEstudioRepositorio) : void <<Create>>
+    +  cargarTodos() : void
+    +  cargarPorIds(ids : List<Long>) : void
+    +  registrarEnCache(entidad : PlanEstudio) : void
+    +  obtener(id : Long) : Optional<PlanEstudio>
+    +  existe(id : Long) : boolean
+}
+    class ProgramaCargador {
+    -  {readOnly} repositorio : ProgramaRepositorio
+    -  {readOnly} cache : Map<UUID, Programa>
+    +  ProgramaCargador(repositorio : ProgramaRepositorio) : void <<Create>>
+    +  cargarTodos() : void
+    +  cargarPorIds(ids : List<UUID>) : void
+    +  registrarEnCache(entidad : Programa) : void
+    +  obtener(id : UUID) : Optional<Programa>
+    +  existe(id : UUID) : boolean
+}
+}
+
+package edu.unimag.repositorio {
+    interface PlanEstudioMateriaRepositorio <<Interface>> {
+    +  {abstract} insertarSiNoExiste(planEstudioMateria : PlanEstudioMateria) : boolean
+}
+    interface FacultadRepositorio <<Interface>> {
+    +  {abstract} insertarSiNombreNoExiste(nombre : String, facultad : Facultad) : boolean
+    +  {abstract} actualizarNombreSiNoExisteEnOtra(idFacultad : Long, nuevoNombre : String) : boolean
+}
+    interface MateriaRepositorio <<Interface>> {
+}
+    interface PlanEstudioRepositorio <<Interface>> {
+}
+    interface ProgramaRepositorio <<Interface>> {
+    +  {abstract} insertarSiNombreNoExiste(nombre : String, programa : Programa) : boolean
+    +  {abstract} actualizarSiNoExisteEnOtra(programaModificado : Programa, verificarNombre : boolean) : boolean
+}
+}
+
+package edu.unimag.repositorio.api {
+    interface CargadorDatos<T, ID> <<Interface>> {
+    +  {abstract} cargarTodos() : void
+    +  {abstract} cargarPorIds(ids : List<ID>) : void
+    +  {abstract} registrarEnCache(entidad : T) : void
+    +  {abstract} obtener(id : ID) : Optional<T>
+    +  {abstract} existe(id : ID) : boolean
+}
+    interface RepositorioBase<T, ID> <<Interface>> {
+    +  {abstract} guardar(entidad : T) : T
+    +  {abstract} actualizar(entidad : T) : T
+    +  {abstract} buscarPorId(id : ID) : Optional<T>
+    +  {abstract} eliminar(id : ID) : boolean
+    +  {abstract} listarTodos() : List<T>
+    +  {abstract} contar() : long
+    +  {abstract} cerrar() : void
+}
+}
+
+package edu.unimag.persistencia {
+    class PlanEstudioMateriaRepositorioImpl {
+    +  PlanEstudioMateriaRepositorioImpl(tpaRepository : TpaRepository<PlanEstudioMateria, PlanEstudioMateriaPk>) : void <<Create>>
+    #  permiteBorradoFisico() : boolean
+    +  insertarSiNoExiste(planEstudioMateria : PlanEstudioMateria) : boolean
+}
+}
+
+package edu.unimag.persistencia.abstracta {
+    abstract class RepositorioBaseAbstracto<T, ID> <<Abstract>> {
+    #  {readOnly} tpaRepository : TpaRepository<T, ID>
+    +  RepositorioBaseAbstracto(tpaRepository : TpaRepository<T, ID>) : void <<Create>>
+    +  guardar(entidad : T) : T
+    +  actualizar(entidad : T) : T
+    +  buscarPorId(id : ID) : Optional<T>
+    +  listarTodos() : List<T>
+    +  contar() : long
+    +  {final} eliminar(id : ID) : boolean
+    +  cerrar() : void
+    #  permiteBorradoFisico() : boolean
+}
+}
+
+package edu.unimag.dto.facultad {
+    class FacultadDto <<Record>> {
+    +  {readOnly} id : Long
+    +  {readOnly} nombre : String
+    +  {readOnly} estado : EstadoEntidad
+}
+}
+
+package edu.unimag.dto.materia {
+    class MateriaActualizarDto <<Record>> {
+    +  {readOnly} id : Integer
+    +  {readOnly} nuevoNombre : String
+    +  {readOnly} nuevosCreditos : Integer
+    +  {readOnly} nuevoCupo : Integer
+}
+    class MateriaCrearDto <<Record>> {
+    +  {readOnly} nombre : String
+    +  {readOnly} creditos : Integer
+    +  {readOnly} cupoMaximo : Integer
+}
+    class MateriaDto <<Record>> {
+    +  {readOnly} id : Integer
+    +  {readOnly} nombre : String
+    +  {readOnly} creditos : Integer
+    +  {readOnly} cupoMaximo : Integer
+    +  {readOnly} estado : EstadoEntidad
+}
+}
+
+package edu.unimag.dto.planestudio {
+    class PlanEstudioActualizarDto <<Record>> {
+    +  {readOnly} id : Long
+    +  {readOnly} nuevaVersion : String
+}
+    class PlanEstudioCrearDto <<Record>> {
+    +  {readOnly} version : String
+    +  {readOnly} idPrograma : UUID
+}
+    class PlanEstudioDto <<Record>> {
+    +  {readOnly} id : Long
+    +  {readOnly} version : String
+    +  {readOnly} estado : EstadoEntidad
+    +  {readOnly} fechaCreacion : OffsetDateTime
+    +  {readOnly} programa : ProgramaDto
+}
+}
+
+package edu.unimag.dto.planestudiomateria {
+    class PlanEstudioMateriaCrearDto <<Record>> {
+    +  {readOnly} idPlanEstudio : Long
+    +  {readOnly} idMateria : Integer
+    +  {readOnly} semestre : Integer
+    +  {readOnly} orden : Integer
+}
+    class PlanEstudioMateriaActualizarDto <<Record>> {
+    +  {readOnly} idPlanEstudio : Long
+    +  {readOnly} idMateria : Integer
+    +  {readOnly} semestre : Integer
+    +  {readOnly} orden : Integer
+}
+    class PlanEstudioMateriaDto <<Record>> {
+    +  {readOnly} planEstudio : PlanEstudioDto
+    +  {readOnly} materia : MateriaDto
+    +  {readOnly} semestre : Integer
+    +  {readOnly} orden : Integer
+}
+}
+
+package edu.unimag.dto.programa {
+    class ProgramaDto <<Record>> {
+    +  {readOnly} id : UUID
+    +  {readOnly} nombre : String
+    +  {readOnly} nivelPrograma : NivelPrograma
+    +  {readOnly} facultad : FacultadDto
+    +  {readOnly} estado : EstadoEntidad
+}
+}
+
+package edu.unimag.config.modulos {
+    class ConfiguracionModuloPlanEstudioMateria {
+    -  {readOnly} planEstudioMateriaRepositorio : PlanEstudioMateriaRepositorio
+    -  {readOnly} planEstudioRepositorio : PlanEstudioRepositorio
+    -  {readOnly} planEstudioServicio : PlanEstudioServicio
+    -  {readOnly} materiaRepositorio : MateriaRepositorio
+    -  {readOnly} materiaServicio : MateriaServicio
+    -  {readOnly} programaRepositorio : ProgramaRepositorio
+    -  {readOnly} facultadRepositorio : FacultadRepositorio
+    -  {readOnly} planEstudioMateriaServicio : PlanEstudioMateriaServicio
+    +  ConfiguracionModuloPlanEstudioMateria(planEstudioRepositorio : PlanEstudioRepositorio, planEstudioServicio : PlanEstudioServicio, materiaRepositorio : MateriaRepositorio, materiaServicio : MateriaServicio, programaRepositorio : ProgramaRepositorio, facultadRepositorio : FacultadRepositorio) : void <<Create>>
+    +  getPlanEstudioMateriaServicio() : PlanEstudioMateriaServicio
+    +  construirControlador() : PlanEstudioMateriaControlador
+    +  cerrarRecursos() : void
+}
+}
+
+package edu.unimag.config.modulos.api {
+    interface ModuloConfigurable <<Interface>> {
+    +  {abstract} cerrarRecursos() : void
+}
+}
+
+' --- Orden de capas (oculto) ---
+edu.unimag.vista.web.PlanEstudioMateriaWeb -[hidden]-> edu.unimag.controlador.PlanEstudioMateriaControlador
+edu.unimag.controlador.PlanEstudioMateriaControlador -[hidden]-> edu.unimag.servicio.PlanEstudioMateriaServicio
+edu.unimag.servicio.PlanEstudioMateriaServicio -[hidden]-> edu.unimag.mapeador.PlanEstudioMateriaMapeador
+edu.unimag.mapeador.PlanEstudioMateriaMapeador -[hidden]-> edu.unimag.modelo.PlanEstudioMateria
+edu.unimag.modelo.PlanEstudioMateria -[hidden]-> edu.unimag.repositorio.PlanEstudioMateriaRepositorio
+edu.unimag.repositorio.PlanEstudioMateriaRepositorio -[hidden]-> edu.unimag.persistencia.PlanEstudioMateriaRepositorioImpl
+
+' --- Grafo de relaciones estructurales ---
+edu.unimag.vista.web.ManejadorWeb <|-- edu.unimag.vista.web.PlanEstudioMateriaWeb
+edu.unimag.mapeador.api.Mapeador <|.. edu.unimag.mapeador.FacultadMapeador
+edu.unimag.mapeador.api.Mapeador <|.. edu.unimag.mapeador.MateriaMapeador
+edu.unimag.repositorio.PlanEstudioMateriaRepositorio <|.. edu.unimag.persistencia.PlanEstudioMateriaRepositorioImpl
+edu.unimag.repositorio.api.CargadorDatos <|.. edu.unimag.repositorio.cargador.FacultadCargador
+edu.unimag.repositorio.api.CargadorDatos <|.. edu.unimag.repositorio.cargador.MateriaCargador
+edu.unimag.repositorio.api.CargadorDatos <|.. edu.unimag.repositorio.cargador.PlanEstudioCargador
+edu.unimag.repositorio.api.CargadorDatos <|.. edu.unimag.repositorio.cargador.ProgramaCargador
+edu.unimag.repositorio.api.RepositorioBase <|-- edu.unimag.repositorio.FacultadRepositorio
+edu.unimag.repositorio.api.RepositorioBase <|-- edu.unimag.repositorio.MateriaRepositorio
+edu.unimag.repositorio.api.RepositorioBase <|-- edu.unimag.repositorio.PlanEstudioMateriaRepositorio
+edu.unimag.repositorio.api.RepositorioBase <|-- edu.unimag.repositorio.PlanEstudioRepositorio
+edu.unimag.repositorio.api.RepositorioBase <|-- edu.unimag.repositorio.ProgramaRepositorio
+edu.unimag.repositorio.api.RepositorioBase <|.. edu.unimag.persistencia.abstracta.RepositorioBaseAbstracto
+edu.unimag.persistencia.abstracta.RepositorioBaseAbstracto <|-- edu.unimag.persistencia.PlanEstudioMateriaRepositorioImpl
+edu.unimag.config.modulos.api.ModuloConfigurable <|.. edu.unimag.config.modulos.ConfiguracionModuloPlanEstudioMateria
+edu.unimag.vista.web.PlanEstudioMateriaWeb "1" --> "1" edu.unimag.controlador.PlanEstudioMateriaControlador
+edu.unimag.controlador.PlanEstudioMateriaControlador "1" --> "1" edu.unimag.servicio.MateriaServicio
+edu.unimag.controlador.PlanEstudioMateriaControlador "1" --> "1" edu.unimag.servicio.PlanEstudioMateriaServicio
+edu.unimag.controlador.PlanEstudioMateriaControlador "1" --> "1" edu.unimag.servicio.PlanEstudioServicio
+edu.unimag.servicio.MateriaServicio "1" --> "1" edu.unimag.mapeador.MateriaMapeador
+edu.unimag.servicio.PlanEstudioMateriaServicio "1" --> "1" edu.unimag.mapeador.PlanEstudioMateriaMapeador
+edu.unimag.servicio.PlanEstudioServicio "1" --> "1" edu.unimag.mapeador.PlanEstudioMapeador
+edu.unimag.servicio.MateriaServicio "1" --> "1" edu.unimag.repositorio.MateriaRepositorio
+edu.unimag.servicio.PlanEstudioMateriaServicio "1" --> "1" edu.unimag.repositorio.FacultadRepositorio
+edu.unimag.servicio.PlanEstudioMateriaServicio "1" --> "1" edu.unimag.repositorio.MateriaRepositorio
+edu.unimag.servicio.PlanEstudioMateriaServicio "1" --> "1" edu.unimag.repositorio.PlanEstudioMateriaRepositorio
+edu.unimag.servicio.PlanEstudioMateriaServicio "1" --> "1" edu.unimag.repositorio.PlanEstudioRepositorio
+edu.unimag.servicio.PlanEstudioMateriaServicio "1" --> "1" edu.unimag.repositorio.ProgramaRepositorio
+edu.unimag.servicio.PlanEstudioServicio "1" --> "1" edu.unimag.repositorio.FacultadRepositorio
+edu.unimag.servicio.PlanEstudioServicio "1" --> "1" edu.unimag.repositorio.PlanEstudioRepositorio
+edu.unimag.servicio.PlanEstudioServicio "1" --> "1" edu.unimag.repositorio.ProgramaRepositorio
+edu.unimag.mapeador.PlanEstudioMapeador "1" --> "1" edu.unimag.mapeador.ProgramaMapeador
+edu.unimag.mapeador.PlanEstudioMateriaMapeador "1" --> "1" edu.unimag.mapeador.MateriaMapeador
+edu.unimag.mapeador.PlanEstudioMateriaMapeador "1" --> "1" edu.unimag.mapeador.PlanEstudioMapeador
+edu.unimag.mapeador.ProgramaMapeador "1" --> "1" edu.unimag.mapeador.FacultadMapeador
+edu.unimag.repositorio.cargador.FacultadCargador "1" --> "1" edu.unimag.repositorio.FacultadRepositorio
+edu.unimag.repositorio.cargador.MateriaCargador "1" --> "1" edu.unimag.repositorio.MateriaRepositorio
+edu.unimag.repositorio.cargador.PlanEstudioCargador "1" --> "1" edu.unimag.repositorio.PlanEstudioRepositorio
+edu.unimag.repositorio.cargador.ProgramaCargador "1" --> "1" edu.unimag.repositorio.ProgramaRepositorio
+edu.unimag.repositorio.cargador.FacultadCargador "1" o-- "*" edu.unimag.modelo.Facultad
+edu.unimag.repositorio.cargador.MateriaCargador "1" o-- "*" edu.unimag.modelo.Materia
+edu.unimag.repositorio.cargador.PlanEstudioCargador "1" o-- "*" edu.unimag.modelo.PlanEstudio
+edu.unimag.repositorio.cargador.ProgramaCargador "1" o-- "*" edu.unimag.modelo.Programa
+edu.unimag.dto.planestudio.PlanEstudioDto "1" --> "1" edu.unimag.dto.programa.ProgramaDto
+edu.unimag.dto.planestudiomateria.PlanEstudioMateriaDto "1" --> "1" edu.unimag.dto.materia.MateriaDto
+edu.unimag.dto.planestudiomateria.PlanEstudioMateriaDto "1" --> "1" edu.unimag.dto.planestudio.PlanEstudioDto
+edu.unimag.dto.programa.ProgramaDto "1" --> "1" edu.unimag.dto.facultad.FacultadDto
+edu.unimag.dto.facultad.FacultadDto "1" --> "1" edu.unimag.modelo.enumeracion.EstadoEntidad
+edu.unimag.dto.materia.MateriaDto "1" --> "1" edu.unimag.modelo.enumeracion.EstadoEntidad
+edu.unimag.dto.planestudio.PlanEstudioDto "1" --> "1" edu.unimag.modelo.enumeracion.EstadoEntidad
+edu.unimag.dto.programa.ProgramaDto "1" --> "1" edu.unimag.modelo.enumeracion.EstadoEntidad
+edu.unimag.dto.programa.ProgramaDto "1" --> "1" edu.unimag.modelo.enumeracion.NivelPrograma
+edu.unimag.modelo.PlanEstudio "1" --> "1" edu.unimag.modelo.Programa
+edu.unimag.modelo.Programa "1" --> "1" edu.unimag.modelo.Facultad
+edu.unimag.modelo.PlanEstudioMateria "1" --> "1" edu.unimag.modelo.pk.PlanEstudioMateriaPk
+edu.unimag.modelo.Facultad "1" --> "1" edu.unimag.modelo.enumeracion.EstadoEntidad
+edu.unimag.modelo.Materia "1" --> "1" edu.unimag.modelo.enumeracion.EstadoEntidad
+edu.unimag.modelo.PlanEstudio "1" --> "1" edu.unimag.modelo.enumeracion.EstadoEntidad
+edu.unimag.modelo.Programa "1" --> "1" edu.unimag.modelo.enumeracion.EstadoEntidad
+edu.unimag.modelo.Programa "1" --> "1" edu.unimag.modelo.enumeracion.NivelPrograma
+edu.unimag.modelo.pk.PlanEstudioMateriaPk "1" --> "1" edu.unimag.modelo.Materia
+edu.unimag.modelo.pk.PlanEstudioMateriaPk "1" --> "1" edu.unimag.modelo.PlanEstudio
+edu.unimag.config.modulos.ConfiguracionModuloPlanEstudioMateria "1" --> "1" edu.unimag.servicio.MateriaServicio
+edu.unimag.config.modulos.ConfiguracionModuloPlanEstudioMateria "1" *-- "1" edu.unimag.servicio.PlanEstudioMateriaServicio
+edu.unimag.config.modulos.ConfiguracionModuloPlanEstudioMateria "1" --> "1" edu.unimag.servicio.PlanEstudioServicio
+edu.unimag.config.modulos.ConfiguracionModuloPlanEstudioMateria "1" --> "1" edu.unimag.repositorio.FacultadRepositorio
+edu.unimag.config.modulos.ConfiguracionModuloPlanEstudioMateria "1" --> "1" edu.unimag.repositorio.MateriaRepositorio
+edu.unimag.config.modulos.ConfiguracionModuloPlanEstudioMateria "1" *-- "1" edu.unimag.repositorio.PlanEstudioMateriaRepositorio
+edu.unimag.config.modulos.ConfiguracionModuloPlanEstudioMateria "1" --> "1" edu.unimag.repositorio.PlanEstudioRepositorio
+edu.unimag.config.modulos.ConfiguracionModuloPlanEstudioMateria "1" --> "1" edu.unimag.repositorio.ProgramaRepositorio
+
+' --- Dependencias de metodo <<use>> ---
+edu.unimag.controlador.PlanEstudioMateriaControlador ..> edu.unimag.dto.materia.MateriaDto : <<use>>
+edu.unimag.controlador.PlanEstudioMateriaControlador ..> edu.unimag.dto.planestudio.PlanEstudioDto : <<use>>
+edu.unimag.controlador.PlanEstudioMateriaControlador ..> edu.unimag.dto.planestudiomateria.PlanEstudioMateriaActualizarDto : <<use>>
+edu.unimag.controlador.PlanEstudioMateriaControlador ..> edu.unimag.dto.planestudiomateria.PlanEstudioMateriaCrearDto : <<use>>
+edu.unimag.controlador.PlanEstudioMateriaControlador ..> edu.unimag.dto.planestudiomateria.PlanEstudioMateriaDto : <<use>>
+edu.unimag.servicio.PlanEstudioMateriaServicio ..> edu.unimag.repositorio.cargador.MateriaCargador : <<use>>
+edu.unimag.servicio.PlanEstudioMateriaServicio ..> edu.unimag.repositorio.cargador.PlanEstudioCargador : <<use>>
+edu.unimag.servicio.MateriaServicio ..> edu.unimag.dto.materia.MateriaActualizarDto : <<use>>
+edu.unimag.servicio.MateriaServicio ..> edu.unimag.dto.materia.MateriaCrearDto : <<use>>
+edu.unimag.servicio.MateriaServicio ..> edu.unimag.dto.materia.MateriaDto : <<use>>
+edu.unimag.servicio.PlanEstudioMateriaServicio ..> edu.unimag.dto.planestudiomateria.PlanEstudioMateriaActualizarDto : <<use>>
+edu.unimag.servicio.PlanEstudioMateriaServicio ..> edu.unimag.dto.planestudiomateria.PlanEstudioMateriaCrearDto : <<use>>
+edu.unimag.servicio.PlanEstudioMateriaServicio ..> edu.unimag.dto.planestudiomateria.PlanEstudioMateriaDto : <<use>>
+edu.unimag.servicio.PlanEstudioServicio ..> edu.unimag.dto.planestudio.PlanEstudioActualizarDto : <<use>>
+edu.unimag.servicio.PlanEstudioServicio ..> edu.unimag.dto.planestudio.PlanEstudioCrearDto : <<use>>
+edu.unimag.servicio.PlanEstudioServicio ..> edu.unimag.dto.planestudio.PlanEstudioDto : <<use>>
+edu.unimag.servicio.PlanEstudioMateriaServicio ..> edu.unimag.modelo.Materia : <<use>>
+edu.unimag.servicio.PlanEstudioMateriaServicio ..> edu.unimag.modelo.PlanEstudio : <<use>>
+edu.unimag.servicio.PlanEstudioMateriaServicio ..> edu.unimag.modelo.PlanEstudioMateria : <<use>>
+edu.unimag.servicio.PlanEstudioServicio ..> edu.unimag.modelo.Facultad : <<use>>
+edu.unimag.servicio.PlanEstudioServicio ..> edu.unimag.modelo.PlanEstudio : <<use>>
+edu.unimag.servicio.PlanEstudioServicio ..> edu.unimag.modelo.Programa : <<use>>
+edu.unimag.mapeador.PlanEstudioMapeador ..> edu.unimag.repositorio.cargador.FacultadCargador : <<use>>
+edu.unimag.mapeador.PlanEstudioMapeador ..> edu.unimag.repositorio.cargador.ProgramaCargador : <<use>>
+edu.unimag.mapeador.PlanEstudioMateriaMapeador ..> edu.unimag.repositorio.cargador.FacultadCargador : <<use>>
+edu.unimag.mapeador.PlanEstudioMateriaMapeador ..> edu.unimag.repositorio.cargador.MateriaCargador : <<use>>
+edu.unimag.mapeador.PlanEstudioMateriaMapeador ..> edu.unimag.repositorio.cargador.PlanEstudioCargador : <<use>>
+edu.unimag.mapeador.PlanEstudioMateriaMapeador ..> edu.unimag.repositorio.cargador.ProgramaCargador : <<use>>
+edu.unimag.mapeador.ProgramaMapeador ..> edu.unimag.repositorio.cargador.FacultadCargador : <<use>>
+edu.unimag.mapeador.FacultadMapeador ..> edu.unimag.dto.facultad.FacultadDto : <<use>>
+edu.unimag.mapeador.MateriaMapeador ..> edu.unimag.dto.materia.MateriaDto : <<use>>
+edu.unimag.mapeador.PlanEstudioMapeador ..> edu.unimag.dto.planestudio.PlanEstudioDto : <<use>>
+edu.unimag.mapeador.PlanEstudioMateriaMapeador ..> edu.unimag.dto.planestudiomateria.PlanEstudioMateriaDto : <<use>>
+edu.unimag.mapeador.ProgramaMapeador ..> edu.unimag.dto.programa.ProgramaDto : <<use>>
+edu.unimag.mapeador.FacultadMapeador ..> edu.unimag.modelo.Facultad : <<use>>
+edu.unimag.mapeador.MateriaMapeador ..> edu.unimag.modelo.Materia : <<use>>
+edu.unimag.mapeador.PlanEstudioMapeador ..> edu.unimag.modelo.PlanEstudio : <<use>>
+edu.unimag.mapeador.PlanEstudioMateriaMapeador ..> edu.unimag.modelo.PlanEstudioMateria : <<use>>
+edu.unimag.mapeador.ProgramaMapeador ..> edu.unimag.modelo.Programa : <<use>>
+edu.unimag.repositorio.FacultadRepositorio ..> edu.unimag.modelo.Facultad : <<use>>
+edu.unimag.repositorio.PlanEstudioMateriaRepositorio ..> edu.unimag.modelo.PlanEstudioMateria : <<use>>
+edu.unimag.repositorio.ProgramaRepositorio ..> edu.unimag.modelo.Programa : <<use>>
+edu.unimag.persistencia.PlanEstudioMateriaRepositorioImpl ..> edu.unimag.modelo.PlanEstudioMateria : <<use>>
+edu.unimag.modelo.PlanEstudioMateria ..> edu.unimag.modelo.Materia : <<use>>
+edu.unimag.modelo.PlanEstudioMateria ..> edu.unimag.modelo.PlanEstudio : <<use>>
+edu.unimag.config.modulos.ConfiguracionModuloPlanEstudioMateria ..> edu.unimag.controlador.PlanEstudioMateriaControlador : <<use>>
+
+@enduml
