@@ -141,15 +141,16 @@ function pintarTabla(monitorias) {
     vacio.hidden = monitorias.length > 0;
 
     for (const m of monitorias) {
+        // En la tabla solo el nombre del curso y la fecha sin hora: asi caben las acciones
         const fila = crearFila([
             m.estudiante.nombre,
             m.profesor.nombre,
-            textoCurso(m.cursoPeriodo),
+            m.cursoPeriodo.nombre,
             m.estadoMonitoria.descripcion,
             m.calificacion === null ? "—" : m.calificacion,
             m.comentario === null ? "—" : m.comentario,
-            new Date(m.fechaCreacion).toLocaleString("es-CO"),
-            m.fechaEvaluacion === null ? "—" : new Date(m.fechaEvaluacion).toLocaleString("es-CO")
+            new Date(m.fechaCreacion).toLocaleDateString("es-CO"),
+            m.fechaEvaluacion === null ? "—" : new Date(m.fechaEvaluacion).toLocaleDateString("es-CO")
         ]);
 
         const botones = [];
@@ -159,12 +160,16 @@ function pintarTabla(monitorias) {
             campoNota.type = "number";
             campoNota.min = "0";
             campoNota.max = "500";
-            campoNota.placeholder = "Nota 0-500";
-            campoNota.style.width = "7em";
+            campoNota.placeholder = "Nota";
+            campoNota.title = "Calificación de 0 a 500";
+            campoNota.style.width = "5.5em";
+            campoNota.style.minWidth = "0";
 
             const campoComentario = document.createElement("input");
             campoComentario.type = "text";
             campoComentario.placeholder = "Comentario";
+            campoComentario.style.width = "9em";
+            campoComentario.style.minWidth = "0";
 
             botones.push(campoNota, campoComentario,
                     crearBoton("Evaluar", "secundario",
@@ -172,6 +177,9 @@ function pintarTabla(monitorias) {
         }
         botones.push(crearBoton("Eliminar", "peligro", () => eliminar(m)));
         agregarAcciones(fila, botones);
+        // Esta tabla tiene 9 columnas: las acciones pueden bajar a una segunda linea
+        fila.lastChild.style.whiteSpace = "normal";
+        fila.lastChild.style.minWidth = "16em";
         tabla.appendChild(fila);
     }
 }

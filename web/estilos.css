@@ -317,6 +317,7 @@ main.pagina form {
     align-items: end;
 }
 main.pagina form.filtro { margin-bottom: 18px; }
+main.pagina #formFiltro { margin-bottom: 18px; }
 
 label {
     display: flex; flex-direction: column; gap: 7px;

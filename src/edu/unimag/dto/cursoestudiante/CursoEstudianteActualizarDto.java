@@ -1,13 +1,14 @@
 package edu.unimag.dto.cursoestudiante;
 
-import edu.unimag.modelo.enumeracion.EstadoEntidad;
+import edu.unimag.modelo.enumeracion.EstadoInscripcion;
 import java.util.UUID;
 
-// Se usa para retirar (INACTIVO) o reactivar (ACTIVO) la inscripcion
+// Identifica una inscripcion (curso-periodo + estudiante) y el estado de inscripcion
+// al que se quiere llevar (ADMITIDO, RECHAZADO, APROBADO, REPROBADO, RETIRADO...)
 public record CursoEstudianteActualizarDto(
         UUID idCursoPeriodo,
         UUID idEstudiante,
-        EstadoEntidad estado) {
+        EstadoInscripcion estado) {
 
     public CursoEstudianteActualizarDto {
         if (idCursoPeriodo == null) {

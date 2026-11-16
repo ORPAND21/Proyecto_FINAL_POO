@@ -19,6 +19,13 @@
     for (const grupo of grupos) {
         const submenu = grupo.nextElementSibling;
         grupo.addEventListener("click", () => {
+            // En escritorio, si el mouse ya lo abrio, el clic no debe cerrarlo
+            if (escritorio.matches && grupo.parentElement.matches(":hover")) {
+                cerrarGrupos(grupo);
+                grupo.setAttribute("aria-expanded", "true");
+                submenu.hidden = false;
+                return;
+            }
             const abrir = grupo.getAttribute("aria-expanded") !== "true";
             cerrarGrupos(grupo);
             grupo.setAttribute("aria-expanded", String(abrir));
